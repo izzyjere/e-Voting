@@ -23,10 +23,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Services\Domain\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\..\Shared\ICTAZEvoting.Shared\ICTAZEvoting.Shared.csproj" />
 	</ItemGroup>
 

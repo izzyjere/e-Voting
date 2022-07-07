@@ -4,9 +4,19 @@ using ICTAZEVoting.Core.Services.Identity;
 using ICTAZEvoting.Shared.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ICTAZEVoting.Core.Extensions
 {
+    public static class HelperExtensions
+    {
+        public static int GetId(this ClaimsPrincipal claimsPrincipal)
+             => Convert.ToInt32(claimsPrincipal.FindFirstValue("UserId"));
+        public static string GetFullName(this ClaimsPrincipal claimsPrincipal)
+            => claimsPrincipal.FindFirstValue("FullName");
+        public static string GetRole(this ClaimsPrincipal claimsPrincipal)
+            => claimsPrincipal.FindFirstValue(ClaimTypes.Role);
+    }
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)

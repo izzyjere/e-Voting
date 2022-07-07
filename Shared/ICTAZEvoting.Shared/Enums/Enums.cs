@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ICTAZEvoting.Shared.Enums
+﻿namespace ICTAZEvoting.Shared.Enums
 {
     public enum Gender
     {

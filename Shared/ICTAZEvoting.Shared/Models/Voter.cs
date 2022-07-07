@@ -1,5 +1,4 @@
 ﻿using ICTAZEvoting.Shared.Contracts;
-using ICTAZEvoting.Shared.Enums;
 
 using System;
 

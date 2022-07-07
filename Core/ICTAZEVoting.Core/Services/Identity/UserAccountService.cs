@@ -1,11 +1,9 @@
-﻿using ICTAZEvoting.Shared.Interfaces;
-using ICTAZEvoting.Shared.Requests;
+﻿using ICTAZEvoting.Shared.Requests;
 using ICTAZEvoting.Shared.Wrapper;
 
 using ICTAZEVoting.Core.Models;
 
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace ICTAZEVoting.Core.Services.Identity
 {

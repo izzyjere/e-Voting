@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-
-namespace ICTAZEvoting.Shared.Models
+﻿namespace ICTAZEVoting.BlockChain.Models
 {
     public class BlockChain
     {
@@ -23,7 +18,7 @@ namespace ICTAZEvoting.Shared.Models
         /// <returns></returns>
         public Block CreateGenesisBlock()
         {
-            return new Block(DateTime.Now, "",null);
+            return new Block(DateTime.Now, "", null);
         }
         public void AddGenesisBlock()
         {
@@ -31,7 +26,7 @@ namespace ICTAZEvoting.Shared.Models
         }
         public Block GetLatestBlock()
         {
-            return Chain[Chain.Count-1];
+            return Chain[Chain.Count - 1];
         }
         /// <summary>
         /// Counts the votes for a particular candidate
@@ -40,7 +35,7 @@ namespace ICTAZEvoting.Shared.Models
         /// <returns></returns>
         public int GetVotesCount(Guid candidateId)
         {
-           return Chain.Count(b=>b.Data.CandidateId==candidateId); 
+            return Chain.Count(b => b.Data.CandidateId == candidateId);
         }
         /// <summary>
         /// Adds a new block to the chain.

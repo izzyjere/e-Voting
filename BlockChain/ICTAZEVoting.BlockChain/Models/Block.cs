@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ICTAZEvoting.Shared.Models;
+using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
-
-namespace ICTAZEvoting.Shared.Models
+namespace ICTAZEVoting.BlockChain.Models
 {
     public class Block
     {
@@ -14,15 +13,15 @@ namespace ICTAZEvoting.Shared.Models
         public Vote Data { get; set; }
         public Block(DateTime timeStamp, string previousHash, Vote data)
         {
-              TimeStamp = timeStamp;
-              PreviousHash = previousHash;
-              Data = data;
-              Hash = CalculateHash();
-        }    
+            TimeStamp = timeStamp;
+            PreviousHash = previousHash;
+            Data = data;
+            Hash = CalculateHash();
+        }
         public string CalculateHash()
         {
             SHA256 sha256 = SHA256.Create();
-            byte[] inputBytes = Encoding.ASCII.GetBytes($"{TimeStamp}-{PreviousHash??""}-{Data.ToString()}");
+            byte[] inputBytes = Encoding.ASCII.GetBytes($"{TimeStamp}-{PreviousHash ?? ""}-{JsonConvert.SerializeObject(Data)}");
             byte[] outputBytes = sha256.ComputeHash(inputBytes);
             return Convert.ToBase64String(outputBytes);
         }

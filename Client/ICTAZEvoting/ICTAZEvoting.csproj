@@ -13,4 +13,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="6.0.400" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\ICTAZEVoting.Core\ICTAZEVoting.Core.csproj" />
+    <ProjectReference Include="..\..\Shared\ICTAZEvoting.Shared\ICTAZEVoting.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

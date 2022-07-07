@@ -1,8 +1,5 @@
 ﻿using ICTAZEvoting.Shared.Enums;
-
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ICTAZEvoting.Shared.Models
 {
@@ -14,6 +11,7 @@ namespace ICTAZEvoting.Shared.Models
         public string NRC { get; set; }
         public string PhoneNumber { get; set; }
         public Gender Gender { get; set; }
+        public string PictureUrl { get; set; }
         public DateTime DateOfBirth { get; set; }         
         public string Address { get; set; }
     }

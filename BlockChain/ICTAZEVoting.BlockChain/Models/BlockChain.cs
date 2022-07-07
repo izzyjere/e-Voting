@@ -1,12 +1,25 @@
-﻿namespace ICTAZEVoting.BlockChain.Models
+﻿using ICTAZEvoting.Shared.Models;
+
+namespace ICTAZEVoting.BlockChain.Models
 {
     public class BlockChain
     {
         public IList<Block> Chain { get; set; }
+        public Vote PendingVote { get; set; } = new();
         public BlockChain()
         {
             InitializeChain();
 
+        }
+        public void AddVote(Vote vote)
+        {
+            PendingVote = vote;
+        }
+        public void ProcessPendingVote()
+        {
+            Block block = new(DateTime.Now,GetLatestBlock().Hash,PendingVote);
+            AddBlock(block);
+            PendingVote = new();
         }
         public void InitializeChain()
         {

@@ -28,7 +28,7 @@ namespace ICTAZEVoting.BlockChain.Network
         {
 
         }
-        public Server(Node node, StorageContext storageContext)
+        public Server(Node node, StorageContext storageContext=null)
         {
             this.node = node;
             this.storageContext = storageContext;

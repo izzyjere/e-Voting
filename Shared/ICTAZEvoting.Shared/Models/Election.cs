@@ -1,0 +1,21 @@
+﻿using ICTAZEvoting.Shared.Contracts;
+using ICTAZEvoting.Shared.Enums;
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ICTAZEvoting.Shared.Models
+{
+    public class Election : Entity<Guid>
+    {
+        public DateTime ElectionDate { get; set; }
+        public string Name { get; set; }         
+        public double Duration { get; set; }
+        public ElectionStatus Status { get; set; }
+        public List<Voter> Voters { get; set; }
+        public List<Candidate> Candidates { get; set; }
+        public BlockChain Votes { get; set; }
+
+    }
+}

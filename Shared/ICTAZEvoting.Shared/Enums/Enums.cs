@@ -10,6 +10,13 @@ namespace ICTAZEvoting.Shared.Enums
         Male,
         Female
     }
+    public enum AuditType
+    {
+        None,
+        Create,
+        Update,
+        Delete
+    }
     public enum ElectionStatus
     {
         Open, Close

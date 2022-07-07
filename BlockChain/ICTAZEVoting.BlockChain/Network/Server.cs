@@ -20,20 +20,14 @@ namespace ICTAZEVoting.BlockChain.Network
 {
     public class Server : WebSocketBehavior
     {
-        readonly Node node;
-        readonly StorageContext storageContext;
+        
         bool chainSynced = false;
         WebSocketServer server = null;
+
         public Server()
         {
 
-        }
-        public Server(Node node, StorageContext storageContext=null)
-        {
-            this.node = node;
-            this.storageContext = storageContext;
-
-        }
+        }    
         protected override void OnMessage(MessageEventArgs e)
         {
             if (e.Data == "Hi Node.")
@@ -44,7 +38,7 @@ namespace ICTAZEVoting.BlockChain.Network
             else
             {
                 var newBlockChain = JsonConvert.DeserializeObject<Models.BlockChain>(e.Data);
-                var myChain = storageContext.GetBlockChain();
+                var myChain = NodeService.Storage.GetBlockChain();
                 var newVotes = new List<Vote>();
                 //Check block chain validity
                 if (newBlockChain.IsValid()&&newBlockChain.Chain.Count>myChain.Chain.Count)
@@ -53,28 +47,28 @@ namespace ICTAZEVoting.BlockChain.Network
                     if(newVote != null)
                     {
                         myChain.PendingVote = newVote;
-                        storageContext.UpdateBlockChain(myChain);
+                        NodeService.Storage.UpdateBlockChain(myChain);
                     }
                    
                 }
                 if(!chainSynced)
                 {
-                    Send(JsonConvert.SerializeObject(storageContext.GetBlockChain()));
+                    Send(JsonConvert.SerializeObject(NodeService.Storage.GetBlockChain()));
                     chainSynced = true;
                 }
             }
         }
         public string GetNodeId()
         {
-            return node.NodeId.ToString();
+            return NodeService.NodeInstance.NodeId.ToString();
         }
         public string GetIpAddress()
         {
-            return node.IPAddress + $":{node.Port}";
+            return NodeService.NodeInstance.IPAddress + $":{NodeService.NodeInstance.Port}";
         }
         public void Start()
         {
-            server = new WebSocketServer($"{node.IPAddress}:{node.Port}");
+            server = new WebSocketServer($"{NodeService.NodeInstance.IPAddress}:{NodeService.NodeInstance.Port}");
             server.AddWebSocketService<Server>("/ICTAZEVoting.Blockchain");
             server.Start();
             Console.WriteLine($"Node has been created and started on: {GetIpAddress()}", Environment.NewLine);

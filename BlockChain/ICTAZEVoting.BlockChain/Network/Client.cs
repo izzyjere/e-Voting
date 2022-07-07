@@ -14,13 +14,12 @@ namespace ICTAZEVoting.BlockChain.Network
 {
     public class Client
     {
-        IDictionary<string, WebSocketSharp.WebSocket> servers = new Dictionary<string, WebSocketSharp.WebSocket>();
-        private StorageContext storageContext;
-        private bool chainSynced;
-
+      
+      
+       
         public void Connect(string nodeAddress)
         {
-            if (!servers.ContainsKey(nodeAddress))
+            if (!NodeService.Nodes.ContainsKey(nodeAddress))
             {
                 var server = new WebSocketSharp.WebSocket(nodeAddress);
                 server.OnMessage += (sender, e) =>
@@ -32,7 +31,7 @@ namespace ICTAZEVoting.BlockChain.Network
                     else
                     {
                         var newBlockChain = JsonConvert.DeserializeObject<Models.BlockChain>(e.Data);
-                        var myChain = storageContext.GetBlockChain();
+                        var myChain = NodeService.Storage.GetBlockChain();
                         var newVotes = new List<Vote>();
                         //Check block chain validity
                         if (newBlockChain.IsValid() && newBlockChain.Chain.Count > myChain.Chain.Count)
@@ -41,7 +40,7 @@ namespace ICTAZEVoting.BlockChain.Network
                             if (newVote != null)
                             {
                                 myChain.PendingVote = newVote;
-                                storageContext.UpdateBlockChain(myChain);
+                                NodeService.Storage.UpdateBlockChain(myChain);
                             }
 
                         }
@@ -50,13 +49,13 @@ namespace ICTAZEVoting.BlockChain.Network
                 };
                 server.Connect();
                 server.Send("Hi Server");
-                server.Send(JsonConvert.SerializeObject(storageContext.GetBlockChain()));
-                servers.Add(nodeAddress, server);
+                server.Send(JsonConvert.SerializeObject(NodeService.Storage.GetBlockChain()));
+                NodeService.Add(nodeAddress, server);
             }
         }
         public void Send(string url, string data)
         {
-            foreach (var item in servers)
+            foreach (var item in NodeService.Nodes)
             {
                 if (item.Key == url)
                 {
@@ -67,7 +66,7 @@ namespace ICTAZEVoting.BlockChain.Network
 
         public void Broadcast(string data)
         {
-            foreach (var item in servers)
+            foreach (var item in NodeService.Nodes)
             {
                 item.Value.Send(data);
             }
@@ -76,7 +75,7 @@ namespace ICTAZEVoting.BlockChain.Network
         public IList<string> GetServerAddresses()
         {
             IList<string> addresses = new List<string>();
-            foreach (var item in servers)
+            foreach (var item in NodeService.Nodes)
             {
                 addresses.Add(item.Key);
             }
@@ -84,7 +83,7 @@ namespace ICTAZEVoting.BlockChain.Network
         }
         public void Close()
         {
-            foreach (var item in servers)
+            foreach (var item in NodeService.Nodes)
             {
                 item.Value.Close();
             }

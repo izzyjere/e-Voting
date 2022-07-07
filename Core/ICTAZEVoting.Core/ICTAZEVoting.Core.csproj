@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Shared\ICTAZEvoting.Shared\ICTAZEvoting.Shared.csproj" />
+		<ProjectReference Include="..\..\Shared\ICTAZEvoting.Shared\ICTAZEVoting.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

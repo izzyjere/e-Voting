@@ -22,12 +22,7 @@ namespace ICTAZEVoting.BlockChain.Network
     {
         
         bool chainSynced = false;
-        WebSocketServer server = null;
-
-        public Server()
-        {
-
-        }    
+        WebSocketServer server = null; 
         protected override void OnMessage(MessageEventArgs e)
         {
             if (e.Data == "Hi Node.")
@@ -58,11 +53,11 @@ namespace ICTAZEVoting.BlockChain.Network
                 }
             }
         }
-        public string GetNodeId()
+        public static string GetNodeId()
         {
             return NodeService.NodeInstance.NodeId.ToString();
         }
-        public string GetIpAddress()
+        public static string GetIpAddress()
         {
             return NodeService.NodeInstance.IPAddress + $":{NodeService.NodeInstance.Port}";
         }

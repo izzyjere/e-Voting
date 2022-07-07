@@ -29,7 +29,7 @@ namespace ICTAZEVoting.BlockChain.Models
         /// This method creates the genesis
         /// </summary>
         /// <returns></returns>
-        public Block CreateGenesisBlock()
+        public static Block CreateGenesisBlock()
         {
             return new Block(DateTime.Now, "", null);
         }

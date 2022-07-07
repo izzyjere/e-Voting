@@ -14,10 +14,7 @@ namespace ICTAZEVoting.BlockChain.Network
 {
     public class Client
     {
-      
-      
-       
-        public void Connect(string nodeAddress)
+        public static void Connect(string nodeAddress)
         {
             if (!NodeService.Nodes.ContainsKey(nodeAddress))
             {
@@ -53,7 +50,7 @@ namespace ICTAZEVoting.BlockChain.Network
                 NodeService.Add(nodeAddress, server);
             }
         }
-        public void Send(string url, string data)
+        public static void Send(string url, string data)
         {
             foreach (var item in NodeService.Nodes)
             {
@@ -64,7 +61,7 @@ namespace ICTAZEVoting.BlockChain.Network
             }
         }
 
-        public void Broadcast(string data)
+        public static void Broadcast(string data)
         {
             foreach (var item in NodeService.Nodes)
             {
@@ -72,7 +69,7 @@ namespace ICTAZEVoting.BlockChain.Network
             }
         }
 
-        public IList<string> GetServerAddresses()
+        public static IList<string> GetServerAddresses()
         {
             IList<string> addresses = new List<string>();
             foreach (var item in NodeService.Nodes)
@@ -81,7 +78,7 @@ namespace ICTAZEVoting.BlockChain.Network
             }
             return addresses;
         }
-        public void Close()
+        public static void Close()
         {
             foreach (var item in NodeService.Nodes)
             {

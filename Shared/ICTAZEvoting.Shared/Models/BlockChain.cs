@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace ICTAZEvoting.Shared.Models
 {
@@ -19,6 +20,26 @@ namespace ICTAZEvoting.Shared.Models
         public Block CreateGenesisBlock()
         {
             return new Block(DateTime.Now, "",null);
+        }
+        public void AddGenesisBlock()
+        {
+            Chain.Add(CreateGenesisBlock());
+        }
+        public Block GetLatestBlock()
+        {
+            return Chain[Chain.Count-1];
+        }
+        public int GetVotesCount(Guid candidateId)
+        {
+           return Chain.Count(b=>b.Data.CandidateId==candidateId); 
+        }
+        public void AddBlock(Block block)
+        {
+            Block latestBlock = GetLatestBlock();
+            block.Index = latestBlock.Index + 1;
+            block.PreviousHash = latestBlock.Hash;
+            block.Hash = block.CalculateHash();
+            Chain.Add(block);
         }
 
     }

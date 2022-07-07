@@ -1,6 +1,7 @@
-﻿using MudBlazor;
+﻿
+using MudBlazor;
 
-namespace ICTAZEvoting.Shared
+namespace ICTAZEvoting.Models
 {
     public class MudBlazorAdminDashboard : MudTheme
     {

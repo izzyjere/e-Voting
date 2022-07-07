@@ -1,5 +1,4 @@
-﻿
-namespace ICTAZEvoting.Shared
+﻿namespace ICTAZEvoting.Models
 {
     public class ChatMessage
     {

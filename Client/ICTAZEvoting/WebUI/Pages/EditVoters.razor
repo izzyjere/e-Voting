@@ -9,18 +9,57 @@
 <MudCard Elevation="25">
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h6">Add / Edit Voters</MudText>
+            <MudText Typo="Typo.h6">Add / Edit voters</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        @*<MudTextField @bind-Value="candidate.PersonalDetails.FirstName" Label="FirstName" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
-        <MudTextField @bind-Value="candidate.PersonalDetails.LastName" Label="Category Description" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>*@
-        <br />
-        <MudButton Variant="Variant.Filled" Color="Color.Info">Save Voter</MudButton>
+<MudGrid>
+    <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+            <MudTextField @bind-Value="voter.VoterNumber" Label="Voter Number" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudTextField @bind-Value="voter.PersonalDetails.NRC" Label="NRC Number" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudDatePicker @bind-Date="voter.PersonalDetails.DateOfBirth" Label="Date of Birth" Editable="true" Placeholder="Select Date" Variant="Variant.Outlined" Style="width:100%" />
+        </Animate>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+             <MudTextField @bind-Value="voter.PersonalDetails.FirstName" Label="First Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudTextField @bind-Value="voter.PersonalDetails.PhoneNumber" Label="Phone" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudTextField @bind-Value="voter.PersonalDetails.Email" Label="Email Address" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+        </Animate>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+            <MudTextField @bind-Value="voter.PersonalDetails.MiddleName" Label="Middle Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudSelect T="Gender" @bind-Value="voter.PersonalDetails.Gender" Label="Gender" Variant="Variant.Outlined" Margin="Margin.Normal">
+                @foreach(var item in Enum.GetValues<Gender>())
+                    {
+                        <MudSelectItem T="Gender" Value="@item">
+                            @item.ToString()
+                        </MudSelectItem>
+                    }
+            </MudSelect>
+        </Animate>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+            <MudTextField @bind-Value="voter.PersonalDetails.LastName" Label="Last Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            @*<MudTextField @bind-Value="voter.PersonalDetails.PictureUrl" Label="Passport Size Photo" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>*@
+            <MudButton HtmlTag="label"
+           Variant="Variant.Filled"
+           Color="Color.Info"
+           StartIcon="@Icons.Filled.CloudUpload"
+           for="fileInput">
+            Upload Photo
+            </MudButton>
+     
+        </Animate>
+    </MudItem>
+    </MudGrid>
+            <MudButton Variant="Variant.Filled" Color="Color.Info">Save voter</MudButton>
     </MudCardContent>
 </MudCard>
-<br />
-
+<br/>
 <MudTable Style="color: white" Elevation="25" Items="voters">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Loans</MudText>
@@ -28,13 +67,14 @@
         <MudTextField @bind-Value="searchString" Placeholder="Search for Categories..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Candidate Number</MudTh>
+        <MudTh>voter Number</MudTh>
         <MudTh>First Name</MudTh>
         <MudTh>Last Name</MudTh>
+        <MudTh>NRC No.</MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Candidate Number">@context.VoterNumber</MudTd>
+        <MudTd DataLabel="voter Number">@context.VoterNumber</MudTd>
 
         <MudTd DataLabel="">
             <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
@@ -61,7 +101,7 @@
     private List<Voter> voters = new List<Voter>();
     protected override async Task OnInitializedAsync()
     {
-            
+            voter.PersonalDetails = new PersonalDetails();
     }
 
     private void Update(Voter voter)

@@ -1,6 +1,6 @@
 ﻿@page "/dashboardMain"
 
-<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Main Dashboard</MudText>
+<MudText Typo="Typo.h5" Color="Color.Dark" Class="mb-4">Main Dashboard</MudText>
 <MudGrid>
     <MudItem xs="12" sm="6" md="3">
         <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
@@ -16,7 +16,7 @@
     
     <MudItem xs="12" sm="6" md="3">
         <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
-        <MudPaper  Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
             <MudIcon Icon="@Icons.Material.Filled.WhereToVote" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
             <div>
                 <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Voters</MudText>
@@ -27,6 +27,7 @@
     </MudItem>
     
     <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
         <MudPaper  Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
             <MudIcon Icon="@Icons.Material.Filled.HowToVote" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
             <div>
@@ -34,8 +35,10 @@
                 <MudText Typo="Typo.h5">46,000</MudText>
             </div>
         </MudPaper>
+        </Animate>
     </MudItem>
     <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
         <MudPaper  Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
             <MudIcon Icon="@Icons.Material.Filled.Ballot" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
             <div>
@@ -43,8 +46,9 @@
                 <MudText Typo="Typo.h5">50</MudText>
             </div>
         </MudPaper>
+        </Animate>
     </MudItem>
-    <MudItem xs="12" sm="8">
+    @*<MudItem xs="12" sm="8">
         <MudPaper  Class="pa-4" Style="height:300px;">
             Charts comming soon ish...
         </MudPaper>
@@ -140,7 +144,7 @@
                 </MudList>
             </MudCardContent>
         </MudCard>
-    </MudItem>
+    </MudItem>*@
 </MudGrid>
 
 

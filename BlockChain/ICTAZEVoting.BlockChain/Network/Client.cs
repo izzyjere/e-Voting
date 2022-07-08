@@ -22,9 +22,12 @@ namespace ICTAZEVoting.BlockChain.Network
                 var server = new WebSocketSharp.WebSocket(nodeAddress);
                 server.OnMessage += (sender, e) =>
                 {
-                    if (e.Data == "Hi too Node.")
+                    var message = JsonConvert.DeserializeObject<NetworkMessage>(e.Data);
+                    if (message.Type == MessageType.Greeting) 
                     {
-                        Console.WriteLine(e.Data);
+                       
+                        Console.WriteLine("Response Received.");
+                        
                     }
                     else
                     {

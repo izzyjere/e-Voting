@@ -6,29 +6,66 @@
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
 
-<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
-<MudCard Elevation="25">
+    <MudCard Elevation="25">
     <MudCardHeader>
         <CardHeaderContent>
             <MudText Typo="Typo.h6">Add / Edit Candidates</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        @*<MudTextField @bind-Value="candidate.PersonalDetails.FirstName" Label="FirstName" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
-        <MudTextField @bind-Value="candidate.PersonalDetails.LastName" Label="Category Description" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>*@
-        <br />
-        <MudButton Variant="Variant.Filled" Color="Color.Info">Save Candidate</MudButton>
+<MudGrid>
+    <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+            <MudTextField @bind-Value="candidate.CandidateNumber" Label="Candidate Number" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudTextField @bind-Value="candidate.PersonalDetails.NRC" Label="NRC Number" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudDatePicker @bind-Date="candidate.PersonalDetails.DateOfBirth" Label="Date of Birth" Editable="true" Placeholder="Select Date" Variant="Variant.Outlined" Style="width:100%" />
+        </Animate>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+             <MudTextField @bind-Value="candidate.PersonalDetails.FirstName" Label="First Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudTextField @bind-Value="candidate.PersonalDetails.PhoneNumber" Label="Phone" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudTextField @bind-Value="candidate.PersonalDetails.Email" Label="Email Address" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+        </Animate>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+            <MudTextField @bind-Value="candidate.PersonalDetails.MiddleName" Label="Middle Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudSelect T="Gender" @bind-Value="candidate.PersonalDetails.Gender" Label="Gender" Variant="Variant.Outlined" Margin="Margin.Normal">
+                @foreach(var item in Enum.GetValues<Gender>())
+                    {
+                        <MudSelectItem T="Gender" Value="@item">
+                            @item.ToString()
+                        </MudSelectItem>
+                    }
+            </MudSelect>
+        </Animate>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+            <MudTextField @bind-Value="candidate.PersonalDetails.LastName" Label="Last Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            @*<MudTextField @bind-Value="candidate.PersonalDetails.PictureUrl" Label="Passport Size Photo" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>*@
+            <MudButton HtmlTag="label"
+           Variant="Variant.Filled"
+           Color="Color.Info"
+           StartIcon="@Icons.Filled.CloudUpload"
+           for="fileInput">
+            Upload Photo
+            </MudButton>
+     
+        </Animate>
+    </MudItem>
+    </MudGrid>
+            <MudButton Variant="Variant.Filled" Color="Color.Info">Save Candidate</MudButton>
     </MudCardContent>
 </MudCard>
-</Animate>
-<br />
 
 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
 <MudTable Style="color: white" Elevation="25" Items="candidates">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Loans</MudText>
         <MudSpacer />
-        <MudTextField @bind-Value="searchString" Placeholder="Search for Categories..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField @bind-Value="searchString" Placeholder="Search for Candidates..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Candidate Number</MudTh>
@@ -38,7 +75,6 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Candidate Number">@context.CandidateNumber</MudTd>
-
         <MudTd DataLabel="">
             <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
             <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
@@ -59,13 +95,14 @@
     </YesButton>
 </MudMessageBox>
 
+
 @code{
     private string searchString = "";
     private Candidate candidate = new Candidate();
     private List<Candidate> candidates = new List<Candidate>();
     protected override async Task OnInitializedAsync()
     {
-            
+        candidate.PersonalDetails = new PersonalDetails();  
     }
 
     private void Update(Candidate candidate)
@@ -91,5 +128,13 @@
     }
 
 
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            files.Add(file);
+        }
+        //TODO upload the files to the server
+    }
 }
-

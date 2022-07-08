@@ -5,6 +5,7 @@
 
 <MudLayout>
     <MudAppBar Elevation="25" Color="Color.Surface">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3" />
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudImage Src="images/logo.png" Height="70" Width="80" />
         </MudHidden>
@@ -27,15 +28,15 @@
             </ChildContent>
         </MudMenu>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="25" ClipMode="DrawerClipMode.Always">
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="25" ClipMode="DrawerClipMode.Docked">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudToolBar DisableGutters="true">
-                <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3" />
-                <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
-                <MudSpacer />
+                
+                @*<MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+                <MudSpacer />*@
             </MudToolBar>
         </MudHidden>
         <MudContainer MaxWidth="MaxWidth.False" Class="mt-4">
@@ -62,9 +63,9 @@
         StateHasChanged();
     }
 
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Personal", href: "#"),
-        new BreadcrumbItem("Dashboard", href: "#"),
-    };
+    //private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    //{
+    //    new BreadcrumbItem("Personal", href: "#"),
+    //    new BreadcrumbItem("Dashboard", href: "#"),
+    //};
 }

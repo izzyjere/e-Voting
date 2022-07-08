@@ -28,12 +28,18 @@ namespace ICTAZEVoting.BlockChain.Network
                     else
                     {
                         var newBlockChain = JsonConvert.DeserializeObject<Models.BlockChain>(e.Data);
-                        var myChain = NodeService.Storage.GetBlockChain();
-                        var newVotes = new List<Vote>();
+                        var myChain = NodeService.Storage.GetBlockChain();                            
+                        
                         //Check block chain validity
                         if (newBlockChain.IsValid() && newBlockChain.Chain.Count > myChain.Chain.Count)
                         {
                             //:TODO
+                            var newVotes = new List<Vote>();
+                            newVotes.AddRange(newBlockChain.PendingVotes);
+                            newVotes.AddRange(myChain.PendingVotes);
+                            newBlockChain.PendingVotes = newVotes;
+                            NodeService.Storage.UpdateBlockChain(newBlockChain);
+
                         }
 
                     }

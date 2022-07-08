@@ -12,7 +12,10 @@ namespace ICTAZEVoting.BlockChain.Models
         }
         public void AddVote(Vote vote)
         {
-            //
+            if(HasVoted(vote.VoterId))
+            {
+                return;
+            }
             PendingVotes.Add(vote);
         }
         public void ProcessPendingVotes()
@@ -54,6 +57,10 @@ namespace ICTAZEVoting.BlockChain.Models
         public Block GetLatestBlock()
         {
             return Chain[Chain.Count - 1];
+        }
+        bool HasVoted(Guid voterId)
+        {
+            return Chain.Any(b=>b.Data.VoterId==voterId);
         }
         /// <summary>
         /// Counts the votes for a particular candidate

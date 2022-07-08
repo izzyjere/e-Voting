@@ -33,13 +33,7 @@ namespace ICTAZEVoting.BlockChain.Network
                         //Check block chain validity
                         if (newBlockChain.IsValid() && newBlockChain.Chain.Count > myChain.Chain.Count)
                         {
-                            var newVote = newBlockChain.PendingVote;
-                            if (newVote != null)
-                            {
-                                myChain.PendingVote = newVote;
-                                NodeService.Storage.UpdateBlockChain(myChain);
-                            }
-
+                            //:TODO
                         }
 
                     }

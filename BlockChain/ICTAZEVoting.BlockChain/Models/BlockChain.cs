@@ -5,21 +5,31 @@ namespace ICTAZEVoting.BlockChain.Models
     public class BlockChain
     {
         public IList<Block> Chain { get; set; }
-        public Vote PendingVote { get; set; } = new();
+        public List<Vote> PendingVotes { get; set; } = new();
         public BlockChain()
         {
             InitializeChain();
-
         }
         public void AddVote(Vote vote)
         {
-            PendingVote = vote;
+            //
+            PendingVotes.Add(vote);
         }
-        public void ProcessPendingVote()
-        {
-            Block block = new(DateTime.Now,GetLatestBlock().Hash,PendingVote);
-            AddBlock(block);
-            PendingVote = new();
+        public void ProcessPendingVotes()
+        {   
+            if(!PendingVotes.Any())
+            {
+                return;
+            }
+            foreach(var vote in PendingVotes)
+            {
+                Block block = new(DateTime.Now, GetLatestBlock().Hash, vote);
+                //Verify Validity of block
+                //Proof of work etc.
+                AddBlock(block);
+            }
+            
+            PendingVotes = new();
         }
         public void InitializeChain()
         {
@@ -36,6 +46,10 @@ namespace ICTAZEVoting.BlockChain.Models
         public void AddGenesisBlock()
         {
             Chain.Add(CreateGenesisBlock());
+        }
+        public List<Block> GetLatestBlocks(int count)
+        {
+            return Chain.TakeLast(count).ToList();
         }
         public Block GetLatestBlock()
         {

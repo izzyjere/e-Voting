@@ -1,4 +1,5 @@
 ﻿using ICTAZEvoting.Shared.Models;
+using ICTAZEvoting.Shared.Wrapper;
 
 using ICTAZEVoting.BlockChain.IO;
 using ICTAZEVoting.BlockChain.Models;
@@ -25,25 +26,22 @@ namespace ICTAZEVoting.BlockChain.Network
         WebSocketServer server = null; 
         protected override void OnMessage(MessageEventArgs e)
         {
-            if (e.Data == "Hi Node.")
+            var message = JsonConvert.DeserializeObject<NetworkMessage>(e.Data);
+            if (message.Type == MessageType.Greeting)
             {
-                Console.WriteLine(e.Data);
+                var node = JsonConvert.DeserializeObject<Node>(message.Payload);
+                NodeService.Add(node.IPAddress, new WebSocket(node.IPAddress));
+                Console.WriteLine("New Node Registered");
                 Send("Hi too Node.");
             }
-            else
+            else 
             {
-                var newBlockChain = JsonConvert.DeserializeObject<Models.BlockChain>(e.Data);
+                var newBlockChain = JsonConvert.DeserializeObject<Models.BlockChain>(message.Payload);
                 var myChain = NodeService.Storage.GetBlockChain();              
                 //Check block chain validity
                 if (newBlockChain.IsValid()&&newBlockChain.Chain.Count>myChain.Chain.Count)
                 {
-                    var newVote = newBlockChain.PendingVote;
-                    if(newVote != null)
-                    {
-                        myChain.PendingVote = newVote;
-                        NodeService.Storage.UpdateBlockChain(myChain);
-                    }
-                   
+                    var difference = newBlockChain.Chain.Count - myChain.Chain.Count;                     
                 }
                 if(!chainSynced)
                 {

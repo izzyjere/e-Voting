@@ -20,6 +20,7 @@ namespace ICTAZEVoting.BlockChain.Network
         {
             NodeInstance = new Node { IPAddress = IpAddress, Port = portNumber, NodeId = Guid.NewGuid() };
             Storage = new(storagePath);
+
             //:TODO  Register node with the network
             RegisterNode();
 
@@ -31,5 +32,6 @@ namespace ICTAZEVoting.BlockChain.Network
                 item.Value.Send(JsonConvert.SerializeObject(NodeInstance));
             }
         }
+        
     }
 }

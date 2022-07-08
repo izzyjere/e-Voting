@@ -19,7 +19,7 @@ namespace ICTAZEVoting.BlockChain.Extensions
     /// </summary>
     /// <param name="database"></param>
     /// <param name="blockChain"></param>
-    /// <returns>The Secret Key as Base64 String</returns>
+    /// <returns>The Secret Key and IV as Base64 String Array</returns>
         public static string[] SaveEncrypted(this DB database, Models.BlockChain blockChain)
         {
             try
@@ -40,6 +40,7 @@ namespace ICTAZEVoting.BlockChain.Extensions
                  return null;              
             }
         }
+
         public static Models.BlockChain GetEncrypted(this DB database, string key,string IV)
         {
             var keyAsBytes = Convert.FromBase64String(key);

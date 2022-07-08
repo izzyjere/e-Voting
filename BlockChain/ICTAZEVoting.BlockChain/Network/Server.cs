@@ -32,7 +32,7 @@ namespace ICTAZEVoting.BlockChain.Network
                 var node = JsonConvert.DeserializeObject<Node>(message.Payload);
                 NodeService.Add(node.IPAddress, new WebSocket(node.IPAddress));
                 Console.WriteLine("New Node Registered");
-                Send("Hi too Node.");
+                Send(JsonConvert.SerializeObject(new NetworkMessage { Type=MessageType.Greeting,Payload=JsonConvert.SerializeObject(NodeService.NodeInstance)}));
             }
             else 
             {

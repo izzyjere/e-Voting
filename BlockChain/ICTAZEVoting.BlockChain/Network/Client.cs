@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+using ICTAZEvoting.Shared.Wrapper;
 
 namespace ICTAZEVoting.BlockChain.Network
 {
@@ -45,8 +46,8 @@ namespace ICTAZEVoting.BlockChain.Network
                     }
                 };
                 server.Connect();
-                server.Send("Hi Server");
-                server.Send(JsonConvert.SerializeObject(NodeService.Storage.GetBlockChain()));
+                server.Send(JsonConvert.SerializeObject(new NetworkMessage { Type = MessageType.Greeting, Payload = JsonConvert.SerializeObject(NodeService.NodeInstance) }));
+                server.Send(JsonConvert.SerializeObject(new NetworkMessage { Type = MessageType.BlockChain, Payload = JsonConvert.SerializeObject(NodeService.Storage.GetBlockChain()) }));
                 NodeService.Add(nodeAddress, server);
             }
         }

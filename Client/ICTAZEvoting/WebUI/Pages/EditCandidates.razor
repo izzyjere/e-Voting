@@ -6,6 +6,7 @@
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
 
+<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
 <MudCard Elevation="25">
     <MudCardHeader>
         <CardHeaderContent>
@@ -19,8 +20,10 @@
         <MudButton Variant="Variant.Filled" Color="Color.Info">Save Candidate</MudButton>
     </MudCardContent>
 </MudCard>
+</Animate>
 <br />
 
+<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
 <MudTable Style="color: white" Elevation="25" Items="candidates">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Loans</MudText>
@@ -42,6 +45,7 @@
         </MudTd>
     </RowTemplate>
 </MudTable>
+</Animate>
 
 <MudScrollToTop>
     <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />

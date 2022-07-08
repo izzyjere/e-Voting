@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{8D8830AA-6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{12C9F872-CED0-4A5C-8626-715B3A3E1B31}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{081B6AC6-0D36-44A3-981E-F28B2CD534B1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{081B6AC6-0D36-44A3-981E-F28B2CD534B1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICTAZEVoting.Shared", "Shared\ICTAZEvoting.Shared\ICTAZEVoting.Shared.csproj", "{799ABAF5-A1D4-4FF1-9DCD-9DE6EE4C727A}"
 EndProject
@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICTAZEVoting.Api", "Api\ICT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICTAZEvoting", "Client\ICTAZEvoting\ICTAZEvoting.csproj", "{A746765C-81A0-4946-8470-EE6BBC76E9B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICTAZEVoting.BlockChain", "BlockChain\ICTAZEVoting.BlockChain\ICTAZEVoting.BlockChain.csproj", "{D352D6D0-A696-4DEB-A9C7-C6C4C3461991}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICTAZEVoting.BlockChain", "BlockChain\ICTAZEVoting.BlockChain\ICTAZEVoting.BlockChain.csproj", "{D352D6D0-A696-4DEB-A9C7-C6C4C3461991}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

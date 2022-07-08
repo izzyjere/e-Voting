@@ -1,0 +1,91 @@
+﻿@page "/voters"
+@using ICTAZEvoting.Shared
+@using System.Linq
+@using System
+@using ICTAZEvoting.Shared.Models
+@inject MudBlazor.ISnackbar snackBar
+@inject IJSRuntime JsRuntime
+
+<MudCard Elevation="25">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add / Edit Voters</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        @*<MudTextField @bind-Value="candidate.PersonalDetails.FirstName" Label="FirstName" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+        <MudTextField @bind-Value="candidate.PersonalDetails.LastName" Label="Category Description" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>*@
+        <br />
+        <MudButton Variant="Variant.Filled" Color="Color.Info">Save Voter</MudButton>
+    </MudCardContent>
+</MudCard>
+<br />
+
+<MudTable Style="color: white" Elevation="25" Items="voters">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Loans</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search for Categories..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Candidate Number</MudTh>
+        <MudTh>First Name</MudTh>
+        <MudTh>Last Name</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Candidate Number">@context.VoterNumber</MudTd>
+
+        <MudTd DataLabel="">
+            <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+<MudScrollToTop>
+    <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
+</MudScrollToTop>
+<MudMessageBox @ref="mbox" Title="Warning" CancelText="Cancel">
+    <MessageContent>
+        Deleting can <b><i>not</i></b> be undone!
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+    </YesButton>
+</MudMessageBox>
+
+@code{
+    private string searchString = "";
+    private Voter voter = new Voter();
+    private List<Voter> voters = new List<Voter>();
+    protected override async Task OnInitializedAsync()
+    {
+            
+    }
+
+    private void Update(Voter voter)
+    {
+        Update(voter);
+        voter = new Voter();
+        snackBar.Add("Voter Saved.", Severity.Success);
+    }
+    private void Edit(Guid id)
+    {
+        voter = voters.FirstOrDefault(c => c.Id == id);
+    }
+
+    MudMessageBox mbox { get; set; }
+    private async Task Delete(Guid id)
+    {
+        bool? confirmed = await mbox.Show();
+        if (confirmed == true)
+        {
+            await Delete(id);
+            snackBar.Add("Loan Deleted.", Severity.Success);
+        }
+    }
+
+
+}
+

@@ -50,10 +50,8 @@
             this.ClientSize = new System.Drawing.Size(920, 401);
             this.Controls.Add(this.blazorWebView1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.Name = "Main";
             this.Text = "ICTAZ E-VOTING SYSTEM";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Main_Load);
             this.ResumeLayout(false);
 

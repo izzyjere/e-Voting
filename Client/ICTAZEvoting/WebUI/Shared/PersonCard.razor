@@ -1,4 +1,5 @@
-﻿<MudCard Elevation="0" Square="true" Class="@Class" Style="@Style">
+﻿<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+<MudCard Elevation="0" Square="true" Class="@Class" Style="@Style">
     <MudCardHeader>
         <CardHeaderAvatar>
             <MudAvatar Image="images/avatar_jonny.jpg" />
@@ -9,6 +10,7 @@
         </CardHeaderContent>
     </MudCardHeader>
 </MudCard>
+</Animate>
 
 @code {
     [Parameter] public string Class { get; set; }

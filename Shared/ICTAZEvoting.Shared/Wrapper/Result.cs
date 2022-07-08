@@ -3,6 +3,16 @@ using System.Threading.Tasks;
 
 namespace ICTAZEvoting.Shared.Wrapper
 {
+    public class NetworkMessage
+    {   
+        public MessageType Type { get; set; }
+        public string Payload { get; set; }
+    }
+    public enum MessageType
+    {
+        Greeting,
+        BlockChain
+    }
     public class Result : IResult
     {
         public Result()

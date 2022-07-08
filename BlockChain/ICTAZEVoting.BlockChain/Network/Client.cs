@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+using ICTAZEvoting.Shared.Wrapper;
 
 namespace ICTAZEVoting.BlockChain.Network
 {
@@ -21,32 +22,35 @@ namespace ICTAZEVoting.BlockChain.Network
                 var server = new WebSocketSharp.WebSocket(nodeAddress);
                 server.OnMessage += (sender, e) =>
                 {
-                    if (e.Data == "Hi too Node.")
+                    var message = JsonConvert.DeserializeObject<NetworkMessage>(e.Data);
+                    if (message.Type == MessageType.Greeting) 
                     {
-                        Console.WriteLine(e.Data);
+                       
+                        Console.WriteLine("Response Received.");
+                        
                     }
                     else
                     {
                         var newBlockChain = JsonConvert.DeserializeObject<Models.BlockChain>(e.Data);
-                        var myChain = NodeService.Storage.GetBlockChain();
-                        var newVotes = new List<Vote>();
+                        var myChain = NodeService.Storage.GetBlockChain();                            
+                        
                         //Check block chain validity
                         if (newBlockChain.IsValid() && newBlockChain.Chain.Count > myChain.Chain.Count)
                         {
-                            var newVote = newBlockChain.PendingVote;
-                            if (newVote != null)
-                            {
-                                myChain.PendingVote = newVote;
-                                NodeService.Storage.UpdateBlockChain(myChain);
-                            }
+                            //:TODO
+                            var newVotes = new List<Vote>();
+                            newVotes.AddRange(newBlockChain.PendingVotes);
+                            newVotes.AddRange(myChain.PendingVotes);
+                            newBlockChain.PendingVotes = newVotes;
+                            NodeService.Storage.UpdateBlockChain(newBlockChain);
 
                         }
 
                     }
                 };
                 server.Connect();
-                server.Send("Hi Server");
-                server.Send(JsonConvert.SerializeObject(NodeService.Storage.GetBlockChain()));
+                server.Send(JsonConvert.SerializeObject(new NetworkMessage { Type = MessageType.Greeting, Payload = JsonConvert.SerializeObject(NodeService.NodeInstance) }));
+                server.Send(JsonConvert.SerializeObject(new NetworkMessage { Type = MessageType.BlockChain, Payload = JsonConvert.SerializeObject(NodeService.Storage.GetBlockChain()) }));
                 NodeService.Add(nodeAddress, server);
             }
         }

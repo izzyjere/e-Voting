@@ -20,6 +20,7 @@ namespace ICTAZEVoting.BlockChain.Extensions
     /// <param name="database"></param>
     /// <param name="blockChain"></param>
     /// <returns>The Secret Key and IV as Base64 String Array</returns>
+    
         public static string[] SaveEncrypted(this DB database, Models.BlockChain blockChain)
         {
             try
@@ -40,7 +41,13 @@ namespace ICTAZEVoting.BlockChain.Extensions
                  return null;              
             }
         }
-
+        public static void UpdateBlock(this DB database, Models.BlockChain blockChain, string key, string IV)
+        {
+            var itemJson = JsonConvert.SerializeObject(blockChain);//convert blockcahin to json   
+            byte[] encrypted = EncryptStringToBytes_Aes(itemJson, Convert.FromBase64String(key), Convert.FromBase64String(IV));  //encrypt the blockchain
+            var base64Json = Convert.ToBase64String(encrypted);          
+            database.Put(key, base64Json);
+        }
         public static Models.BlockChain GetEncrypted(this DB database, string key,string IV)
         {
             var keyAsBytes = Convert.FromBase64String(key);

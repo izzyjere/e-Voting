@@ -1,5 +1,7 @@
 ﻿using ICTAZEVoting.BlockChain.IO;
 
+using Newtonsoft.Json;
+
 using WebSocketSharp;
 
 namespace ICTAZEVoting.BlockChain.Network
@@ -17,8 +19,19 @@ namespace ICTAZEVoting.BlockChain.Network
         public static void InitializeNode(string storagePath, string IpAddress, int portNumber)
         {
             NodeInstance = new Node { IPAddress = IpAddress, Port = portNumber, NodeId = Guid.NewGuid() };
+            Storage = new(storagePath);
+
             //:TODO  Register node with the network
+            RegisterNode();
 
         }
+        static void RegisterNode()
+        {
+            foreach (var item in Nodes)
+            {
+                item.Value.Send(JsonConvert.SerializeObject(NodeInstance));
+            }
+        }
+        
     }
 }

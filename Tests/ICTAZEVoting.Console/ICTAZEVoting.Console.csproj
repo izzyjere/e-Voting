@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BlockChain\ICTAZEVoting.BlockChain\ICTAZEVoting.BlockChain.csproj" />
+    <ProjectReference Include="..\..\Core\ICTAZEVoting.Core\ICTAZEVoting.Core.csproj" />
+    <ProjectReference Include="..\..\Shared\ICTAZEvoting.Shared\ICTAZEVoting.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

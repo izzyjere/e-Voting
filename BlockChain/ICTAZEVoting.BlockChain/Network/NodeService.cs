@@ -8,7 +8,8 @@ namespace ICTAZEVoting.BlockChain.Network
 {
     public static class NodeService
     {
-        public static Dictionary<string, WebSocket> Nodes { get; }
+        public static Dictionary<string, WebSocket> Nodes { get; } = new();
+        static Server server;
         public static void Add(string nodeAddress, WebSocket server)
         {
             if(!Nodes.ContainsKey(nodeAddress)|| !nodeAddress.Equals(NodeInstance.IPAddress))
@@ -16,11 +17,12 @@ namespace ICTAZEVoting.BlockChain.Network
         }
         public static StorageContext  Storage { get; private set; }
         public static Node NodeInstance { get; private set; }
-        public static void InitializeNode(string storagePath, string IpAddress, int portNumber)
+        public static void InitializeNode(string storagePath, string address, int portNumber)
         {
-            NodeInstance = new Node { IPAddress = IpAddress, Port = portNumber, NodeId = Guid.NewGuid() };
+            server = new Server(portNumber,address);
+            NodeInstance = new Node (server.GetIpAddress(),portNumber);           
             Storage = new(storagePath);
-
+            server.Start();
             //:TODO  Register node with the network
             RegisterNode();
 

@@ -8,7 +8,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.EmojiPeople" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
                 <div>
                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Candidates</MudText>
-                    <MudText Typo="Typo.h5">125,000</MudText>
+                    <MudText Typo="Typo.h5">10</MudText>
                 </div>
             </MudPaper>
         </Animate>
@@ -20,7 +20,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.WhereToVote" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
                 <div>
                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Voters</MudText>
-                    <MudText Typo="Typo.h5">150,000</MudText>
+                    <MudText Typo="Typo.h5">7,000,000</MudText>
                 </div>
             </MudPaper>
         </Animate>
@@ -32,7 +32,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.HowToVote" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
                 <div>
                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Votes Casted</MudText>
-                    <MudText Typo="Typo.h5">46,000</MudText>
+                    <MudText Typo="Typo.h5">4,000</MudText>
                 </div>
             </MudPaper>
         </Animate>
@@ -49,33 +49,52 @@
         </Animate>
     </MudItem>
 
+    
     <MudItem xs="12" sm="12" md="6">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Presidential > Consolidated</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
         <MudPaper Class="pa-4">
-            <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@labels" Width="300px" Height="300px" />
+            <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@President" Width="300px" Height="300px" />
         </MudPaper>
-        <MudPaper Class="pa-4 mt-2 d-flex justify-center">
-            <MudButton OnClick="AddDataSize" Variant="Variant.Filled" Color="Color.Primary">Add</MudButton>
-            <MudButton OnClick="RemoveDataSize" Variant="Variant.Filled" Color="Color.Secondary">Remove</MudButton>
-        </MudPaper>
-    </MudItem>
+        </MudCard>
+        </Animate>
+   </MudItem>
+        
 
     <MudItem xs="12" sm="12" md="6">
-        <MudPaper Class="pa-4">
-            <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@labels" Width="300px" Height="300px" />
-        </MudPaper>
-        <MudPaper Class="pa-4 mt-2 d-flex justify-center">
-            <MudButton OnClick="AddDataSize" Variant="Variant.Filled" Color="Color.Primary">Add</MudButton>
-            <MudButton OnClick="RemoveDataSize" Variant="Variant.Filled" Color="Color.Secondary">Remove</MudButton>
-        </MudPaper>
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Presidential > Province</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudPaper Class="pa-4">
+                    <div>
+                        <MudChart ChartType="ChartType.Bar" ChartSeries="@PresidentProvince" @bind-SelectedIndex="Index3" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+                    </div>
+                </MudPaper>
+            </MudCard>
+        </Animate>
     </MudItem>
-        <MudItem xs="12" sm="12" md="6">
+    <MudItem xs="12" sm="12" md="6">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Voters Disagreggeted by Gender</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
         <MudPaper Class="pa-4">
-            <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@labels" Width="300px" Height="300px" />
+            <MudChart ChartType="ChartType.Pie" InputData="@data3" @bind-SelectedIndex="Index3" InputLabels="@Gender" Width="300px" Height="300px" />
         </MudPaper>
-        <MudPaper Class="pa-4 mt-2 d-flex justify-center">
-            <MudButton OnClick="AddDataSize" Variant="Variant.Filled" Color="Color.Primary">Add</MudButton>
-            <MudButton OnClick="RemoveDataSize" Variant="Variant.Filled" Color="Color.Secondary">Remove</MudButton>
-        </MudPaper>
+        </MudCard>
+        </Animate>
     </MudItem>
 </MudGrid>
 
@@ -87,12 +106,11 @@
 
 @code {
 
-  private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
+    private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
     int dataSize = 4;
     double[] data = { 77, 25, 20, 5 };
-    string[] labels = { "Uranium", "Plutonium", "Thorium", "Caesium", "Technetium", "Promethium",
-                        "Polonium", "Astatine", "Radon", "Francium", "Radium", "Actinium", "Protactinium",
-                        "Neptunium", "Americium", "Curium", "Berkelium", "Californium", "Einsteinium", "Mudblaznium" };
+    string[] President = { "Clarence Simukanzye", "Wisdom Jere", "Ndanji Bupe Soko", "Bulaya Mwanaute" };
+
 
     Random random = new Random();
 
@@ -121,4 +139,21 @@
             RandomizeData();
         }
     }
+
+
+    private int Index2 = -1; //default value cannot be 0 -> first selectedindex is 0.
+
+    public List<ChartSeries> PresidentProvince = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "Clarence simukanzye", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
+        new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
+        new ChartSeries() { Name = "Ndanji Bupe Soko", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18, 10 } },
+        new ChartSeries() { Name = "Bulaya Mwanaute", Data = new double[] { 20, 15, 2, 6, 10, 50, 19, 46, 80, 4 } },
+    };
+    public string[] XAxisLabels = { "Northen", "North Western", "Luapula", "Lusaka", "Muchinga", "Central", "Southern", "Eastern", "Copperbelt", "Western" };
+
+    private int Index3 = -1; //default value cannot be 0 -> first selectedindex is 0.
+    int dataSize3 = 2;
+    double[] data3 = { 77, 25 };
+    string[] Gender = { "Male", "Female", "Other" };
 }

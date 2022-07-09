@@ -91,6 +91,21 @@
                     </CardHeaderContent>
                 </MudCardHeader>
         <MudPaper Class="pa-4">
+            <MudChart ChartType="ChartType.Pie" InputData="@data4" @bind-SelectedIndex="Index4" InputLabels="@Gender2" Width="300px" Height="300px" />
+        </MudPaper>
+        </MudCard>
+        </Animate>
+    </MudItem>
+
+    <MudItem xs="12" sm="8" md="6">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Voters Disagreggeted by Gender</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+        <MudPaper Class="pa-4">
             <MudChart ChartType="ChartType.Pie" InputData="@data3" @bind-SelectedIndex="Index3" InputLabels="@Gender" Width="300px" Height="300px" />
         </MudPaper>
         </MudCard>
@@ -154,6 +169,11 @@
 
     private int Index3 = -1; //default value cannot be 0 -> first selectedindex is 0.
     int dataSize3 = 2;
-    double[] data3 = { 77, 25 };
+    double[] data3 = { 77, 62 };
     string[] Gender = { "Male", "Female", "Other" };
+
+    private int Index4 = -1; //default value cannot be 0 -> first selectedindex is 0.
+    int dataSize4 = 2;
+    double[] data4 = { 77, 25 };
+    string[] Gender2 = { "Male", "Female", "Other" };
 }

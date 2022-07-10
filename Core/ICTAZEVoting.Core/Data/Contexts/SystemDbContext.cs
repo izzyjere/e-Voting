@@ -5,6 +5,7 @@ using ICTAZEVoting.Core.Models;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ICTAZEVoting.Shared.Models;
 
 namespace ICTAZEVoting.Core.Data.Contexts
 {
@@ -98,7 +99,44 @@ namespace ICTAZEVoting.Core.Data.Contexts
 
             #endregion
             #region Domain
+            modelBuilder.Entity<Voter>(e =>
+            {
+                e.ToTable("Voters");
+                e.OwnsOne(v => v.PersonalDetails, p =>
+                {
+                    p.ToTable("VoterPersonalDetails");
+                    p.Property(p=>p.OwnerId);                     
+                });
+
+            });
+            modelBuilder.Entity<Candidate>(e =>
+            {
+                e.ToTable("Candidates");
+                e.OwnsOne(v => v.PersonalDetails, p =>
+                {
+                    p.ToTable("CandidatePersonalDetails");
+                    p.Property(p => p.OwnerId);
+                });                
+
+            });
             
+            modelBuilder.Entity<Election>(e =>
+            {
+                e.ToTable("Elections");
+                e.OwnsMany(e => e.Positions, ep =>
+                {
+                    ep.ToTable("ElectionPositions");
+                    ep.Property(p => p.ElectionId);
+                    ep.WithOwner(p => p.Election);
+                });
+                e.OwnsMany(e => e.Voters, ep =>
+                {
+                    ep.ToTable("ElectionVoters");
+                    ep.Property(p => p.ElectionId);
+                    ep.WithOwner(p => p.Election);
+                });
+            });
+            modelBuilder
             #endregion
         }
     }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ICTAZEVoting.Shared.Models
 {
-    public class CandidatePosition : Entity<Guid>
+    public class ElectionPosition 
     {
         public string Position { get; set; }
         public Guid ElectionId { get; set; }

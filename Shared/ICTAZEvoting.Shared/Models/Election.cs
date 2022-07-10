@@ -16,7 +16,7 @@ namespace ICTAZEVoting.Shared.Models
         public double Duration { get; set; }
         public ElectionStatus Status { get; set; } 
         public List<ElectionVoter> Voters { get; set; }
-        public List<CandidatePosition> Positions { get; set; }            
+        public List<ElectionPosition> Positions { get; set; }            
         public ElectionType Type { get; set; }
         public Election()
         {

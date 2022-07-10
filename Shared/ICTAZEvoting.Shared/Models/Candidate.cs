@@ -8,7 +8,7 @@ namespace ICTAZEVoting.Shared.Models
     {
         public string CandidateNumber { get; set; }
         public Guid CandidatePositionId { get; set; }
-        public virtual CandidatePosition Position { get; set; }
+        public virtual ElectionPosition Position { get; set; }
         public PersonalDetails PersonalDetails { get; set; }
     }
 }

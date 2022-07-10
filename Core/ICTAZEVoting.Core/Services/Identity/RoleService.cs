@@ -16,20 +16,18 @@ namespace ICTAZEVoting.Core.Services.Identity;
 public class RoleService : IRoleService
 {
     private readonly RoleManager<Role> _roleManager;
-    private readonly UserManager<User> _userManager;   
-    private readonly ICurrentUserService _currentUserService;
+    private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
 
     public RoleService(
         RoleManager<Role> roleManager,
         IMapper mapper,
-        UserManager<User> userManager,
-        ICurrentUserService currentUserService)
+        UserManager<User> userManager        )
     {
         _roleManager = roleManager;
         _mapper = mapper;
         _userManager = userManager;        
-        _currentUserService = currentUserService;
+       
     }
     public async Task<Result<string>> DeleteAsync(int id)
     {

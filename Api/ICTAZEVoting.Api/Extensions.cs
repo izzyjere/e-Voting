@@ -21,6 +21,8 @@ using ICTAZEVoting.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using ICTAZEVoting.Shared.Models;
 using Microsoft.EntityFrameworkCore;
+using ICTAZEVoting.Core.Data.Repositories;
+using System.Data;
 
 namespace ICTAZEVoting.Api
 {
@@ -44,9 +46,10 @@ namespace ICTAZEVoting.Api
                 var result = await unitOfWork.Repository<Voter>().Entities().ToListAsync();
                 return Result<IEnumerable<Voter>>.Success(result);
             });
-            app.MapGet("/voters/{id}", async (IUnitOfWork<Guid> unitOfWork,[FromRoute] string id) =>
-            {  var myGuid = Guid.Empty;
-                if(Guid.TryParse(id,out myGuid))
+            app.MapGet("/voters/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
                 {
                     var voter = await unitOfWork.Repository<Voter>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
                     if (voter == null)
@@ -58,9 +61,19 @@ namespace ICTAZEVoting.Api
                 return Result<Voter>.Fail("Not found.");
 
             });
+            app.MapPost("/voters/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity) =>
+            {
+                var result = await unitOfWork.Repository<Voter>().Add(entity);
+                return result ? Result.Success("Voter was registered.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapPut("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity) =>
+            {
+                var result = await unitOfWork.Repository<Voter>().Update(entity);
+                return result ? Result.Success("Voter details were updated.") : Result.Fail("An error has occured. Try again.");
+            });
             app.MapGet("/candidates", [Authorize(Roles = $"{RoleConstants.AdministratorRole},{RoleConstants.BasicRole}")] async (IUnitOfWork<Guid> unitOfWork) =>
             {
-                var result = await unitOfWork.Repository<Candidate>().Entities().Include(c=>c.Position).ThenInclude(p=>p.Election).Include(c=>c.PoliticalParty).ToListAsync();
+                var result = await unitOfWork.Repository<Candidate>().Entities().Include(c => c.Position).ThenInclude(p => p.Election).Include(c => c.PoliticalParty).ToListAsync();
                 return Result<IEnumerable<Candidate>>.Success(result);
             });
             app.MapGet("/candidates/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
@@ -78,9 +91,19 @@ namespace ICTAZEVoting.Api
                 return Result<Candidate>.Fail("Not found.");
 
             });
+            app.MapPost("/candidates/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Candidate entity) =>
+            {
+                var result = await unitOfWork.Repository<Candidate>().Add(entity);
+                return result ? Result.Success("Candidate was registered.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapPut("/candidates/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Candidate entity) =>
+            {
+                var result = await unitOfWork.Repository<Candidate>().Update(entity);
+                return result ? Result.Success("Candidate details were updated.") : Result.Fail("An error has occured. Try again.");
+            });
             app.MapGet("/elections", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
             {
-                var result = await unitOfWork.Repository<Election>().Entities().Include(e=>e.Voters).Include(e=>e.Positions).ThenInclude(p=>p.Candidates).ThenInclude(c=>c.PoliticalParty).ToListAsync();
+                var result = await unitOfWork.Repository<Election>().Entities().Include(e => e.Voters).Include(e => e.Positions).ThenInclude(p => p.Candidates).ThenInclude(c => c.PoliticalParty).ToListAsync();
                 return Result<IEnumerable<Election>>.Success(result);
             });
             app.MapGet("/elections/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
@@ -96,18 +119,25 @@ namespace ICTAZEVoting.Api
                     return Result<Election>.Success(election);
                 }
                 return Result<Election>.Fail("Not found.");
-
             });
-
-
+            app.MapPost("/elections/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Election entity) =>
+             {
+                 var result = await unitOfWork.Repository<Election>().Add(entity);
+                 return result ? Result.Success("Election was created.") : Result.Fail("An error has occured. Try again.");
+             });
+            app.MapPut("/elections/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Election entity) =>
+             {
+                 var result = await unitOfWork.Repository<Election>().Update(entity);
+                 return result ? Result.Success("Election was updated.") : Result.Fail("An error has occured. Try again.");
+             });
             #endregion
             return app;
         }
-        internal static IApplicationBuilder Initialize (this IApplicationBuilder app)
+        internal static IApplicationBuilder Initialize(this IApplicationBuilder app)
         {
             var scope = app.ApplicationServices.CreateScope();
             var seeder = scope.ServiceProvider.GetService<ISeeder>();
-            if(seeder == null)
+            if (seeder == null)
             {
                 throw new Exception("No Seeder was registered");
             }
@@ -140,9 +170,9 @@ namespace ICTAZEVoting.Api
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "ICTAZ VOTING SYSTEM"                    
+                    Title = "ICTAZ VOTING SYSTEM"
                 });
-        
+
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {

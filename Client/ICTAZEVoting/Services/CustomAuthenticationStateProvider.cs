@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using ICTAZEVoting.Extensions;
 using ICTAZEVoting.Shared.Responses.Identity;
+using Newtonsoft.Json.Linq;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ICTAZEVoting.Services
 {
@@ -58,11 +60,18 @@ namespace ICTAZEVoting.Services
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", savedToken.Token);
-            var state = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(GetClaimsFromJwt(savedToken.Token), "jwt")));
+            var state = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(GetAllClaims(savedToken.Token), "jwt")));
             AuthenticationStateUser = state.User;
             return state;
         }
 
+        IEnumerable<Claim> GetAllClaims(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
+            return securityToken.Claims.ToList();
+
+        }
         private IEnumerable<Claim> GetClaimsFromJwt(string jwt)
         {
             var claims = new List<Claim>();
@@ -89,8 +98,8 @@ namespace ICTAZEVoting.Services
 
                     keyValuePairs.Remove(ClaimTypes.Role);
                 }
-
             }
+
             return claims;
         }
 

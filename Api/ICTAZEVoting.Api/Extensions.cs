@@ -173,21 +173,21 @@ namespace ICTAZEVoting.Api
                  else
                  {
                      var profile = new PersonalDetails();
-                     profile = await db.Set<SystemAdmin>().Select(s=>s.PersonalDetails).FirstOrDefaultAsync(s => s.UserId == Guid.Parse(id));
+                     profile = (await db.Set<SystemAdmin>().FirstOrDefaultAsync(s => s.PersonalDetails.UserId == Guid.Parse(id))).PersonalDetails;
                      if(profile != null)
                      {
                          return Result<UserProfileResponse>.Success(new UserProfileResponse { FullName=profile.FullName, ProfilePicture=profile.PictureUrl });
                      }
                      else
                      {
-                         profile = await db.Set<Voter>().Select(s => s.PersonalDetails).FirstOrDefaultAsync(s => s.UserId == Guid.Parse(id));
+                         profile = profile = (await db.Set<Voter>().FirstOrDefaultAsync(s => s.PersonalDetails.UserId == Guid.Parse(id))).PersonalDetails; ;
                          if (profile != null)
                          {
                              return Result<UserProfileResponse>.Success(new UserProfileResponse { FullName = profile.FullName, ProfilePicture = profile.PictureUrl });
                          }
                          else
                          {
-                             profile = await db.Set<Candidate>().Select(s => s.PersonalDetails).FirstOrDefaultAsync(s => s.UserId == Guid.Parse(id));
+                             profile = (await db.Set<Candidate>().FirstOrDefaultAsync(s => s.PersonalDetails.UserId == Guid.Parse(id))).PersonalDetails;
                              if (profile != null)
                              {
                                  return Result<UserProfileResponse>.Success(new UserProfileResponse { FullName = profile.FullName, ProfilePicture = profile.PictureUrl });

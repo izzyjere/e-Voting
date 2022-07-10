@@ -15,10 +15,10 @@
         <MudSpacer />
         <MudMenu Direction="Direction.Left" OffsetX="true" Dense="true" Class="mt-1 ml-4">
             <ActivatorContent>
-                <MudAvatar Image="images/avatar_jonny.jpg" />
+                <MudAvatar Image="@Profile.ProfilePicture" />
             </ActivatorContent>
             <ChildContent>
-                <PersonCard Class="mt-n2" />
+                <PersonCard Profile="@Profile" Class="mt-n2" />
                 <MudDivider Class="mb-2" />
                 <MudListItem Text="Account" Icon="@Icons.Material.Outlined.Person" Href="/personal/account" />
                 <MudListItem Text="Logout" Icon="@Icons.Material.Outlined.Login" Href="/pages/authentication/login" />
@@ -26,7 +26,7 @@
         </MudMenu>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="25" ClipMode="DrawerClipMode.Docked">
-        <NavMenu />
+        <NavMenu Profile="@Profile" />
     </MudDrawer>
     <MudMainContent>
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
@@ -46,20 +46,33 @@
 </MudScrollToTop>
 
 @code {
-    
+
 
     public bool _drawerOpen = true;
-
+    UserProfileResponse Profile = new();
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
 
-    protected override void OnInitialized()
+    ClaimsPrincipal claimsPrincipal = new();
+    [CascadingParameter] Task<AuthenticationState> authenticationState { get; set; }
+ 
+    protected override async Task OnInitializedAsync()
     {
-        StateHasChanged();
-    }
+        claimsPrincipal = (await authenticationState).User;
+        if (claimsPrincipal.Identity.IsAuthenticated)
+        {  
+            var req = new UserProfileRequest {Id = claimsPrincipal.GetUserId()};
+            var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);            
+            var r = await request.ToResult<UserProfileResponse>();
+            if(r.Succeeded)
+            {
+                Profile = r.Data;
+            }
 
+        }
+    }
     //private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     //{
     //    new BreadcrumbItem("Personal", href: "#"),

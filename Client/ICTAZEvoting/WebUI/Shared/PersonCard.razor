@@ -1,15 +1,14 @@
-﻿@using System.Net.Http.Json
-
+﻿
 <AuthorizeView>
     <Authorized>       
         <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
             <MudCard Elevation="0" Square="true" Class="@Class" Style="@Style">
                 <MudCardHeader>
                     <CardHeaderAvatar>
-                        <MudAvatar Image="@userProfile.ProfilePicture" />
+                        <MudAvatar Image="@Profile.ProfilePicture" />
                     </CardHeaderAvatar>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.body2">@userProfile.FullName</MudText>
+                        <MudText Typo="Typo.body2">@Profile.FullName</MudText>
                         <MudText Typo="Typo.caption">@context.User.GetRole()</MudText>
                     </CardHeaderContent>
                 </MudCardHeader>
@@ -22,19 +21,6 @@
 @code {
     [Parameter] public string Class { get; set; }
     [Parameter] public string Style { get; set; }
-    UserProfileResponse userProfile = new();
-    ClaimsPrincipal claimsPrincipal = new();
-    [CascadingParameter] Task<AuthenticationState> authenticationState { get; set; }
-    string userId = string.Empty;
-    protected override async Task OnInitializedAsync()
-    {
-        claimsPrincipal = (await authenticationState).User;
-        if (claimsPrincipal.Identity.IsAuthenticated)
-        {  
-            var req = new UserProfileRequest {Id = claimsPrincipal.GetUserId()};
-            var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);
-            var res = await request.ToResult<UserProfileResponse>();
-            userProfile = res.Data;
-        }
-    }
+    [Parameter] public UserProfileResponse Profile { get; set; }
+    
 }

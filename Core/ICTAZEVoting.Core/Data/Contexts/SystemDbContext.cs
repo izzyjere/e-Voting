@@ -99,6 +99,24 @@ namespace ICTAZEVoting.Core.Data.Contexts
 
             #endregion
             #region Domain
+            modelBuilder.Entity<Election>(e =>
+            {
+                e.ToTable("Elections");                
+                e.OwnsMany(e => e.Voters, ep =>
+                {
+                    ep.ToTable("ElectionVoters");
+                    ep.Property(p => p.ElectionId);
+                    ep.WithOwner(p => p.Election);
+                });
+            });
+            modelBuilder.Entity<ElectionPosition>(e=>
+            {
+                e.ToTable("ElectionPositions");                  
+            });
+            modelBuilder.Entity<PoliticalParty>(e =>
+            {
+                e.ToTable("PoliticalParty");
+            });
             modelBuilder.Entity<Voter>(e =>
             {
                 e.ToTable("Voters");
@@ -112,6 +130,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
             modelBuilder.Entity<Candidate>(e =>
             {
                 e.ToTable("Candidates");
+               
                 e.OwnsOne(v => v.PersonalDetails, p =>
                 {
                     p.ToTable("CandidatePersonalDetails");
@@ -120,22 +139,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
 
             });
             
-            modelBuilder.Entity<Election>(e =>
-            {
-                e.ToTable("Elections");
-                e.OwnsMany(e => e.Positions, ep =>
-                {
-                    ep.ToTable("ElectionPositions");
-                    ep.Property(p => p.ElectionId);
-                    ep.WithOwner(p => p.Election);
-                });
-                e.OwnsMany(e => e.Voters, ep =>
-                {
-                    ep.ToTable("ElectionVoters");
-                    ep.Property(p => p.ElectionId);
-                    ep.WithOwner(p => p.Election);
-                });
-            });
+            
             modelBuilder.Entity<ElectionType>(e =>
             {
                 e.ToTable("ElectionTypes");

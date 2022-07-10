@@ -8,11 +8,6 @@ namespace ICTAZEVoting.Shared.Models
     {
         public string VoterNumber { get; set; }
         public PersonalDetails PersonalDetails { get; set; }
-        public string VerificationCipher { get; set; }
-        public Voter()
-        {
-            Id = Guid.NewGuid();             
-        }
-
+        public string VerificationCipher { get; set; }         
     }
 }

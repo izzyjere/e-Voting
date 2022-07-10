@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 
 using ICTAZEVoting.Shared.Interfaces;
-using ICTAZEVoting.Shared.Models;
 using ICTAZEVoting.Shared.Requests;
 using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Shared.Wrapper;
@@ -10,6 +9,7 @@ using ICTAZEVoting.Core.Models;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ICTAZEVoting.Shared.Constants;
 
 namespace ICTAZEVoting.Core.Services.Identity;
 

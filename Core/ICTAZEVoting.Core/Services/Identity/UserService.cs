@@ -2,7 +2,6 @@
 using AutoMapper;
 
 using ICTAZEVoting.Shared.Interfaces;
-using ICTAZEVoting.Shared.Models;
 using ICTAZEVoting.Shared.Requests;
 using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Shared.Wrapper;
@@ -15,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Text;
 using System.Text.Encodings.Web;
+using ICTAZEVoting.Shared.Constants;
 
 namespace ICTAZEVoting.Core.Services.Identity
 {

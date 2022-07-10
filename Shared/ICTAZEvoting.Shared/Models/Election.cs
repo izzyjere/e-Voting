@@ -17,10 +17,6 @@ namespace ICTAZEVoting.Shared.Models
         public ElectionStatus Status { get; set; } 
         public List<ElectionVoter> Voters { get; set; }
         public List<ElectionPosition> Positions { get; set; }            
-        public ElectionType Type { get; set; }
-        public Election()
-        {
-            Id = Guid.NewGuid();
-        }
+        public ElectionType Type { get; set; }         
     }
 }

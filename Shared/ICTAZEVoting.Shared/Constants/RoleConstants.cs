@@ -1,4 +1,4 @@
-﻿namespace ICTAZEVoting.Shared.Models
+﻿namespace ICTAZEVoting.Shared.Constants
 {
     public class RoleConstants
     {

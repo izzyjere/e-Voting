@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ICTAZEvoting.Shared.Responses.Identity
+namespace ICTAZEVoting.Shared.Responses.Identity
 {
     public class RoleResponse
     {

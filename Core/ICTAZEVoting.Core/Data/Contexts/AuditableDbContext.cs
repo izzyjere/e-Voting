@@ -1,4 +1,4 @@
-﻿using ICTAZEvoting.Shared.Enums;
+﻿using ICTAZEVoting.Shared.Enums;
 
 using ICTAZEVoting.Core.Models;
 

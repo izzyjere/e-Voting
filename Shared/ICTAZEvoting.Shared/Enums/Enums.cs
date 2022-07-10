@@ -1,4 +1,4 @@
-﻿namespace ICTAZEvoting.Shared.Enums
+﻿namespace ICTAZEVoting.Shared.Enums
 {
     public enum Gender
     {

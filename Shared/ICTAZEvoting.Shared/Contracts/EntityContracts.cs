@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ICTAZEvoting.Shared.Contracts
+namespace ICTAZEVoting.Shared.Contracts
 {
     public interface IEntity
     {

@@ -1,18 +1,23 @@
-﻿using ICTAZEvoting.Shared.Models;
+﻿using ICTAZEVoting.Shared.Models;
 
 namespace ICTAZEVoting.BlockChain.Models
 {
     public class BlockChain
     {
         public IList<Block> Chain { get; set; }
+        public Guid ElectionId { get; set; }
         public List<Vote> PendingVotes { get; set; } = new();
+        public int Difficulty { set; get; } = 2;
         public BlockChain()
         {
             InitializeChain();
         }
         public void AddVote(Vote vote)
         {
-            //
+            if(HasVoted(vote.VoterId))
+            {
+                return;
+            }
             PendingVotes.Add(vote);
         }
         public void ProcessPendingVotes()
@@ -54,6 +59,10 @@ namespace ICTAZEVoting.BlockChain.Models
         public Block GetLatestBlock()
         {
             return Chain[Chain.Count - 1];
+        }
+        bool HasVoted(Guid voterId)
+        {
+            return Chain.Any(b=>b.Data.VoterId==voterId);
         }
         /// <summary>
         /// Counts the votes for a particular candidate

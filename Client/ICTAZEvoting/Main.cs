@@ -1,4 +1,4 @@
-using ICTAZEvoting.WebUI;
+using ICTAZEVoting.WebUI;
 
 using Microsoft.AspNetCore.Components.WebView.WindowsForms;
 using Microsoft.Extensions.DependencyInjection;

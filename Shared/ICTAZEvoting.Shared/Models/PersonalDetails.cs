@@ -1,8 +1,8 @@
-﻿using ICTAZEvoting.Shared.Enums;
+﻿using ICTAZEVoting.Shared.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ICTAZEvoting.Shared.Models
+namespace ICTAZEVoting.Shared.Models
 {
     public class PersonalDetails
     {
@@ -18,5 +18,6 @@ namespace ICTAZEvoting.Shared.Models
         public string Address { get; set; }
         [EmailAddress]
         public string Email { get; set; }
+        public Guid OwnerId { get; set; }
     }
 }

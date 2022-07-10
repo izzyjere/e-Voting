@@ -1,8 +1,8 @@
-﻿using ICTAZEvoting.Shared.Interfaces;
+﻿using ICTAZEVoting.Shared.Interfaces;
 using static System.Console;
 using System.Collections;
 using ICTAZEVoting.Core.Data.Contexts;
-using ICTAZEvoting.Shared.Contracts;
+using ICTAZEVoting.Shared.Contracts;
 
 namespace ICTAZEVoting.Core.Data.Repositories
 {

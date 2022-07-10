@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 
-using ICTAZEvoting.Shared.Interfaces;
-using ICTAZEvoting.Shared.Models;
-using ICTAZEvoting.Shared.Requests;
-using ICTAZEvoting.Shared.Responses.Identity;
-using ICTAZEvoting.Shared.Wrapper;
+using ICTAZEVoting.Shared.Interfaces;
+using ICTAZEVoting.Shared.Models;
+using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Responses.Identity;
+using ICTAZEVoting.Shared.Wrapper;
 
 using ICTAZEVoting.Core.Models;
 
@@ -16,20 +16,18 @@ namespace ICTAZEVoting.Core.Services.Identity;
 public class RoleService : IRoleService
 {
     private readonly RoleManager<Role> _roleManager;
-    private readonly UserManager<User> _userManager;   
-    private readonly ICurrentUserService _currentUserService;
+    private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
 
     public RoleService(
         RoleManager<Role> roleManager,
         IMapper mapper,
-        UserManager<User> userManager,
-        ICurrentUserService currentUserService)
+        UserManager<User> userManager        )
     {
         _roleManager = roleManager;
         _mapper = mapper;
         _userManager = userManager;        
-        _currentUserService = currentUserService;
+       
     }
     public async Task<Result<string>> DeleteAsync(int id)
     {

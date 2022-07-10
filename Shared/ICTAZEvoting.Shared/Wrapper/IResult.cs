@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ICTAZEvoting.Shared.Wrapper
+namespace ICTAZEVoting.Shared.Wrapper
 {
     public interface IResult
     {

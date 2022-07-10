@@ -1,6 +1,6 @@
-﻿using ICTAZEvoting.Shared.Requests;
-using ICTAZEvoting.Shared.Responses.Identity;
-using ICTAZEvoting.Shared.Wrapper;
+﻿using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Responses.Identity;
+using ICTAZEVoting.Shared.Wrapper;
 
 namespace ICTAZEVoting.Core.Services.Identity
 {

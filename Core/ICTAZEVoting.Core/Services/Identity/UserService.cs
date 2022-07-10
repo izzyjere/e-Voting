@@ -1,11 +1,11 @@
 ﻿
 using AutoMapper;
 
-using ICTAZEvoting.Shared.Interfaces;
-using ICTAZEvoting.Shared.Models;
-using ICTAZEvoting.Shared.Requests;
-using ICTAZEvoting.Shared.Responses.Identity;
-using ICTAZEvoting.Shared.Wrapper;
+using ICTAZEVoting.Shared.Interfaces;
+using ICTAZEVoting.Shared.Models;
+using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Responses.Identity;
+using ICTAZEVoting.Shared.Wrapper;
 
 using ICTAZEVoting.Core.Models;
 

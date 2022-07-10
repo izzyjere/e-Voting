@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ICTAZEvoting.Shared.Wrapper
+namespace ICTAZEVoting.Shared.Wrapper
 {
     public class NetworkMessage
     {   

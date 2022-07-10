@@ -1,10 +1,11 @@
 ﻿using ICTAZEVoting.Core.Data.Contexts;
 using ICTAZEVoting.Core.Data.Repositories;
 using ICTAZEVoting.Core.Services.Identity;
-using ICTAZEvoting.Shared.Interfaces;
+using ICTAZEVoting.Shared.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Reflection;
 
 namespace ICTAZEVoting.Core.Extensions
 {
@@ -26,6 +27,10 @@ namespace ICTAZEVoting.Core.Extensions
                     .AddTransient<ISeeder, DatabaseSeeder>();
 
             return services;
+        }
+        public static IServiceCollection AddMappings(this IServiceCollection services)
+        {
+           return services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
         public static IServiceCollection AddIdentityServices(this IServiceCollection services)
         {

@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace ICTAZEvoting.Shared.Models
+namespace ICTAZEVoting.Shared.Models
 {
     public class Vote 
     {

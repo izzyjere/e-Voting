@@ -1,5 +1,5 @@
-﻿using ICTAZEvoting.Shared.Models;
-using ICTAZEvoting.Shared.Wrapper;
+﻿using ICTAZEVoting.Shared.Models;
+using ICTAZEVoting.Shared.Wrapper;
 using Newtonsoft.Json;
 using WebSocketSharp;
 using WebSocketSharp.Server;

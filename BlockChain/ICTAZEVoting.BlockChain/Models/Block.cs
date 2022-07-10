@@ -1,4 +1,4 @@
-﻿using ICTAZEvoting.Shared.Models;
+﻿using ICTAZEVoting.Shared.Models;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,6 +11,7 @@ namespace ICTAZEVoting.BlockChain.Models
         public string PreviousHash { get; set; }
         public string Hash { get; set; }
         public Vote Data { get; set; }
+        public int Nonce { get; set; } = 0;
         public Block(DateTime timeStamp, string previousHash, Vote data)
         {
             TimeStamp = timeStamp;

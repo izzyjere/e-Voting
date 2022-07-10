@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ICTAZEvoting.Shared.Requests
+namespace ICTAZEVoting.Shared.Requests
 {
     public class RoleRequest
     {

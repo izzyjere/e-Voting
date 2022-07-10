@@ -1,26 +1,36 @@
 ﻿@page "/"
 @page "/login"
+@page "/login/{returnUrl}"
 
 @layout LoginLayout
 <center><MudImage Height="100" Width="100" Src="images/logo.png"></MudImage></center>
 <MudText Typo="Typo.h4" GutterBottom="true">Sign In</MudText>
-<EditForm OnValidSubmit="Submit" Model="@Model">
+<EditForm OnValidSubmit="Submit" OnInvalidSubmit='()=>snackBar.Add("Please fill in all required fields.",Severity.Error)' Model="@Model">
     <DataAnnotationsValidator />
-    <MudTextField T="string" @bind-Value="@Model.UserName" Label="Username" Variant="Variant.Outlined" Class="my-6"></MudTextField>
-    <MudTextField @bind-Value="@Model.Password" Label="Password" Variant="Variant.Outlined" Class="my-6" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/dashboardMain" Size="Size.Large" FullWidth="true">Sign In</MudButton>
+    <MudTextField For="()=>Model.UserName" T="string" @bind-Value="@Model.UserName" Label="Username" Variant="Variant.Outlined" Class="my-6"></MudTextField>
+    <MudTextField  For="()=>Model.Password" @bind-Value="@Model.Password" Label="Password" Variant="Variant.Outlined" Class="my-6" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
+    <MudButton  ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true">Sign In</MudButton>
 </EditForm>
 
 
 @code {
-    string Password { get; set; } = "BMWvBPJXZu";
+
     TokenRequest Model { get; set; } = new();
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
     async Task Submit()
     {
-
+        var result = await authenticationService.SignIn(Model);
+        if(result.Succeeded)
+        {
+            Navigation.NavigateTo("authenticate");
+            snackBar.Add(result.Messages.First(), Severity.Success);
+        }
+        else
+        {
+            snackBar.Add(result.Messages.First(), Severity.Error);
+        }
     }
     void TogglePasswordVisibility()
     {

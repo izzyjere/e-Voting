@@ -1,0 +1,95 @@
+﻿@layout AuthLayout
+@attribute [AllowAnonymous]
+@page "/authenticate"
+@page "/authenticate/{redirectUrl?}"
+@if (IsLoading)
+{
+    <div id="preloader"></div>
+    Task.Run(async () => await Continue());
+}
+<style>
+
+/*--------------------------------------------------------------
+# Preloader
+--------------------------------------------------------------*/
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  overflow: hidden;
+  background: #1098F7;
+}
+
+#preloader:before {
+  content: "";
+  position: fixed;
+  top: calc(50% - 30px);
+  left: calc(50% - 30px);
+  border: 6px solid #37517e;
+  border-top-color: #fff;
+  border-bottom-color: #fff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: animate-preloader 1s linear infinite;
+  animation: animate-preloader 1s linear infinite;
+}
+</style>
+
+@code {
+
+    bool IsLoading { get; set; } = true;
+    [Parameter] public string? RedirectUrl { get; set; }
+    #nullable disable
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    ClaimsPrincipal CurrentUser { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentUser = (await AuthenticationStateTask).User;       
+
+    }
+    async Task Continue()
+    {   
+        await Task.Delay(1000);
+        if (!string.IsNullOrEmpty(RedirectUrl))
+        {
+
+            if (CurrentUser.Identity.IsAuthenticated)
+            {    
+                Navigation.NavigateTo($"{RedirectUrl}", true);             
+            }
+            else
+            {                  
+                Navigation.NavigateTo($"login/?returnUrl={RedirectUrl}", true);               
+            }
+        }
+        else
+        {   
+            if (CurrentUser.Identity.IsAuthenticated)
+            {  
+                if(CurrentUser.IsInRole("Administrator"))
+                {
+                    Navigation.NavigateTo("dashboardMain", true);  
+                }
+                else if(CurrentUser.IsInRole("Voter"))
+                {
+                    Navigation.NavigateTo("voter-dash", true);  
+                }
+                else
+                {
+                   Navigation.NavigateTo("login", true); 
+                }
+
+            }
+            else
+            {
+              Navigation.NavigateTo("login", true);  
+            }
+           
+        }
+        IsLoading = false;         
+    }
+}

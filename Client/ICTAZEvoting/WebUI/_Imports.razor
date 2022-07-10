@@ -1,4 +1,5 @@
 ﻿@using System.Net.Http
+@using ICTAZEVoting.Services
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
@@ -8,6 +9,7 @@
 @using Microsoft.JSInterop
 @using System.Security.Claims
 @using MudBlazor
+@using ICTAZEVoting.Extensions
 @using ICTAZEVoting.WebUI
 @using ICTAZEVoting.WebUI.Shared
 @using ICTAZEVoting.Shared.Requests
@@ -17,3 +19,7 @@
 @using Radzen.Blazor
 
 @inject HttpClient httpClient
+@inject IDialogService dialogService
+@inject ISnackbar snackBar
+@inject IAuthenticationService authenticationService
+@inject NavigationManager Navigation

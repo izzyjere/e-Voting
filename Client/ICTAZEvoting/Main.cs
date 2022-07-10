@@ -21,7 +21,7 @@ namespace ICTAZEVoting
             var services = new ServiceCollection();
             services.AddMudServices(configuration =>
             {
-                configuration.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
+                configuration.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
                 configuration.SnackbarConfiguration.HideTransitionDuration = 1000;
                 configuration.SnackbarConfiguration.ShowTransitionDuration = 100;
                 configuration.SnackbarConfiguration.VisibleStateDuration = 5000;

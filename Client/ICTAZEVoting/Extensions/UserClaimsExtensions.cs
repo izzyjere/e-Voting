@@ -10,6 +10,8 @@ namespace ICTAZEVoting.Extensions
     {
         internal static string GetEmail(this ClaimsPrincipal claimsPrincipal)
            => claimsPrincipal.FindFirstValue(ClaimTypes.Email);
+        internal static string GetProfilePicture(this ClaimsPrincipal claimsPrincipal)
+       => claimsPrincipal.FindFirstValue("ProfilePicture");
         internal static string GetFirstName(this ClaimsPrincipal claimsPrincipal)
             => claimsPrincipal.FindFirstValue(ClaimTypes.Name);
         internal static string GetRole(this ClaimsPrincipal claimsPrincipal)
@@ -23,7 +25,6 @@ namespace ICTAZEVoting.Extensions
 
         internal static string GetUserId(this ClaimsPrincipal claimsPrincipal)
            => claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
-        internal static string FindFirstValue(this ClaimsPrincipal claimsPrincipal, string claimType)
-            => claimsPrincipal.FindFirst(claimType).Value;
+       
     }
 }

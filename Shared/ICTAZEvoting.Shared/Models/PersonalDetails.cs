@@ -7,7 +7,7 @@ namespace ICTAZEVoting.Shared.Models
     public class PersonalDetails
     {
         public string FirstName { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public string LastName { get; set; }
         public string? MiddleName { get; set; }
         [Required,RegularExpression(@"^\d{6}\/\d{2}\/\d{1}$", ErrorMessage ="Please enter a valid NRC. xxxxxx/xx/x")]

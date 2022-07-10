@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Core.Extensions;
 using Microsoft.OpenApi.Models;
+using ICTAZEVoting.Shared.Interfaces;
 
 namespace ICTAZEVoting.Api
 {
@@ -34,6 +35,17 @@ namespace ICTAZEVoting.Api
                     return new Result<TokenResponse>() { Succeeded = false, Messages = new List<string> { "Incorect credentials" }, Data = new TokenResponse() };
             });
             #endregion
+            return app;
+        }
+        internal static IApplicationBuilder Initialize (this IApplicationBuilder app)
+        {
+            var scope = app.ApplicationServices.CreateScope();
+            var seeder = scope.ServiceProvider.GetService<ISeeder>();
+            if(seeder == null)
+            {
+                throw new Exception("No Seeder was registered");
+            }
+            seeder.Seed();
             return app;
         }
         internal static IServiceCollection RegisterSwagger(this IServiceCollection services)

@@ -23,5 +23,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapEndpointRoutes();
-
+app.Initialize();
 app.Run();

@@ -57,7 +57,7 @@ namespace ICTAZEVoting.Core
                 var superUser = new User                 {
                    
                     Email = "admin@example.com",
-                    UserName = "testAdmin",
+                    UserName = "testAdmin",                    
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,                    
                     IsActive = true,
@@ -77,7 +77,7 @@ namespace ICTAZEVoting.Core
                           Email = superUser.Email,
                           PhoneNumber = "+260974855669",
                           Gender = Shared.Enums.Gender.Male,
-                          PictureUrl = "",
+                          PictureUrl = "images/clarence.png",
                           UserId = Guid.Parse(userGuid),
                           DateOfBirth = DateTime.Now,
                           Address = "Riverside, Kitwe"

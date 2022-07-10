@@ -20,5 +20,6 @@ namespace ICTAZEVoting.Shared.Models
         [EmailAddress]
         public string Email { get; set; }
         public Guid OwnerId { get; set; }
+        public string FullName => FirstName + " " + LastName;
     }
 }

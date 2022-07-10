@@ -7,5 +7,6 @@ namespace ICTAZEVoting.Shared.Constants
     public static class ApiEndpoints
     {
         public const string Login = "token";
+        public const string UserProfile = "userprofile";
     }
 }

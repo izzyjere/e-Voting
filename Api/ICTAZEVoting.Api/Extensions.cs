@@ -161,7 +161,47 @@ namespace ICTAZEVoting.Api
                 var result = await unitOfWork.Repository<ElectionType>().Update(entity);
                 return result ? Result.Success("Election was updated.") : Result.Fail("An error has occured. Try again.");
             });
+            app.MapGet("/userprofile/{id}", [Authorize] async (SystemDbContext db, UserManager<User> userManager, [FromRoute] string id) =>
+             {
+                 var myGuid = Guid.Empty;
 
+                 var user = await userManager.FindByIdAsync(id);
+                 if (user == null)
+                 {
+                     return Result<UserProfileResponse>.Fail("Not found.");
+                 }
+                 else
+                 {
+                     var profile = new PersonalDetails();
+                     profile = await db.Set<SystemAdmin>().Select(s=>s.PersonalDetails).FirstOrDefaultAsync(s => s.UserId == Guid.Parse(id));
+                     if(profile != null)
+                     {
+                         return Result<UserProfileResponse>.Success(new UserProfileResponse { FullName=profile.FullName, ProfilePicture=profile.PictureUrl });
+                     }
+                     else
+                     {
+                         profile = await db.Set<Voter>().Select(s => s.PersonalDetails).FirstOrDefaultAsync(s => s.UserId == Guid.Parse(id));
+                         if (profile != null)
+                         {
+                             return Result<UserProfileResponse>.Success(new UserProfileResponse { FullName = profile.FullName, ProfilePicture = profile.PictureUrl });
+                         }
+                         else
+                         {
+                             profile = await db.Set<Candidate>().Select(s => s.PersonalDetails).FirstOrDefaultAsync(s => s.UserId == Guid.Parse(id));
+                             if (profile != null)
+                             {
+                                 return Result<UserProfileResponse>.Success(new UserProfileResponse { FullName = profile.FullName, ProfilePicture = profile.PictureUrl });
+                             }
+                             else
+                             {
+                                 return Result<UserProfileResponse>.Fail("Not found.");
+                             }
+                         }
+                     }
+
+                 }
+                
+             });
 
             #endregion
             return app;

@@ -23,6 +23,7 @@ using ICTAZEVoting.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using ICTAZEVoting.Core.Data.Repositories;
 using System.Data;
+using SkiaSharp;
 
 namespace ICTAZEVoting.Api
 {
@@ -202,9 +203,28 @@ namespace ICTAZEVoting.Api
                  }
                 
              });
-
+            app.MapPost("/profile-picture", (IWebHostEnvironment env, [FromBody]UploadRequest request) =>
+            {
+                var fileName = request.Data.ToImageFile(Path.Combine(env.ContentRootPath,"ImageUploads"));
+                return Result.Success(fileName);
+            });
             #endregion
             return app;
+        }
+        internal static string ToImageFile(this byte[] bytes, string path)
+        {
+            var image = SKImage.FromEncodedData(bytes);
+            var filename = Path.GetRandomFileName().Replace(".", "_") + ".jpeg";
+
+            using (var data = image.Encode(SKEncodedImageFormat.Jpeg, 100))
+            {
+                // save the data to a stream
+                using (var stream = File.OpenWrite(Path.Combine(path, filename)))
+                {
+                    data.SaveTo(stream);
+                }
+            }
+            return filename;
         }
         internal static IApplicationBuilder Initialize(this IApplicationBuilder app)
         {

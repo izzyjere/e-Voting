@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Reflection;
+using SkiaSharp;
 
 namespace ICTAZEVoting.Core.Extensions
 {
@@ -17,7 +18,9 @@ namespace ICTAZEVoting.Core.Extensions
             => claimsPrincipal.FindFirstValue("FullName");
         public static string GetRole(this ClaimsPrincipal claimsPrincipal)
             => claimsPrincipal.FindFirstValue(ClaimTypes.Role);
+       
     }
+    
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)

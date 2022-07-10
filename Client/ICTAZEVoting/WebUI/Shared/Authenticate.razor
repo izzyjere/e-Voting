@@ -4,7 +4,7 @@
 @page "/authenticate/{redirectUrl?}"
 @if (IsLoading)
 {
-    <div class="loader" id="preloader"></div>
+   
     Task.Run(async () => await Continue());
 }
 
@@ -45,7 +45,7 @@
                 }
                 else if(CurrentUser.IsInRole("Voter"))
                 {
-                    Navigation.NavigateTo("voter-dash", true);  
+                    Navigation.NavigateTo("dashboardVoter", true);  
                 }
                 else
                 {

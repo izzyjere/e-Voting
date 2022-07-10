@@ -51,17 +51,16 @@
                 </Animate>
             </MudItem>
         </MudGrid>
-                    
-                    <MudButton @onclick="CaptureFrame" Variant="Variant.Filled" Color="Color.Info">Capture Passport Size Photo</MudButton>
-                    @if (!string.IsNullOrEmpty(frameUri))
-                    {
-                        <img src="@frameUri" />
-                    }
-                    <br/><br/>
-                    <video id="videoFeed" width="320" height="240" />
-                    <canvas class="d-none" id="currentFrame" width="320" height="240" /><br />
-                    
-                    <br/><br/>
+
+        <MudButton id="capture-btn" Disabled="@dis"  @onclick="CaptureFrame" Variant="Variant.Filled" Color="Color.Info">Capture Passport Size Photo</MudButton>
+        @if (!string.IsNullOrEmpty(frameUri))
+        {
+            <img src="@frameUri" />
+        }
+        <br /><br />
+        <video id="videoFeed" width="320" height="240" />
+        <canvas class="d-none" id="currentFrame" width="320" height="240" /><br />
+        <br /><br />
         <MudButton Variant="Variant.Filled" Color="Color.Info">Save voter</MudButton>
     </MudCardContent>
 </MudCard>
@@ -104,13 +103,13 @@
 @code {
     private string frameUri;
     private string searchString = "";
+    bool dis = true;
     private Voter voter = new Voter();
     private List<Voter> voters = new List<Voter>();
     protected override async Task OnInitializedAsync()
     {
         voter.PersonalDetails = new PersonalDetails();
-        /*await JsRuntime.InvokeVoidAsync("startVideo", "videoFeed")*/
-        ;
+        await StartVideFrame();
     }
 
     private void Update(Voter voter)
@@ -135,19 +134,25 @@
         }
     }
 
+    private async Task StartVideFrame()
+    {
+        await JsRuntime.InvokeVoidAsync("startVideo", "videoFeed");       
+        dis = false;
+        StateHasChanged();
+    }
     private async Task CaptureFrame()
     {
-        await JsRuntime.InvokeVoidAsync("startVideo", "videoFeed");
-        await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
+         await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));    
     }
 
-    //[JSInvokable]
-    //    public void ProcessImage(string imageString)
-    //    {
-    //        byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
 
-    //        Do image processing here
-    //    }
+    [JSInvokable]
+    public void ProcessImage(string imageString)
+    {
+        byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
+        var fileName = httpClient.PostAsJsonAsync(ApiEndpoints.PictureUpload, new UploadRequest { Data = imageData });
+       
+    }
 
 }
 

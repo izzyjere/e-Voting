@@ -17,8 +17,13 @@
 
     TokenRequest Model { get; set; } = new();
     bool PasswordVisibility;
+    [Parameter] public string ReturnUrl { get; set; }
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    protected override async void OnInitialized()
+    {
+        await authenticationService.SignOut();
+    }
     async Task Submit()
     {
         var result = await authenticationService.SignIn(Model);

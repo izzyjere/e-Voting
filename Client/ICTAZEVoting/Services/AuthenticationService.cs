@@ -1,5 +1,6 @@
 ﻿
 using ICTAZEVoting.Extensions;
+using ICTAZEVoting.Shared.Constants;
 using ICTAZEVoting.Shared.Requests;
 using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Shared.Wrapper;
@@ -31,7 +32,7 @@ namespace ICTAZEVoting.Services
 
         public async Task<IResult> SignIn(TokenRequest request)
         {
-            var response = await Client.PostAsJsonAsync("", request);
+            var response = await Client.PostAsJsonAsync(ApiEndpoints.Login, request);
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.ToResult<TokenResponse>();

@@ -57,7 +57,7 @@ namespace ICTAZEVoting.Core
                 var superUser = new User                 {
                    
                     Email = "admin@example.com",
-                    UserName = "wisdomJere",
+                    UserName = "testAdmin",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,                    
                     IsActive = true,

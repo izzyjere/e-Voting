@@ -1,16 +1,22 @@
-﻿<PersonCard Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text);"/>
+﻿<PersonCard Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text);" />
 <MudDivider Class="mb-4" />
 <MudNavMenu>
-    <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Personal</MudText>
-    <MudNavLink Href="dashboardMain" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
-    <MudNavMenu Color=Color.Dark Margin=Margin.None>
-    <MudNavLink Href="candidates" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.People">Candidates</MudNavLink>
-    <MudNavLink Href="voters" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Groups">Voters</MudNavLink>
-    <MudNavLink Href="electionresults" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Info">Election Results</MudNavLink>
-    <MudNavLink Href="electionstats" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.TipsAndUpdates">Election Statistics</MudNavLink>
-    <MudNavLink Href="voting" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.HowToVote">Voting</MudNavLink>
-    <MudNavLink Href="login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Logout">Sign Out</MudNavLink>
-</MudNavMenu>
+    <AuthorizeView Roles="@ICTAZEVoting.Shared.Constants.RoleConstants.AdministratorRole">
+        <Authorized>
+            <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Personal</MudText>
+            <MudNavLink Href="dashboardMain" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+            <MudNavLink Href="electionresults" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MonitorHeart">Election Results</MudNavLink>
+            <MudNavLink Href="electionstats" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.TipsAndUpdates">Election Statistics</MudNavLink>
+            <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Election Setup</MudText>
+            <MudNavLink Href="elections" Icon="@Icons.Material.Filled.HowToVote">Elections</MudNavLink>
+            <MudNavLink Href="candidates" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.People">Candidates</MudNavLink>
+            <MudNavLink Href="voters" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Groups">Voters</MudNavLink>
+            <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Others</MudText>
+            <MudNavLink Href="political-parties" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Campaign">Political Parties</MudNavLink>
+            <MudNavLink Href="election-type" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Bookmark">Election Types</MudNavLink>          
+            <MudNavLink Href="/" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Logout">Sign Out</MudNavLink>
+        </Authorized>
+    </AuthorizeView>
 </MudNavMenu>
 
 @code {

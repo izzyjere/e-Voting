@@ -1,4 +1,4 @@
-﻿using ICTAZEvoting.Shared.Interfaces;
+﻿using ICTAZEVoting.Shared.Interfaces;
 
 using Microsoft.AspNetCore.Http;
 

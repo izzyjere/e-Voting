@@ -1,7 +1,7 @@
-﻿using ICTAZEvoting.Shared.Contracts;
-using ICTAZEvoting.Shared.Requests;
-using ICTAZEvoting.Shared.Responses.Identity;
-using ICTAZEvoting.Shared.Wrapper;
+﻿using ICTAZEVoting.Shared.Contracts;
+using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Responses.Identity;
+using ICTAZEVoting.Shared.Wrapper;
 
 using ICTAZEVoting.Core.Middleware;
 using ICTAZEVoting.Core.Models;

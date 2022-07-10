@@ -1,5 +1,5 @@
-﻿using ICTAZEvoting.Shared.Requests;
-using ICTAZEvoting.Shared.Wrapper;
+﻿using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Wrapper;
 
 namespace ICTAZEVoting.Core.Services.Identity
 {

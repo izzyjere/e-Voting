@@ -1,4 +1,4 @@
-﻿using ICTAZEvoting.Shared.Requests;
+﻿using ICTAZEVoting.Shared.Requests;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

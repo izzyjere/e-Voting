@@ -1,6 +1,6 @@
 ﻿
-using ICTAZEvoting.Shared.Contracts;
-using ICTAZEvoting.Shared.Interfaces;
+using ICTAZEVoting.Shared.Contracts;
+using ICTAZEVoting.Shared.Interfaces;
 
 using ICTAZEVoting.Core.Data.Contexts;
 

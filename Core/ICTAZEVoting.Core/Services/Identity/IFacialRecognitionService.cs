@@ -1,4 +1,4 @@
-﻿using ICTAZEvoting.Shared.Wrapper;
+﻿using ICTAZEVoting.Shared.Wrapper;
 namespace ICTAZEVoting.Core.Services.Identity
 {
     public interface IFacialRecognitionService

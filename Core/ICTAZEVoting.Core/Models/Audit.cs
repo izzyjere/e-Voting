@@ -1,4 +1,4 @@
-﻿using ICTAZEvoting.Shared.Contracts;
+﻿using ICTAZEVoting.Shared.Contracts;
 
 namespace ICTAZEVoting.Core.Models
 {

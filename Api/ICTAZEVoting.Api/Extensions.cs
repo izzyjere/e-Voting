@@ -1,5 +1,5 @@
-﻿using ICTAZEvoting.Shared.Contracts;
-using ICTAZEvoting.Shared.Wrapper;
+﻿using ICTAZEVoting.Shared.Contracts;
+using ICTAZEVoting.Shared.Wrapper;
 
 using ICTAZEVoting.Core.Data.Contexts;
 using ICTAZEVoting.Core.Factories;

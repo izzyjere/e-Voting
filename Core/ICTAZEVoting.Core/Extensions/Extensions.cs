@@ -1,7 +1,7 @@
 ﻿using ICTAZEVoting.Core.Data.Contexts;
 using ICTAZEVoting.Core.Data.Repositories;
 using ICTAZEVoting.Core.Services.Identity;
-using ICTAZEvoting.Shared.Interfaces;
+using ICTAZEVoting.Shared.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;

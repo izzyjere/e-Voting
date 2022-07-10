@@ -1,5 +1,5 @@
-﻿using ICTAZEvoting.Shared.Contracts;
-using ICTAZEvoting.Shared.Wrapper;
+﻿using ICTAZEVoting.Shared.Contracts;
+using ICTAZEVoting.Shared.Wrapper;
 
 using Microsoft.Extensions.Options;
 using Microsoft.ProjectOxford.Face;
@@ -37,6 +37,11 @@ namespace ICTAZEVoting.Core.Services.Identity
 
                 return await Result.FailAsync("An error occured. Try Again");
             }
+        }
+
+        public Task<IResult> VerifyAsync(MemoryStream memoryStream)
+        {
+            throw new NotImplementedException();
         }
     }
 }

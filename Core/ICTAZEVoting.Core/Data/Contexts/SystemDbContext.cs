@@ -109,6 +109,15 @@ namespace ICTAZEVoting.Core.Data.Contexts
                     ep.WithOwner(p => p.Election);
                 });
             });
+            modelBuilder.Entity<SystemAdmin>(e =>
+            {
+                e.ToTable("SystemAdmins");
+                e.OwnsOne(p => p.PersonalDetails, p =>
+                {
+                    p.ToTable("SystemAdminPersonalDetails");
+                    p.Property(p => p.OwnerId);
+                });
+            });
             modelBuilder.Entity<ElectionPosition>(e=>
             {
                 e.ToTable("ElectionPositions");                  

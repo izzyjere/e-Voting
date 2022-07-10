@@ -57,7 +57,7 @@ namespace ICTAZEVoting.Core
                 var superUser = new User                 {
                    
                     Email = "admin@example.com",
-                    UserName = "150279/34/1",
+                    UserName = "wisdomJere",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,                    
                     IsActive = true,
@@ -81,7 +81,7 @@ namespace ICTAZEVoting.Core
                           UserId = Guid.Parse(userGuid),
                           DateOfBirth = DateTime.Now,
                           Address = "Riverside, Kitwe"
-                      }
+                      },CreatedBy = "SYSTEM",TimeStamp = DateTime.Now,RemoteIp="127.0.0.1"
                     };
 
                     _db.Set<SystemAdmin>().Add(syadmin);

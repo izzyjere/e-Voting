@@ -7,8 +7,8 @@ namespace ICTAZEVoting.Core.Services.Identity;
 public interface IRoleService
 {
     Task<Result<string>> AddEditAsync(RoleRequest request);
-    Task<Result<string>> DeleteAsync(int id);
+    Task<Result<string>> DeleteAsync(Guid id);
     Task<Result<List<RoleResponse>>> GetAllAsync();
-    Task<Result<RoleResponse>> GetByIdAsync(int id);
+    Task<Result<RoleResponse>> GetByIdAsync(Guid id);
     Task<int> GetCountAsync();     
 }

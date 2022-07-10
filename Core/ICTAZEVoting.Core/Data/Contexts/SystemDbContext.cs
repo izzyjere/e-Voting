@@ -20,7 +20,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {
-            foreach (var entry in ChangeTracker.Entries<AuditableEntity<int>>().ToList())
+            foreach (var entry in ChangeTracker.Entries<AuditableEntity<Guid>>().ToList())
             {
                 var userName = await currentUserService.GetUserName();
                 switch (entry.State)
@@ -41,7 +41,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
 
 
             }
-            if (await currentUserService.GetUserId() == 0)
+            if (await currentUserService.GetUserId() == Guid.Empty)
             {
                 return await base.SaveChangesAsync(cancellationToken);
             }

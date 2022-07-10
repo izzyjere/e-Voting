@@ -17,7 +17,7 @@ namespace ICTAZEVoting.Core.Services.Identity
            
           
         }
-        public async Task<IResult> ChangePasswordAsync(ChangePasswordRequest model, int userId)
+        public async Task<IResult> ChangePasswordAsync(ChangePasswordRequest model, Guid userId)
         {
             var user = await userManager.FindByIdAsync(userId.ToString());
             if (user == null)
@@ -32,7 +32,7 @@ namespace ICTAZEVoting.Core.Services.Identity
             return identityResult.Succeeded ? await Result.SuccessAsync() : await Result.FailAsync(errors);
 
         }         
-        public async Task<IResult<string>> GetProfilePictureAsync(int userId)
+        public async Task<IResult<string>> GetProfilePictureAsync(Guid userId)
         {
             var user = await userManager.FindByIdAsync(userId.ToString());
             if (user == null)

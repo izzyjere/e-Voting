@@ -14,7 +14,7 @@ namespace ICTAZEVoting.Core.Models
         }
 
         public EntityEntry Entry { get; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public string TableName { get; set; }
         public Dictionary<string, object> KeyValues { get; } = new();
         public Dictionary<string, object> OldValues { get; } = new();

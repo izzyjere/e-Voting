@@ -29,7 +29,7 @@ public class RoleService : IRoleService
         _userManager = userManager;        
        
     }
-    public async Task<Result<string>> DeleteAsync(int id)
+    public async Task<Result<string>> DeleteAsync(Guid id)
     {
         var existingRole = await _roleManager.FindByIdAsync(id.ToString());
         if (existingRole.Name != RoleConstants.AdministratorRole && existingRole.Name != RoleConstants.BasicRole)
@@ -65,7 +65,7 @@ public class RoleService : IRoleService
         return await Result<List<RoleResponse>>.SuccessAsync(rolesResponse);
     }
     
-   public async Task<Result<RoleResponse>> GetByIdAsync(int id)
+   public async Task<Result<RoleResponse>> GetByIdAsync(Guid id)
     {
         var roles = await _roleManager.Roles.SingleOrDefaultAsync(x => x.Id == id);
         var rolesResponse = _mapper.Map<RoleResponse>(roles);

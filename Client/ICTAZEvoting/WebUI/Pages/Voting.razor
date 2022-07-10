@@ -1,22 +1,165 @@
 ﻿@page "/voting"
 
+<MudGrid>
 <h1>Ballot Paper</h1>
-<MudText>Presidential Candidates</MudText>
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabPanel Text="Presidential">
+        <MudGrid>
+    <MudItem xs="12" sm="8" md="4">
+        <Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
+    <a href="https://www.w3schools.com">
+            <MudCard Elevation="25" Outlined="true">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary">CS</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">Clarence Simukanzye</MudText>
+                        @*<MudText Typo="Typo.body2">Peninsula in Europe</MudText>*@
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        @*<MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />*@
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardMedia Image="images/clarence.png" Height="300" />
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">Knowldge drives innovation, innovation drives productivity and productivity drives economic growth.</MudText>
+                </MudCardContent>
+                @*<MudCardActions>
+                    @*<MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
+                    </MudCardActions>*@
+            </MudCard>
+    </a>
+    </Animate>
+    </MudItem>
 
-
-<!DOCTYPE html>
-<html>
-<body>
-
-    <p>
-            <a href="https://www.w3schools.com">
-            <img border="0" alt="W3Schools" src="images/clarence.png" width="300" height="300">
-            <br/>
+    <MudItem xs="12" sm="8" md="4">
+    <a href="https://www.w3schools.com">
+        <Animate Animation="Animations.FadeDown" Duration="TimeSpan.FromSeconds(1)">
+            <MudCard Elevation="25" Outlined="true">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary">BM</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">Bulaya Mwanaute</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardMedia Image="images/bulaya.png" Height="300" />
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">Economic growth through Artificial Intelligence.</MudText>
+                </MudCardContent>
+            </MudCard>
+    </Animate>
         </a>
-    </p>
+    </MudItem>
 
-</body>
-</html>
+    <MudItem xs="12" sm="8" md="4">
+        <Animate Animation="Animations.FadeDownLeft" Duration="TimeSpan.FromSeconds(1)">
+    <a href="https://www.w3schools.com">
+            <MudCard Elevation="25" Outlined="true">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary">WJ</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">Wisdom Jere</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardMedia Image="images/wisdom.png" Height="300" />
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">I will fix all bugs.</MudText>
+                </MudCardContent>
+            </MudCard>
+    </a>
+    </Animate>
+    </MudItem>
+</MudGrid>
+    </MudTabPanel>
+    <MudTabPanel Text="Parliamentary">
+        <MudGrid>
+    <MudItem xs="12" sm="8" md="4">
+        <Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
+    <a href="https://www.w3schools.com">
+            <MudCard Elevation="25" Outlined="true">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary">CS</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">Clarence Simukanzye</MudText>
+                        @*<MudText Typo="Typo.body2">Peninsula in Europe</MudText>*@
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        @*<MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />*@
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardMedia Image="images/clarence.png" Height="300" />
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">Knowldge drives innovation, innovation drives productivity and productivity drives economic growth.</MudText>
+                </MudCardContent>
+                @*<MudCardActions>
+                    @*<MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
+                    </MudCardActions>*@
+            </MudCard>
+    </a>
+    </Animate>
+    </MudItem>
+
+    <MudItem xs="12" sm="8" md="4">
+    <a href="https://www.w3schools.com">
+        <Animate Animation="Animations.FadeDown" Duration="TimeSpan.FromSeconds(1)">
+            <MudCard Elevation="25" Outlined="true">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary">BM</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">Bulaya Mwanaute</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardMedia Image="images/bulaya.png" Height="300" />
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">Economic growth through Artificial Intelligence.</MudText>
+                </MudCardContent>
+            </MudCard>
+    </Animate>
+        </a>
+    </MudItem>
+
+    <MudItem xs="12" sm="8" md="4">
+        <Animate Animation="Animations.FadeDownLeft" Duration="TimeSpan.FromSeconds(1)">
+    <a href="https://www.w3schools.com">
+            <MudCard Elevation="25" Outlined="true">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary">WJ</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">Wisdom Jere</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardMedia Image="images/wisdom.png" Height="300" />
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">I will fix all bugs.</MudText>
+                </MudCardContent>
+            </MudCard>
+    </a>
+    </Animate>
+    </MudItem>
+</MudGrid>
+    </MudTabPanel>
+    <MudTabPanel Text="Tab Three">
+        <MudText>Content Three</MudText>
+    </MudTabPanel>
+    <MudTabPanel Text="Tab Disabled" Disabled="true">
+        <MudText>Content Disabled</MudText>
+    </MudTabPanel>
+</MudTabs>
+</MudGrid>
+
 
 @code {
 

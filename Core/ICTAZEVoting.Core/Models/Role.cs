@@ -2,7 +2,7 @@
 
 namespace ICTAZEVoting.Core.Models
 {
-    public class Role : IdentityRole<int>
+    public class Role : IdentityRole<Guid>
     {
         public string Description { get; set; }
         public Role() : base() { }

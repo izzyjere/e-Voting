@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ICTAZEVoting.Core.Models
 {
-    public class User : IdentityUser<int>
+    public class User : IdentityUser<Guid>
     {
         public virtual List<UserRole> Roles { get; set; }
         public Guid PersonId { get; set; }    

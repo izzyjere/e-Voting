@@ -2,7 +2,7 @@
 
 namespace ICTAZEVoting.Core.Models
 {
-    public class Audit : Entity<int>
+    public class Audit : Entity<Guid>
     {
         public int UserId { get; set; }
         public string? Type { get; set; }

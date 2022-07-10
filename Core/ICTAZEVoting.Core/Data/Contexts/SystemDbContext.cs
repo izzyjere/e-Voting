@@ -78,23 +78,23 @@ namespace ICTAZEVoting.Core.Data.Contexts
                 entity.ToTable("UserRoles", "Identity");
                 entity.HasKey(nameof(UserRole.UserId), nameof(UserRole.RoleId));
             });
-            modelBuilder.Entity<IdentityUserClaim<int>>(entity =>
+            modelBuilder.Entity<IdentityUserClaim<Guid>>(entity =>
             {
                 entity.ToTable("UserClaims", "Identity");
             });
-            modelBuilder.Entity<IdentityUserLogin<int>>(entity =>
+            modelBuilder.Entity<IdentityUserLogin<Guid>>(entity =>
             {
                 entity.ToTable("UserLogins", "Identity");
-                entity.HasKey(nameof(IdentityUserLogin<int>.LoginProvider), nameof(IdentityUserLogin<int>.ProviderKey));
+                entity.HasKey(nameof(IdentityUserLogin<Guid>.LoginProvider), nameof(IdentityUserLogin<Guid>.ProviderKey));
             });
-            modelBuilder.Entity<IdentityRoleClaim<int>>(entity =>
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>(entity =>
             {
                 entity.ToTable(name: "RoleClaims", "Identity");
             });
-            modelBuilder.Entity<IdentityUserToken<int>>(entity =>
+            modelBuilder.Entity<IdentityUserToken<Guid>>(entity =>
             {
                 entity.ToTable("UserTokens", "Identity");
-                entity.HasKey(nameof(IdentityUserToken<int>.UserId), nameof(IdentityUserToken<int>.LoginProvider), nameof(IdentityUserToken<int>.Name));
+                entity.HasKey(nameof(IdentityUserToken<Guid>.UserId), nameof(IdentityUserToken<Guid>.LoginProvider), nameof(IdentityUserToken<Guid>.Name));
             });
 
             #endregion

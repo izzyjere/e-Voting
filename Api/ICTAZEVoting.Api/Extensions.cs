@@ -19,14 +19,13 @@ using Microsoft.OpenApi.Models;
 
 namespace ICTAZEVoting.Api
 {
-
     public static class Extensions
     {
         public static IEndpointRouteBuilder MapEndpointRoutes(this IEndpointRouteBuilder app)
         {
             #region Identity
 
-            app.MapPost("/login", async (ITokenService tokenService, [FromBody] TokenRequest request) =>
+            app.MapPost("/token", async (ITokenService tokenService, [FromBody] TokenRequest request) =>
             {
                 var res = await tokenService.LoginAsync(request);
                 if (res.Succeeded)

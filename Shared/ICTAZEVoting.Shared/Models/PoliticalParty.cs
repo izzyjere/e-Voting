@@ -12,5 +12,6 @@ namespace ICTAZEVoting.Shared.Models
         public string? Slogan { get; set; }
         public string? Manifesto { get; set; }
         public string? LogoUrl { get; set; }
+        public virtual List<Candidate> Candidates { get; set; }
     }
 }

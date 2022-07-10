@@ -1,9 +1,15 @@
+using ICTAZEVoting.Services;
 using ICTAZEVoting.WebUI;
 
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebView.WindowsForms;
 using Microsoft.Extensions.DependencyInjection;
 
+using MudBlazor;
 using MudBlazor.Services;
+
+using System.Globalization;
+using System.Net.Http;
 
 namespace ICTAZEVoting
 {
@@ -13,7 +19,30 @@ namespace ICTAZEVoting
         {
             InitializeComponent();
             var services = new ServiceCollection();
-            services.AddMudServices();
+            services.AddMudServices(configuration =>
+            {
+                configuration.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
+                configuration.SnackbarConfiguration.HideTransitionDuration = 1000;
+                configuration.SnackbarConfiguration.ShowTransitionDuration = 100;
+                configuration.SnackbarConfiguration.VisibleStateDuration = 5000;
+                configuration.SnackbarConfiguration.NewestOnTop = true;
+                configuration.SnackbarConfiguration.MaximumOpacity = 100;
+                configuration.SnackbarConfiguration.ShowCloseIcon = true;
+            });
+            services.AddTransient<AuthenticationHeaderHandler>()
+                 .AddScoped(sp => sp
+                   .GetRequiredService<IHttpClientFactory>()
+                   .CreateClient("ICTAZEVotingSystem"))
+               .AddHttpClient("ICTAZEVotingSystem", client =>
+               {
+                   client.DefaultRequestHeaders.AcceptLanguage.Clear();
+                   client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
+                   client.BaseAddress = new Uri("https://localhost:7119");
+               })
+               .AddHttpMessageHandler<AuthenticationHeaderHandler>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddAuthorizationCore()
+            .AddScoped<IAuthenticationService, AuthenticationService>();       
             services.AddWindowsFormsBlazorWebView();
             blazorWebView1.HostPage = "wwwroot\\index.html";
             blazorWebView1.Services = services.BuildServiceProvider();

@@ -1,8 +1,9 @@
 ﻿using ICTAZEVoting.BlockChain.Extensions;
 using LevelDB;
+
 namespace ICTAZEVoting.BlockChain.IO
 {
-    public class StorageContext
+    public class StorageContext : IDisposable
     {
         readonly DB database;
         readonly Dictionary<string, string> keyStore = new();
@@ -24,6 +25,17 @@ namespace ICTAZEVoting.BlockChain.IO
             return null;
         }
 
+        public Task SetAsync(string key, string value)
+        {
+            database.Put(key, value);
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetAsync(string key)
+        {
+            return Task.FromResult(database.Get(key));
+        }
+
         public void UpdateBlockChain(Models.BlockChain chain)
         {
             database.UpdateBlock(chain, keyStore["key"], keyStore["iv"]);
@@ -38,6 +50,16 @@ namespace ICTAZEVoting.BlockChain.IO
                 keyStore.Add("key", keyAndIV[0]);
                 keyStore.Add("iv", keyAndIV[1]);
             }
+        }
+
+        public void Remove(string key)
+        {
+           database.Delete(key);
+        }
+
+        public void Dispose()
+        {
+            database.Dispose();
         }
     }
 }

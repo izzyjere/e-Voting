@@ -11,8 +11,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="BlazorAnimate" Version="3.0.0" />
+		<PackageReference Include="LevelDB.Standard" Version="2.1.6.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="6.0.400" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
 	
 		<PackageReference Include="MudBlazor" Version="6.0.11" />
 	
@@ -20,6 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\BlockChain\ICTAZEVoting.BlockChain\ICTAZEVoting.BlockChain.csproj" />
 		<ProjectReference Include="..\..\Core\ICTAZEVoting.Core\ICTAZEVoting.Core.csproj" />
 		<ProjectReference Include="..\..\Shared\ICTAZEVoting.Shared\ICTAZEVoting.Shared.csproj" />
 	</ItemGroup>

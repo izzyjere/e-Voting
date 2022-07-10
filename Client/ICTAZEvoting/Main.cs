@@ -1,3 +1,4 @@
+using ICTAZEVoting.Extensions;
 using ICTAZEVoting.Services;
 using ICTAZEVoting.WebUI;
 
@@ -18,7 +19,9 @@ namespace ICTAZEVoting
         public Main()
         {
             InitializeComponent();
+            Task.Run(async()=> await SessionStorage.RemoveItemAsync("UserToken"));
             var services = new ServiceCollection();
+
             services.AddMudServices(configuration =>
             {
                 configuration.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;

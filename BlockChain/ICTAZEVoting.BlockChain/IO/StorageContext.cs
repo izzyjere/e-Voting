@@ -33,7 +33,8 @@ namespace ICTAZEVoting.BlockChain.IO
 
         public Task<string> GetAsync(string key)
         {
-            return Task.FromResult(database.Get(key));
+            var token = database.Get(key);
+            return Task.FromResult(token);
         }
 
         public void UpdateBlockChain(Models.BlockChain chain)

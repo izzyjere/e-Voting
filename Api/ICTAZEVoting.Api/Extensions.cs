@@ -161,10 +161,10 @@ namespace ICTAZEVoting.Api
                 var result = await unitOfWork.Repository<ElectionType>().Update(entity);
                 return result ? Result.Success("Election was updated.") : Result.Fail("An error has occured. Try again.");
             });
-            app.MapGet("/userprofile/{id}", [Authorize] async (SystemDbContext db, UserManager<User> userManager, [FromRoute] string id) =>
+            app.MapPost("/userprofile", [Authorize] async (SystemDbContext db, UserManager<User> userManager, [FromBody]UserProfileRequest request) =>
              {
                  var myGuid = Guid.Empty;
-
+                 var id  = request.Id;
                  var user = await userManager.FindByIdAsync(id);
                  if (user == null)
                  {

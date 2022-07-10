@@ -1,4 +1,5 @@
-﻿
+﻿@using System.Net.Http.Json
+
 <AuthorizeView>
     <Authorized>       
         <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
@@ -28,8 +29,12 @@
     protected override async Task OnInitializedAsync()
     {
         claimsPrincipal = (await authenticationState).User;
-        var request = await httpClient.GetAsync($"{ApiEndpoints.UserProfile}/{claimsPrincipal.GetUserId()}");
-        var res = await request.ToResult<UserProfileResponse>();
-        userProfile = res.Data;
+        if (claimsPrincipal.Identity.IsAuthenticated)
+        {  
+            var req = new UserProfileRequest {Id = claimsPrincipal.GetUserId()};
+            var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);
+            var res = await request.ToResult<UserProfileResponse>();
+            userProfile = res.Data;
+        }
     }
 }

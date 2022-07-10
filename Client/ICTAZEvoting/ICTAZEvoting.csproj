@@ -24,8 +24,4 @@
 		<ProjectReference Include="..\..\Shared\ICTAZEVoting.Shared\ICTAZEVoting.Shared.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="WebUI\WebCam\" />
-	</ItemGroup>
-
 </Project>

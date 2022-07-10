@@ -1,4 +1,4 @@
-﻿namespace ICTAZEvoting
+﻿namespace ICTAZEVoting.WebUI.WebCam
 {
     public class WebCamOptions
     {

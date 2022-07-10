@@ -23,7 +23,7 @@ namespace ICTAZEVoting.Core.Extensions
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
             services
-                    .AddTransient<IUnitOfWork<int>, UnitOfWork<int>>()
+                    .AddTransient<IUnitOfWork<Guid>, UnitOfWork<Guid>>()
                     .AddTransient<ISeeder, DatabaseSeeder>();
 
             return services;

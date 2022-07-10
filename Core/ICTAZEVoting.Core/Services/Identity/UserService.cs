@@ -2,7 +2,6 @@
 using AutoMapper;
 
 using ICTAZEVoting.Shared.Interfaces;
-using ICTAZEVoting.Shared.Models;
 using ICTAZEVoting.Shared.Requests;
 using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Shared.Wrapper;
@@ -15,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Text;
 using System.Text.Encodings.Web;
+using ICTAZEVoting.Shared.Constants;
 
 namespace ICTAZEVoting.Core.Services.Identity
 {
@@ -46,7 +46,7 @@ namespace ICTAZEVoting.Core.Services.Identity
             var result = _mapper.Map<List<UserResponse>>(users);
             return await Result<List<UserResponse>>.SuccessAsync(result);
         }
-        public async Task<IResult<UserResponse>> GetByIdAsync(int userId)
+        public async Task<IResult<UserResponse>> GetByIdAsync(Guid userId)
         {
             var user = await _userManager.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
             var result = _mapper.Map<UserResponse>(user);
@@ -135,7 +135,7 @@ namespace ICTAZEVoting.Core.Services.Identity
 
 
         }
-        public async Task<IResult<UserRolesResponse>> GetRolesAsync(int userId)
+        public async Task<IResult<UserRolesResponse>> GetRolesAsync(Guid userId)
         {
             var viewModel = new List<UserRoleModel>();
             var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -169,14 +169,14 @@ namespace ICTAZEVoting.Core.Services.Identity
         /// <param name="code"></param>
         /// <returns></returns>
         /// <exception cref="EmailConfirmationException"></exception>
-        public async Task<IResult<int>> ConfirmEmailAsync(int userId, string code)
+        public async Task<IResult<Guid>> ConfirmEmailAsync(Guid userId, string code)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
             {
-                return await Result<int>.SuccessAsync(user.Id, string.Format("Account Confirmed for {0}. You can now use the /api/identity/token endpoint to generate JWT.", user.Email));
+                return await Result<Guid>.SuccessAsync(user.Id, string.Format("Account Confirmed for {0}. You can now use the /api/identity/token endpoint to generate JWT.", user.Email));
             }
             else
             {

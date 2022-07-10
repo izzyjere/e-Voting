@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ICTAZEVoting.Core.Models
 {
-    public class UserRole : IdentityUserRole<int>
+    public class UserRole : IdentityUserRole<Guid>
     {
         [ForeignKey(nameof(UserId))]
         public virtual User User { get; set; }

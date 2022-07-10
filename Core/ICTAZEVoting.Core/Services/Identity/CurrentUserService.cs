@@ -17,10 +17,10 @@ namespace ICTAZEVoting.Core.Services.Identity
             throw new NotImplementedException();
         }
 
-        public Task<int> GetUserId()
+        public Task<Guid> GetUserId()
         {
             var context = httpContextAccessor.HttpContext;
-            var id = 0;
+            var id = Guid.Empty;
             if (context != null)
             {
                 //id = context.User.GetId();

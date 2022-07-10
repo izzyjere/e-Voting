@@ -20,7 +20,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {
-            foreach (var entry in ChangeTracker.Entries<AuditableEntity<int>>().ToList())
+            foreach (var entry in ChangeTracker.Entries<AuditableEntity<Guid>>().ToList())
             {
                 var userName = await currentUserService.GetUserName();
                 switch (entry.State)
@@ -41,7 +41,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
 
 
             }
-            if (await currentUserService.GetUserId() == 0)
+            if (await currentUserService.GetUserId() == Guid.Empty)
             {
                 return await base.SaveChangesAsync(cancellationToken);
             }
@@ -78,27 +78,54 @@ namespace ICTAZEVoting.Core.Data.Contexts
                 entity.ToTable("UserRoles", "Identity");
                 entity.HasKey(nameof(UserRole.UserId), nameof(UserRole.RoleId));
             });
-            modelBuilder.Entity<IdentityUserClaim<int>>(entity =>
+            modelBuilder.Entity<IdentityUserClaim<Guid>>(entity =>
             {
                 entity.ToTable("UserClaims", "Identity");
             });
-            modelBuilder.Entity<IdentityUserLogin<int>>(entity =>
+            modelBuilder.Entity<IdentityUserLogin<Guid>>(entity =>
             {
                 entity.ToTable("UserLogins", "Identity");
-                entity.HasKey(nameof(IdentityUserLogin<int>.LoginProvider), nameof(IdentityUserLogin<int>.ProviderKey));
+                entity.HasKey(nameof(IdentityUserLogin<Guid>.LoginProvider), nameof(IdentityUserLogin<Guid>.ProviderKey));
             });
-            modelBuilder.Entity<IdentityRoleClaim<int>>(entity =>
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>(entity =>
             {
                 entity.ToTable(name: "RoleClaims", "Identity");
             });
-            modelBuilder.Entity<IdentityUserToken<int>>(entity =>
+            modelBuilder.Entity<IdentityUserToken<Guid>>(entity =>
             {
                 entity.ToTable("UserTokens", "Identity");
-                entity.HasKey(nameof(IdentityUserToken<int>.UserId), nameof(IdentityUserToken<int>.LoginProvider), nameof(IdentityUserToken<int>.Name));
+                entity.HasKey(nameof(IdentityUserToken<Guid>.UserId), nameof(IdentityUserToken<Guid>.LoginProvider), nameof(IdentityUserToken<Guid>.Name));
             });
 
             #endregion
             #region Domain
+            modelBuilder.Entity<Election>(e =>
+            {
+                e.ToTable("Elections");                
+                e.OwnsMany(e => e.Voters, ep =>
+                {
+                    ep.ToTable("ElectionVoters");
+                    ep.Property(p => p.ElectionId);
+                    ep.WithOwner(p => p.Election);
+                });
+            });
+            modelBuilder.Entity<SystemAdmin>(e =>
+            {
+                e.ToTable("SystemAdmins");
+                e.OwnsOne(p => p.PersonalDetails, p =>
+                {
+                    p.ToTable("SystemAdminPersonalDetails");
+                    p.Property(p => p.OwnerId);
+                });
+            });
+            modelBuilder.Entity<ElectionPosition>(e=>
+            {
+                e.ToTable("ElectionPositions");                  
+            });
+            modelBuilder.Entity<PoliticalParty>(e =>
+            {
+                e.ToTable("PoliticalParty");
+            });
             modelBuilder.Entity<Voter>(e =>
             {
                 e.ToTable("Voters");
@@ -112,6 +139,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
             modelBuilder.Entity<Candidate>(e =>
             {
                 e.ToTable("Candidates");
+               
                 e.OwnsOne(v => v.PersonalDetails, p =>
                 {
                     p.ToTable("CandidatePersonalDetails");
@@ -120,22 +148,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
 
             });
             
-            modelBuilder.Entity<Election>(e =>
-            {
-                e.ToTable("Elections");
-                e.OwnsMany(e => e.Positions, ep =>
-                {
-                    ep.ToTable("ElectionPositions");
-                    ep.Property(p => p.ElectionId);
-                    ep.WithOwner(p => p.Election);
-                });
-                e.OwnsMany(e => e.Voters, ep =>
-                {
-                    ep.ToTable("ElectionVoters");
-                    ep.Property(p => p.ElectionId);
-                    ep.WithOwner(p => p.Election);
-                });
-            });
+            
             modelBuilder.Entity<ElectionType>(e =>
             {
                 e.ToTable("ElectionTypes");

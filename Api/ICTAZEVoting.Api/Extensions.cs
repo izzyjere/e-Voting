@@ -16,17 +16,16 @@ using Microsoft.AspNetCore.Mvc;
 using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Core.Extensions;
 using Microsoft.OpenApi.Models;
+using ICTAZEVoting.Shared.Interfaces;
 
 namespace ICTAZEVoting.Api
 {
-
     public static class Extensions
     {
         public static IEndpointRouteBuilder MapEndpointRoutes(this IEndpointRouteBuilder app)
         {
-            #region Identity
-
-            app.MapPost("/login", async (ITokenService tokenService, [FromBody] TokenRequest request) =>
+            #region Identity             
+            app.MapPost("/token", async (ITokenService tokenService, [FromBody] TokenRequest request) =>
             {
                 var res = await tokenService.LoginAsync(request);
                 if (res.Succeeded)
@@ -35,6 +34,17 @@ namespace ICTAZEVoting.Api
                     return new Result<TokenResponse>() { Succeeded = false, Messages = new List<string> { "Incorect credentials" }, Data = new TokenResponse() };
             });
             #endregion
+            return app;
+        }
+        internal static IApplicationBuilder Initialize (this IApplicationBuilder app)
+        {
+            var scope = app.ApplicationServices.CreateScope();
+            var seeder = scope.ServiceProvider.GetService<ISeeder>();
+            if(seeder == null)
+            {
+                throw new Exception("No Seeder was registered");
+            }
+            seeder.Seed();
             return app;
         }
         internal static IServiceCollection RegisterSwagger(this IServiceCollection services)

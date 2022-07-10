@@ -5,8 +5,8 @@ namespace ICTAZEVoting.Core.Services.Identity
 {
     public interface IUserAccountService
     {
-        Task<IResult> ChangePasswordAsync(ChangePasswordRequest model, int userId);
+        Task<IResult> ChangePasswordAsync(ChangePasswordRequest model, Guid userId);
 
-        Task<IResult<string>> GetProfilePictureAsync(int userId);        
+        Task<IResult<string>> GetProfilePictureAsync(Guid userId);        
     }
 }

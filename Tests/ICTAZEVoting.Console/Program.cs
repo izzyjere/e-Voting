@@ -1,1 +1,1 @@
-﻿
+﻿Console.WriteLine("Cause this can't be empty");

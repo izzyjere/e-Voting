@@ -18,7 +18,7 @@
                 <MudAvatar Image="@Profile.ProfilePicture" />
             </ActivatorContent>
             <ChildContent>
-                <PersonCard Profile="@Profile" Class="mt-n2" />
+                <PersonCard Profile="@Profile" Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text);" />
                 <MudDivider Class="mb-2" />
                 <MudListItem Text="Account" Icon="@Icons.Material.Outlined.Person" Href="/personal/account" />
                 <MudListItem Text="Logout" Icon="@Icons.Material.Outlined.Login" Href="/pages/authentication/login" />

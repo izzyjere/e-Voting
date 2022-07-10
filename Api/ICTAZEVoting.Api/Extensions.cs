@@ -17,6 +17,10 @@ using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Core.Extensions;
 using Microsoft.OpenApi.Models;
 using ICTAZEVoting.Shared.Interfaces;
+using ICTAZEVoting.Shared.Constants;
+using Microsoft.AspNetCore.Authorization;
+using ICTAZEVoting.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ICTAZEVoting.Api
 {
@@ -33,6 +37,69 @@ namespace ICTAZEVoting.Api
                 else
                     return new Result<TokenResponse>() { Succeeded = false, Messages = new List<string> { "Incorect credentials" }, Data = new TokenResponse() };
             });
+            #endregion
+            #region Domain
+            app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            {
+                var result = await unitOfWork.Repository<Voter>().Entities().ToListAsync();
+                return Result<IEnumerable<Voter>>.Success(result);
+            });
+            app.MapGet("/voters/{id}", async (IUnitOfWork<Guid> unitOfWork,[FromRoute] string id) =>
+            {  var myGuid = Guid.Empty;
+                if(Guid.TryParse(id,out myGuid))
+                {
+                    var voter = await unitOfWork.Repository<Voter>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (voter == null)
+                    {
+                        return Result<Voter>.Fail("Not found.");
+                    }
+                    return Result<Voter>.Success(voter);
+                }
+                return Result<Voter>.Fail("Not found.");
+
+            });
+            app.MapGet("/candidates", [Authorize(Roles = $"{RoleConstants.AdministratorRole},{RoleConstants.BasicRole}")] async (IUnitOfWork<Guid> unitOfWork) =>
+            {
+                var result = await unitOfWork.Repository<Candidate>().Entities().Include(c=>c.Position).ThenInclude(p=>p.Election).Include(c=>c.PoliticalParty).ToListAsync();
+                return Result<IEnumerable<Candidate>>.Success(result);
+            });
+            app.MapGet("/candidates/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var candidate = await unitOfWork.Repository<Candidate>().Entities().Include(c => c.Position).ThenInclude(p => p.Election).Include(c => c.PoliticalParty).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (candidate == null)
+                    {
+                        return Result<Candidate>.Fail("Not found.");
+                    }
+                    return Result<Candidate>.Success(candidate);
+                }
+                return Result<Candidate>.Fail("Not found.");
+
+            });
+            app.MapGet("/elections", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            {
+                var result = await unitOfWork.Repository<Election>().Entities().Include(e=>e.Voters).Include(e=>e.Positions).ThenInclude(p=>p.Candidates).ThenInclude(c=>c.PoliticalParty).ToListAsync();
+                return Result<IEnumerable<Election>>.Success(result);
+            });
+            app.MapGet("/elections/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Voters).Include(e => e.Positions).ThenInclude(p => p.Candidates).ThenInclude(c => c.PoliticalParty).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (election == null)
+                    {
+                        return Result<Election>.Fail("Not found.");
+                    }
+                    return Result<Election>.Success(election);
+                }
+                return Result<Election>.Fail("Not found.");
+
+            });
+
+
             #endregion
             return app;
         }

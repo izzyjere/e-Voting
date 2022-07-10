@@ -100,7 +100,9 @@ namespace ICTAZEVoting.Api
             {
                 var result = await unitOfWork.Repository<Candidate>().Update(entity);
                 return result ? Result.Success("Candidate details were updated.") : Result.Fail("An error has occured. Try again.");
+
             });
+            //Election
             app.MapGet("/elections", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
             {
                 var result = await unitOfWork.Repository<Election>().Entities().Include(e => e.Voters).Include(e => e.Positions).ThenInclude(p => p.Candidates).ThenInclude(c => c.PoliticalParty).ToListAsync();
@@ -130,6 +132,37 @@ namespace ICTAZEVoting.Api
                  var result = await unitOfWork.Repository<Election>().Update(entity);
                  return result ? Result.Success("Election was updated.") : Result.Fail("An error has occured. Try again.");
              });
+            app.MapGet("/elections/types", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            {
+                var result = await unitOfWork.Repository<ElectionType>().Entities().ToListAsync();
+                return Result<IEnumerable<ElectionType>>.Success(result);
+            });
+            app.MapGet("/elections/types/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var electionType = await unitOfWork.Repository<ElectionType>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (electionType == null)
+                    {
+                        return Result<ElectionType>.Fail("Not found.");
+                    }
+                    return Result<ElectionType>.Success(electionType);
+                }
+                return Result<ElectionType>.Fail("Not found.");
+            });
+            app.MapPost("/elections/types/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] ElectionType entity) =>
+            {
+                var result = await unitOfWork.Repository<ElectionType>().Add(entity);
+                return result ? Result.Success("Election type was created.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapPut("/elections/types/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] ElectionType entity) =>
+            {
+                var result = await unitOfWork.Repository<ElectionType>().Update(entity);
+                return result ? Result.Success("Election was updated.") : Result.Fail("An error has occured. Try again.");
+            });
+
+
             #endregion
             return app;
         }

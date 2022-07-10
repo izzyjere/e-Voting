@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\ICTAZEvoting.Shared\ICTAZEVoting.Shared.csproj" />
+    <ProjectReference Include="..\..\Shared\ICTAZEVoting.Shared\ICTAZEVoting.Shared.csproj" />
   </ItemGroup>
 
 </Project>

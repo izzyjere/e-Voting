@@ -1,4 +1,4 @@
-﻿using ICTAZEvoting.Shared.Models;
+﻿using ICTAZEVoting.Shared.Models;
 
 namespace ICTAZEVoting.BlockChain.Models
 {

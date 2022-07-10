@@ -1,5 +1,5 @@
 ﻿using ICTAZEVoting.BlockChain.IO;
-using ICTAZEvoting.Shared.Models;
+using ICTAZEVoting.Shared.Models;
 
 using Newtonsoft.Json;
 
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
-using ICTAZEvoting.Shared.Wrapper;
+using ICTAZEVoting.Shared.Wrapper;
 
 namespace ICTAZEVoting.BlockChain.Network
 {

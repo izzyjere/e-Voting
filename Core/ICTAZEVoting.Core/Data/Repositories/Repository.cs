@@ -17,15 +17,33 @@ namespace ICTAZEVoting.Core.Data.Repositories
         {
             context = _context;
         }
-        public async Task Add(T entity)
+        public Task<bool> Add(T entity)
         {
-            await context.Set<T>().AddAsync(entity);
+            try
+            {
+                context.Set<T>().Add(entity);
+                return Task.FromResult(true);
+            }
+            catch
+            {
+
+                return Task.FromResult(false);
+            }
         }
 
-        public Task Delete(T entity)
+        public Task<bool> Delete(T entity)
         {
-            context.Set<T>().Remove(entity);
-            return Task.CompletedTask;
+            try
+            {
+                context.Set<T>().Remove(entity);
+                return Task.FromResult(true);
+            }
+            catch 
+            {
+
+                return Task.FromResult(false);
+            }
+           
         }
 
         public IQueryable<T> Entities(bool eager = true)
@@ -60,10 +78,17 @@ namespace ICTAZEVoting.Core.Data.Repositories
             return await context.Set<T>().ToListAsync();
         }
 
-        public Task Update(T entity)
+        public Task<bool> Update(T entity)
         {
-            context.Set<T>().Update(entity);
-            return Task.CompletedTask;
+            try
+            {
+                context.Set<T>().Update(entity);
+                return Task.FromResult(true);
+            }
+            catch
+            {
+                return Task.FromResult(false);
+            }
         }
     }
 }

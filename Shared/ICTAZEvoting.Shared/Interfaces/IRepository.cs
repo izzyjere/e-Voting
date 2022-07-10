@@ -10,9 +10,9 @@ namespace ICTAZEVoting.Shared.Interfaces
         IQueryable<T> Entities(bool eager = true);
         Task<List<T>> GetAll();
         Task<T> Get(TKey id);
-        Task Delete(T entity);
-        Task Update(T entity);
-        Task Add(T entity);
+        Task<bool> Delete(T entity);
+        Task<bool> Update(T entity);
+        Task<bool> Add(T entity);
 
     }
 }

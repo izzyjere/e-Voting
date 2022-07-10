@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICTAZEVoting.Test", "Tests\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{95B185C4-EF7D-4945-94B7-A563B356CBAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICTAZEVoting.Console", "Tests\ICTAZEVoting.Console\ICTAZEVoting.Console.csproj", "{5060D529-2D66-4DF2-8342-44398B56292B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICTAZEVoting.Console", "Tests\ICTAZEVoting.Console\ICTAZEVoting.Console.csproj", "{5060D529-2D66-4DF2-8342-44398B56292B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

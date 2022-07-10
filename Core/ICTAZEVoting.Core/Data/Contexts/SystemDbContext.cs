@@ -136,7 +136,10 @@ namespace ICTAZEVoting.Core.Data.Contexts
                     ep.WithOwner(p => p.Election);
                 });
             });
-            modelBuilder
+            modelBuilder.Entity<ElectionType>(e =>
+            {
+                e.ToTable("ElectionTypes");
+            });
             #endregion
         }
     }

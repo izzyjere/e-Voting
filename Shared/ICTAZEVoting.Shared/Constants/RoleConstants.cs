@@ -2,7 +2,7 @@
 {
     public class RoleConstants
     {
-        public static string AdministratorRole { get; set; }
-        public static string BasicRole { get; set; }
+        public static string AdministratorRole { get => "Administrator"; }
+        public static string BasicRole { get=>"Voter"; }
     }
 }

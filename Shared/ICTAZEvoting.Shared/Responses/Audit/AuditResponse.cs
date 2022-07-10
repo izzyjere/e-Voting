@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ICTAZEvoting.Shared.Responses.Audit
+namespace ICTAZEVoting.Shared.Responses.Audit
 {
     public class AuditResponse
     {

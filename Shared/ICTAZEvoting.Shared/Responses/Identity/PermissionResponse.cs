@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace ICTAZEvoting.Shared.Responses.Identity
+namespace ICTAZEVoting.Shared.Responses.Identity
 {
     public class PermissionResponse
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ICTAZEvoting.Shared.Requests;
+namespace ICTAZEVoting.Shared.Requests;
 
 public class PermissionRequest
 {

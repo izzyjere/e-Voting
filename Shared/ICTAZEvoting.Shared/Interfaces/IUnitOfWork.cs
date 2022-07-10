@@ -1,10 +1,10 @@
-﻿using ICTAZEvoting.Shared.Contracts;
+﻿using ICTAZEVoting.Shared.Contracts;
 
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ICTAZEvoting.Shared.Interfaces
+namespace ICTAZEVoting.Shared.Interfaces
 {
     public interface IUnitOfWork<TKey> : IDisposable
     {

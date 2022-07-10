@@ -1,9 +1,9 @@
-﻿using ICTAZEvoting.Shared.Contracts;
+﻿using ICTAZEVoting.Shared.Contracts;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ICTAZEvoting.Shared.Interfaces
+namespace ICTAZEVoting.Shared.Interfaces
 {
     public interface IRepository<T, TKey> where T : class, IEntity<TKey>
     {

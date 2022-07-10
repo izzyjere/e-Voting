@@ -1,4 +1,4 @@
-﻿namespace ICTAZEvoting.Shared.Interfaces
+﻿namespace ICTAZEVoting.Shared.Interfaces
 {
     public interface ISeeder
     {

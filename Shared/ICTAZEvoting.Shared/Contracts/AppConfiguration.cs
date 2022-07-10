@@ -1,4 +1,4 @@
-﻿namespace ICTAZEvoting.Shared.Contracts
+﻿namespace ICTAZEVoting.Shared.Contracts
 {
     public class AppConfiguration
     {

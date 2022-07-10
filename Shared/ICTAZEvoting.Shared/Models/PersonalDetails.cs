@@ -1,8 +1,8 @@
-﻿using ICTAZEvoting.Shared.Enums;
+﻿using ICTAZEVoting.Shared.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ICTAZEvoting.Shared.Models
+namespace ICTAZEVoting.Shared.Models
 {
     public class PersonalDetails
     {

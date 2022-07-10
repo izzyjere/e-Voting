@@ -1,8 +1,8 @@
-﻿using ICTAZEvoting.Shared.Contracts;
+﻿using ICTAZEVoting.Shared.Contracts;
 
 using System;
 
-namespace ICTAZEvoting.Shared.Models
+namespace ICTAZEVoting.Shared.Models
 {
     public class Voter: AuditableEntity<Guid>
     {

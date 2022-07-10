@@ -5,6 +5,7 @@ namespace ICTAZEVoting.BlockChain.Models
     public class BlockChain
     {
         public IList<Block> Chain { get; set; }
+        public Guid ElectionId { get; set; }
         public List<Vote> PendingVotes { get; set; } = new();
         public int Difficulty { set; get; } = 2;
         public BlockChain()

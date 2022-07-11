@@ -1,14 +1,11 @@
 using ICTAZEVoting.Extensions;
-using ICTAZEVoting.Services;
+using ICTAZEVoting.Services.Identity;
 using ICTAZEVoting.WebUI;
-
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebView.WindowsForms;
 using Microsoft.Extensions.DependencyInjection;
-
 using MudBlazor;
 using MudBlazor.Services;
-
 using System.Globalization;
 using System.Net.Http;
 

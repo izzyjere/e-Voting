@@ -5,7 +5,7 @@ using System.Threading;
 using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Extensions;
 
-namespace ICTAZEVoting.Services
+namespace ICTAZEVoting.Services.Identity
 {
     public class AuthenticationHeaderHandler : DelegatingHandler
     {

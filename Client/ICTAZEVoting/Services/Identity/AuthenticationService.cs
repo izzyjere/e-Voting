@@ -1,5 +1,4 @@
-﻿
-using ICTAZEVoting.Extensions;
+﻿using ICTAZEVoting.Extensions;
 using ICTAZEVoting.Shared.Constants;
 using ICTAZEVoting.Shared.Requests;
 using ICTAZEVoting.Shared.Responses.Identity;
@@ -13,7 +12,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 
-namespace ICTAZEVoting.Services
+namespace ICTAZEVoting.Services.Identity
 {
     public class AuthenticationService : IAuthenticationService
     {

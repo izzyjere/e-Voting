@@ -1,5 +1,6 @@
 ﻿@using System.Net.Http
 @using ICTAZEVoting.Services
+@using ICTAZEVoting.Shared.Interfaces
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
@@ -16,9 +17,9 @@
 @using ICTAZEVoting.Shared.Constants
 @using ICTAZEVoting.Shared.Requests
 @using ICTAZEVoting.Extensions
+@using ICTAZEVoting.Services.Identity
 @using ICTAZEVoting.WebUI
 @using ICTAZEVoting.WebUI.Shared
-@using ICTAZEVoting.Shared.Requests
 @using BlazorAnimate
 @using ICTAZEVoting.Shared.Enums
 @using Radzen
@@ -29,3 +30,6 @@
 @inject ISnackbar snackBar
 @inject IAuthenticationService authenticationService
 @inject NavigationManager Navigation
+@inject IElectionService electionService
+@inject IVoterService voterSevice
+@inject IVotingService votingServicess

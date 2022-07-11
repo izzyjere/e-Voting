@@ -15,7 +15,7 @@ using ICTAZEVoting.Shared.Responses.Identity;
 using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace ICTAZEVoting.Services
+namespace ICTAZEVoting.Services.Identity
 {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {

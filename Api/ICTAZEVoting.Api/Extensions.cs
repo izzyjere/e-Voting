@@ -152,15 +152,38 @@ namespace ICTAZEVoting.Api
                 }
                 return Result<ElectionType>.Fail("Not found.");
             });
-            app.MapPost("/elections/types/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] ElectionType entity) =>
+            app.MapPost("/elections/types/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] string entity) =>
             {
-                var result = await unitOfWork.Repository<ElectionType>().Add(entity);
+                var result = await unitOfWork.Repository<ElectionType>().Add(new ElectionType { Name = entity });
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
                 return result ? Result.Success("Election type was created.") : Result.Fail("An error has occured. Try again.");
             });
             app.MapPut("/elections/types/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] ElectionType entity) =>
             {
                 var result = await unitOfWork.Repository<ElectionType>().Update(entity);
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
                 return result ? Result.Success("Election was updated.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapDelete("/elections/types/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var entity = await unitOfWork.Repository<ElectionType>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (entity == null)
+                    {
+                        return Result.Fail("Not found.");
+                    }
+                    else
+                    {
+                        var result = await unitOfWork.Repository<ElectionType>().Delete(entity);
+                        result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                        return result? Result.Success($"{entity.Name} was deleted."): Result.Fail("An error occured, try again.");
+                    }
+                   
+                }
+                return Result.Fail("Not found.");
+
             });
             app.MapPost("/userprofile", [Authorize] async (SystemDbContext db, UserManager<User> userManager, [FromBody]UserProfileRequest request) =>
              {

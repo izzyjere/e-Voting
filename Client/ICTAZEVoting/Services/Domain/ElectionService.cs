@@ -1,25 +1,29 @@
-﻿using ICTAZEVoting.Shared.Interfaces;
-using ICTAZEVoting.Shared.Models;
-using ICTAZEVoting.Shared.Wrapper;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿global using ICTAZEVoting.Shared.Interfaces;
+global using ICTAZEVoting.Shared.Models;
+global using ICTAZEVoting.Shared.Wrapper;
+global using ICTAZEVoting.Shared.Constants;
+global using System.Net.Http.Json;
+global using ICTAZEVoting.Extensions;
+using ICTAZEVoting.Shared.Contracts;
 
 namespace ICTAZEVoting.Services.Domain
 {
     public class ElectionService : IElectionService
     {
+        readonly HttpClient httpClient;
+        public ElectionService(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;
+        }
         public Task<IResult> AddElectionPosition(ElectionPosition position)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IResult> AddElectionType()
+        public async Task<IResult> AddElectionType(string type)
         {
-            throw new NotImplementedException();
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddElectionType, type);
+            return await add.ToResult();
         }
 
         public Task<IResult> AddPoliticalParty(PoliticalParty politicalParty)
@@ -37,9 +41,14 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<IResult> DeleteElectionType(string id)
+        public async Task<IResult> DeleteElectionType(string id)
         {
-            throw new NotImplementedException();
+            var delete = await httpClient.DeleteAsync($"{ApiEndpoints.DeleteElectionType}/{id}");
+            if(delete.IsSuccessStatusCode)
+            {
+                return await delete.ToResult();
+            }
+            return Result.Fail("An error occured. Check your internet connection.");
         }
 
         public Task<IResult> DisqualifyCandidate(string id)
@@ -77,9 +86,16 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<List<ElectionType>> GetElectionTypes()
+        public async Task<List<ElectionType>> GetElectionTypes()
         {
-            throw new NotImplementedException();
+            var get = await httpClient.GetAsync(ApiEndpoints.GetElectionTypes);
+            var list = new List<ElectionType>();
+            if(get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<List<ElectionType>>();
+                list = res.Data;
+            }
+            return list;
         }
 
         public Task<PoliticalParty> GetPoliticalParty(string id)
@@ -112,9 +128,10 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<IResult> UpdateElectionType(ElectionType type)
-        {
-            throw new NotImplementedException();
+        public async Task<IResult> UpdateElectionType(ElectionType entity)
+{
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.EditElectionType, entity);
+            return await add.ToResult();
         }
 
         public Task<IResult> UpdatePoliticalParty(PoliticalParty politicalParty)

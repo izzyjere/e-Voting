@@ -71,44 +71,8 @@ namespace ICTAZEVoting.Services.Identity
             var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
             return securityToken.Claims.ToList();
 
-        }
-        private IEnumerable<Claim> GetClaimsFromJwt(string jwt)
-        {
-            var claims = new List<Claim>();
-            var payload = jwt.Split('.')[1];
-            var jsonBytes = ParseBase64WithoutPadding(payload);
-            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-
-            if (keyValuePairs != null)
-            {
-                keyValuePairs.TryGetValue(ClaimTypes.Role, out var roles);
-
-                if (roles != null)
-                {
-                    if (roles.ToString().Trim().StartsWith("["))
-                    {
-                        var parsedRoles = JsonSerializer.Deserialize<string[]>(roles.ToString());
-
-                        claims.AddRange(parsedRoles.Select(role => new Claim(ClaimTypes.Role, role)));
-                    }
-                    else
-                    {
-                        claims.Add(new Claim(ClaimTypes.Role, roles.ToString()));
-                    }
-
-                    keyValuePairs.Remove(ClaimTypes.Role);
-                }
-            }
-
-            return claims;
-        }
-
-        private byte[] ParseBase64WithoutPadding(string payload)
-        {
-            payload = payload.Trim().Replace('-', '+').Replace('_', '/');
-            var base64 = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
-            return Convert.FromBase64String(base64);
-        }
+        }         
+       
     }
 }
 

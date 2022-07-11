@@ -26,9 +26,10 @@ namespace ICTAZEVoting.Services.Domain
             return await add.ToResult();
         }
 
-        public Task<IResult> AddPoliticalParty(PoliticalParty politicalParty)
+        public async Task<IResult> AddPoliticalParty(PoliticalParty politicalParty)
         {
-            throw new NotImplementedException();
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddPoliticalParty, politicalParty);
+            return await add.ToResult();
         }
 
         public Task<IResult> DeleteCandidate(string id)
@@ -40,9 +41,14 @@ namespace ICTAZEVoting.Services.Domain
         {
             throw new NotImplementedException();
         }  
-        public Task<IResult> DeletePoliticalParty(string id)
+        public async Task<IResult> DeletePoliticalParty(string id)
         {
-            throw new NotImplementedException();
+            var delete = await httpClient.DeleteAsync($"{ApiEndpoints.DeletePoliticalParty}/{id}");
+            if (delete.IsSuccessStatusCode)
+            {
+                return await delete.ToResult();
+            }
+            return Result.Fail("An error occured. Check your internet connection.");
         }
 
         public async Task<IResult> DeleteElectionType(string id)
@@ -107,9 +113,16 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<List<PoliticalParty>> GetPoliticalPartyList()
+        public async Task<List<PoliticalParty>> GetPoliticalPartyList()
         {
-            throw new NotImplementedException();
+            var get = await httpClient.GetAsync(ApiEndpoints.GetPoliticalParties);
+            var list = new List<PoliticalParty>();
+            if (get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<List<PoliticalParty>>();
+                list = res.Data;
+            }
+            return list;
         }
 
         public Task<IResult> RegisterCandidate(Candidate candidate)
@@ -138,9 +151,10 @@ namespace ICTAZEVoting.Services.Domain
             return await add.ToResult();
         }
 
-        public Task<IResult> UpdatePoliticalParty(PoliticalParty politicalParty)
+        public async Task<IResult> UpdatePoliticalParty(PoliticalParty politicalParty)
         {
-            throw new NotImplementedException();
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.EditPoliticalParty, politicalParty);
+            return await add.ToResult();
         }
     }
 }

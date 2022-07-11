@@ -126,6 +126,14 @@ namespace ICTAZEVoting.Core.Data.Contexts
             {
                 e.ToTable("PoliticalParty");
             });
+            modelBuilder.Entity<PolingStation>(e =>
+            {
+                e.ToTable("PolingStations");
+            });
+            modelBuilder.Entity<Constituency>(e =>
+            {
+                e.ToTable("Constituencies");
+            });
             modelBuilder.Entity<Voter>(e =>
             {
                 e.ToTable("Voters");

@@ -1,10 +1,8 @@
-﻿using ICTAZEVoting.Shared.Models;
-using ICTAZEVoting.Shared.Wrapper;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿global using ICTAZEVoting.Shared.Models;
+global using ICTAZEVoting.Shared.Requests;
+global using ICTAZEVoting.Shared.Wrapper;
+global using System.Collections.Generic;
+global using System.Threading.Tasks;
 
 namespace ICTAZEVoting.Shared.Interfaces
 {
@@ -21,7 +19,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> UpdateCandidate(Candidate candidate);
         Task<IResult> AddPoliticalParty(PoliticalParty politicalParty);
         Task<IResult> RemovePoliticalParty(PoliticalParty politicalParty);
-        Task<IResult> UpdatePoliticalParty(PoliticalParty politicalParty);
+        Task<IResult> UpdatePoliticalParty(PoliticalPartyUpdateRequest politicalParty);
         Task<List<PoliticalParty>> GetPoliticalPartyList();
         Task<PoliticalParty> GetPoliticalParty(string id);
         Task<IResult> AddElectionType(string type);

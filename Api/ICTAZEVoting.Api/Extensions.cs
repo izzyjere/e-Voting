@@ -210,8 +210,17 @@ namespace ICTAZEVoting.Api
                 result = await unitOfWork.Commit(new CancellationToken()) != 0;
                 return result ? Result.Success("Political Party was created.") : Result.Fail("An error has occured. Try again.");
             });
-            app.MapPut("/elections/parties/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] PoliticalParty entity) =>
+            app.MapPost("/elections/parties/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] PoliticalPartyUpdateRequest request) =>
             {
+                var entity = await unitOfWork.Repository<PoliticalParty>().Get(request.Id);
+                if(entity==null)
+                {
+                    return Result.Fail("Not found.");
+                }
+                entity.Name = request.Name;
+                entity.Slogan = request.Slogan;
+                entity.Manifesto = request.Manifesto;
+                entity.LogoUrl = request.LogoUrl;
                 var result = await unitOfWork.Repository<PoliticalParty>().Update(entity);
                 result = await unitOfWork.Commit(new CancellationToken()) != 0;
                 return result ? Result.Success("Political Party was updated.") : Result.Fail("An error has occured. Try again.");

@@ -68,7 +68,14 @@
                     <MudCardHeader>
                         <CardHeaderAvatar>
                             <MudAvatar Class="mud-elevation-25">
-                                <MudImage Src="@context.LogoUrl" />
+                                @if(string.IsNullOrEmpty(context.LogoUrl))
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" />
+                                }
+                                else
+                                {
+                                    <MudImage Src="@context.LogoUrl" /> 
+                                }                               
                             </MudAvatar>
                         </CardHeaderAvatar>
                         <CardHeaderContent>
@@ -143,7 +150,15 @@
         }
         else
         {
-            var result = await electionService.UpdatePoliticalParty(politicalParty);
+            var request = new PoliticalPartyUpdateRequest
+            {   
+                Id = politicalParty.Id,
+                Name = politicalParty.Name,
+                Manifesto = politicalParty.Slogan,
+                Slogan = politicalParty.Slogan,
+                LogoUrl = politicalParty.LogoUrl
+            };
+            var result = await electionService.UpdatePoliticalParty(request);
             if(result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
@@ -156,7 +171,7 @@
 
         }
     }
-    private async void Edit(PoliticalParty politicalParty)
+    private void Edit(PoliticalParty politicalParty)
     {
         this.politicalParty = politicalParty;
         isEditing = true;

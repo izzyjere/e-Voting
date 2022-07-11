@@ -5,6 +5,7 @@ global using ICTAZEVoting.Shared.Constants;
 global using System.Net.Http.Json;
 global using ICTAZEVoting.Extensions;
 using ICTAZEVoting.Shared.Contracts;
+using ICTAZEVoting.Shared.Requests;
 
 namespace ICTAZEVoting.Services.Domain
 {
@@ -151,7 +152,7 @@ namespace ICTAZEVoting.Services.Domain
             return await add.ToResult();
         }
 
-        public async Task<IResult> UpdatePoliticalParty(PoliticalParty politicalParty)
+        public async Task<IResult> UpdatePoliticalParty(PoliticalPartyUpdateRequest politicalParty)
         {
             var add = await httpClient.PostAsJsonAsync(ApiEndpoints.EditPoliticalParty, politicalParty);
             return await add.ToResult();

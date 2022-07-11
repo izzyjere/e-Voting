@@ -14,19 +14,21 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudGrid Justify="Justify.FlexEnd">
+      <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@politicalParty">
+           <MudGrid Justify="Justify.FlexEnd">
             <MudItem xs="12" sm="6" md="4">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField @bind-Value="politicalParty.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    <MudTextField For="()=>politicalParty.Name" @bind-Value="politicalParty.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
 
             <MudItem xs="12" sm="6" md="4">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField @bind-Value="politicalParty.Slogan" Label="Slogan" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    <MudTextField  For="()=>politicalParty.Slogan" @bind-Value="politicalParty.Slogan" Label="Slogan" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
-            <MudItem xs="12" sm="6" md="4">
+            <MudItem xs="12" sm="6" md="4"> 
+                <InputFile OnChange="UploadFiles" hidden accept=".png,.jpeg,.gif,.webp,.svg" id="fileInput"></InputFile>
                 <MudButton Class="mt-6" HtmlTag="label"
                            Variant="Variant.Filled"
                            Color="Color.Info"
@@ -37,11 +39,13 @@
             </MudItem>
             <MudItem xs="12">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField Lines="4" @bind-Value="politicalParty.Manifesto" Label="Manifesto" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    <MudTextField Lines="4"  For="()=>politicalParty.Manifesto" @bind-Value="politicalParty.Manifesto" Label="Manifesto" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
         </MudGrid>
-        <MudButton Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Political Party</MudButton>
+        <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Political Party</MudButton>
+      </EditForm>
+       
     </MudCardContent>
 </MudCard>
 
@@ -179,10 +183,7 @@
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private void UploadFiles(InputFileChangeEventArgs e)
     {
-        foreach (var file in e.GetMultipleFiles())
-        {
-            files.Add(file);
-        }
+        
         //TODO upload the files to the server
     }
 }

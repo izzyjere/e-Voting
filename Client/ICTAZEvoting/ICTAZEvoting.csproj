@@ -27,4 +27,8 @@
 		<ProjectReference Include="..\..\Shared\ICTAZEVoting.Shared\ICTAZEVoting.Shared.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Services\Domain\" />
+	</ItemGroup>
+
 </Project>

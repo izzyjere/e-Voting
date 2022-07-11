@@ -158,7 +158,7 @@ namespace ICTAZEVoting.Api
                 result = await unitOfWork.Commit(new CancellationToken()) != 0;
                 return result ? Result.Success("Election type was created.") : Result.Fail("An error has occured. Try again.");
             });
-            app.MapPut("/elections/types/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] ElectionType entity) =>
+            app.MapPost("/elections/types/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] ElectionType entity) =>
             {
                 var result = await unitOfWork.Repository<ElectionType>().Update(entity);
                 result = await unitOfWork.Commit(new CancellationToken()) != 0;

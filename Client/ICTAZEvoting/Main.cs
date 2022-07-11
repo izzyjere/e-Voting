@@ -1,5 +1,7 @@
 using ICTAZEVoting.Extensions;
+using ICTAZEVoting.Services.Domain;
 using ICTAZEVoting.Services.Identity;
+using ICTAZEVoting.Shared.Interfaces;
 using ICTAZEVoting.WebUI;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebView.WindowsForms;
@@ -40,6 +42,9 @@ namespace ICTAZEVoting
                    client.BaseAddress = new Uri("https://localhost:7119");
                })
                .AddHttpMessageHandler<AuthenticationHeaderHandler>();
+            services.AddScoped<IVoterService, VoterService>();
+            services.AddScoped<IVotingService, VotingService>();
+            services.AddScoped<IElectionService, ElectionService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddAuthorizationCore()
             .AddScoped<IAuthenticationService, AuthenticationService>();       

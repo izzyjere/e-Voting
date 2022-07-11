@@ -1,0 +1,117 @@
+﻿@page "/elections"
+
+@using ICTAZEVoting.Shared
+@using System.Linq
+@using System
+@using ICTAZEVoting.Shared.Models
+@inject MudBlazor.ISnackbar snackBar
+@inject IJSRuntime JsRuntime
+
+    <MudCard Elevation="25">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add / Edit Candidates</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+<MudGrid>
+    <MudItem xs="12" sm="6" md="3">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+            <MudDatePicker @bind-Date="election.ElectionDate" Label="Date of the Eleciton" Editable="true" Placeholder="Select Date" Variant="Variant.Outlined" Style="width:100%" />
+            <MudTextField @bind-Value="election.Name" Label="NRC Number" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudSelect T="Guid" Label="Select Election Type" @bind-Value = "electionType.Id">
+            @foreach(var type in electionTypes){
+        <MudSelectItem T="Guid" Value = "@electionType.Id">@electionType.Name</MudSelectItem>
+            }
+        </MudSelect>
+            <MudTextField @bind-Value="election.Duration" Label="NRC Number" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+            <MudTextField @bind-Value="election.Status" Label="First Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+        </Animate>
+    </MudItem>
+    
+    </MudGrid>
+            <MudButton Variant="Variant.Filled" Color="Color.Info">Save Candidate</MudButton>
+    </MudCardContent>
+</MudCard>
+
+<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
+<MudTable Style="color: white" Elevation="25" Items="elections">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Loans</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search for Candidates..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Election Date</MudTh>
+        <MudTh>Election Title</MudTh>
+
+        <MudTh>Election Duration</MudTh>
+        <MudTh>Election Status</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Election Date">@context.ElectionDate</MudTd>
+        <MudTd DataLabel="">
+            <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+</Animate>
+
+<MudScrollToTop>
+    <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
+</MudScrollToTop>
+<MudMessageBox @ref="mbox" Title="Warning" CancelText="Cancel">
+    <MessageContent>
+        Deleting can <b><i>not</i></b> be undone!
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+    </YesButton>
+</MudMessageBox>
+
+
+@code{
+    private string searchString = "";
+    private Election election = new Election();
+    private List<Election> elections = new List<Election>();
+    private ElectionType electionType = new ElectionType();
+    private List<ElectionType> electionTypes = new List<ElectionType>();
+    protected override async Task OnInitializedAsync()
+    {
+          
+    }
+
+    private void Update(Election election)
+    {
+        Update(election);
+        election = new Election();
+        snackBar.Add("Election Saved.", Severity.Success);
+    }
+    private void Edit(Guid id)
+    {
+        election = elections.FirstOrDefault(c => c.Id == id);
+    }
+
+    MudMessageBox mbox { get; set; }
+    private async Task Delete(Guid id)
+    {
+        bool? confirmed = await mbox.Show();
+        if (confirmed == true)
+        {
+            await Delete(id);
+            snackBar.Add("Election Deleted.", Severity.Success);
+        }
+    }
+
+
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            files.Add(file);
+        }
+        //TODO upload the files to the server
+    }
+}

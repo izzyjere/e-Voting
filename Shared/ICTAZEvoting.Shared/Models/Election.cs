@@ -10,7 +10,7 @@ namespace ICTAZEVoting.Shared.Models
 {
     public class Election : Entity<Guid>
     {
-        public DateTime ElectionDate { get; set; }
+        public DateTime? ElectionDate { get; set; }
         public string Name { get; set; }         
         public Guid ElectionTypeId { get; set; }
         public double Duration { get; set; }

@@ -10,36 +10,37 @@
 <MudCard Elevation="25">
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h6">Add / Edit Political</MudText>
+            <MudText Typo="Typo.h6">Add / Edit Political Party</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
         <MudGrid>
-            <MudItem xs="12" sm="6" md="3">
+            <MudItem xs="12" sm="6" md="4" lg="3">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                   <MudTextField @bind-Value="politicalParty.Name" Label="election Status" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    <MudTextField @bind-Value="politicalParty.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
 
-            <MudItem xs="12" sm="6" md="3">
+            <MudItem xs="12" sm="6" md="4" lg="3">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                   <MudTextField @bind-Value="politicalParty.Slogan" Label="election Status" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    <MudTextField @bind-Value="politicalParty.Slogan" Label="Slogan" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
 
-            <MudItem xs="12" sm="6" md="3">
+            <MudItem xs="12" sm="6" md="4" lg="3">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                   <MudTextField @bind-Value="politicalParty.Manifesto" Label="election Status" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    <MudTextField Lines="4" @bind-Value="politicalParty.Manifesto" Label="Manifesto" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
-
-            <MudButton HtmlTag="label"
-                Variant="Variant.Filled"
-                Color="Color.Info"
-                StartIcon="@Icons.Filled.CloudUpload"
-            for="fileInput">
-                Upload Party Logo
-            </MudButton>
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Info"
+                           StartIcon="@Icons.Filled.CloudUpload"
+                           for="fileInput">
+                    Upload Party Logo
+                </MudButton>
+            </MudItem>
         </MudGrid>
         <MudButton Variant="Variant.Filled" Color="Color.Info">Save Political Party</MudButton>
     </MudCardContent>
@@ -58,14 +59,14 @@
         <RowTemplate>
             <MudTd DataLabel="Election Type">@context.Name</MudTd>
             <MudTd DataLabel="Payments">
-            @if(context.Candidates.Any())
-            {
-                foreach(var candidate in context.Candidates)
+                @if (context.Candidates.Any())
                 {
-                    <MudSelectItem T="Guid" Value = "@candidate.Id">@candidate.PersonalDetails.FirstName @candidate.PersonalDetails.LastName</MudSelectItem>
+                    foreach (var candidate in context.Candidates)
+                    {
+                        <MudSelectItem T="Guid" Value="@candidate.Id">@candidate.PersonalDetails.FirstName @candidate.PersonalDetails.LastName</MudSelectItem>
+                    }
                 }
-            }
-        </MudTd>
+            </MudTd>
             <MudTd DataLabel="">
                 <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
                 <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
@@ -91,7 +92,7 @@
     private string searchString = "";
     private PoliticalParty politicalParty = new PoliticalParty();
     private List<PoliticalParty> politicalparties = new List<PoliticalParty>();
- 
+
     protected override async Task OnInitializedAsync()
     {
 

@@ -1,0 +1,92 @@
+﻿@page "/electiontypes"
+
+@using ICTAZEVoting.Shared
+@using System.Linq
+@using System
+@using ICTAZEVoting.Shared.Models
+@inject MudBlazor.ISnackbar snackBar
+@inject IJSRuntime JsRuntime
+
+<MudCard Elevation="25">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add / Edit Election Types</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="12" sm="6" md="3">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                   <MudTextField @bind-Value="electionType.Name" Label="election Status" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                </Animate>
+            </MudItem>
+        </MudGrid>
+        <MudButton Variant="Variant.Filled" Color="Color.Info">Save Election Type</MudButton>
+    </MudCardContent>
+</MudCard>
+
+<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+    <MudTable Style="color: white" Elevation="25" Items="electionTypes">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Election Types</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Search for Elections..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Election Type</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Election Type">@context.Name</MudTd>
+            <MudTd DataLabel="">
+                <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</Animate>
+
+<MudScrollToTop>
+    <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
+</MudScrollToTop>
+<MudMessageBox @ref="mbox" Title="Warning" CancelText="Cancel">
+    <MessageContent>
+        Deleting can <b><i>not</i></b> be undone!
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+    </YesButton>
+</MudMessageBox>
+
+
+@code {
+    private string searchString = "";
+    private ElectionType electionType = new ElectionType();
+    private List<ElectionType> electionTypes = new List<ElectionType>();
+ 
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    private void Update(ElectionType electionType)
+    {
+        Update(electionType);
+        electionType = new ElectionType();
+        snackBar.Add("Election Type Saved.", Severity.Success);
+    }
+    private void Edit(Guid id)
+    {
+        electionType = electionTypes.FirstOrDefault(c => c.Id == id);
+    }
+
+    MudMessageBox mbox { get; set; }
+    private async Task Delete(Guid id)
+    {
+        bool? confirmed = await mbox.Show();
+        if (confirmed == true)
+        {
+            await Delete(id);
+            snackBar.Add("Election Type Deleted.", Severity.Success);
+        }
+    }
+}

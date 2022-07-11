@@ -50,13 +50,22 @@
         <ToolBarContent>
             <MudText Typo="Typo.h6">Election Types</MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="searchString" Placeholder="Search for Elections..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="searchString" Placeholder="Search for Political Parties..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Election Type</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Election Type">@context.Name</MudTd>
+            <MudTd DataLabel="Payments">
+            @if(context.Candidates.Any())
+            {
+                foreach(var candidate in context.Candidates)
+                {
+                    <MudSelectItem T="Guid" Value = "@candidate.Id">@candidate.PersonalDetails.FirstName @candidate.PersonalDetails.LastName</MudSelectItem>
+                }
+            }
+        </MudTd>
             <MudTd DataLabel="">
                 <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
                 <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />

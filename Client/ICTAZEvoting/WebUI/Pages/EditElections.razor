@@ -28,7 +28,7 @@
             </MudItem>
             <MudItem xs="12" sm="6" md="3">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudSelect T="Guid" Label="Select Election Type" @bind-Value="electionType.Id">
+                    <MudSelect T="Guid" Variant="Variant.Outlined" Label="Select Election Type" @bind-Value="electionType.Id">
                         @foreach (var type in electionTypes)
                         {
                             <MudSelectItem T="Guid" Value="@electionType.Id">@electionType.Name</MudSelectItem>

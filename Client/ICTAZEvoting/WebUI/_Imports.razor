@@ -1,5 +1,6 @@
 ﻿@using System.Net.Http
 @using ICTAZEVoting.Services
+@using ICTAZEVoting.Shared.Interfaces
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
@@ -29,3 +30,6 @@
 @inject ISnackbar snackBar
 @inject IAuthenticationService authenticationService
 @inject NavigationManager Navigation
+@inject IElectionService electionService
+@inject IVoterService voterSevice
+@inject IVotingService votingServicess

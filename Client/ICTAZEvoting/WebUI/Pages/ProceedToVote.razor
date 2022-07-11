@@ -1,0 +1,57 @@
+﻿@page "/proceedtovote"
+
+
+@using ICTAZEVoting.Shared
+@using System.Linq
+@using System
+@using ICTAZEVoting.Shared.Models
+@inject MudBlazor.ISnackbar snackBar
+@inject IJSRuntime JsRuntime
+
+<MudContainer Class="d-flex justify-center align-center">
+    <MudContainer Class="d-flex flex-column justify-center" style="width: 200px; height: 100px">
+        <MudImage Src="images/eczlogo.png" ObjectPosition="ObjectPosition.Center" />
+    </MudContainer>
+</MudContainer>
+
+<MudContainer Class="d-flex flex-column justify-center">
+    <MudText Style="font-family: fantasy" Typo="Typo.h4" Align="Align.Center"><b>THE REPUBLIC OF ZAMBIA</b></MudText>
+    <MudText Style="font-family: fantasy" Typo="Typo.h5" Align="Align.Center"><b>2026 GENERAL ELECTIONS</b></MudText>
+</MudContainer>
+
+<MudContainer Class="d-flex flex-column justify-center">
+    <MudText Style="font-family: 'Arial Rounded MT'" Typo="Typo.h6" Align="Align.Center"><b>HOW TO VOTE:</b></MudText>
+</MudContainer>
+
+<MudContainer Class="d-flex justify-center align-center">
+    <video width="640" height="240" controls>
+        <source src="WebCam/howtovote.mp4" type="video/mp4">
+        <source src="movie.ogg" type="video/ogg">
+        Your browser does not support the video tag.
+    </video>
+</MudContainer>
+
+<br />
+<br />
+
+<MudContainer Class="d-flex justify-center align-center">
+    <a href="voting">
+        <MudButton EndIcon="@Icons.Material.Filled.ScheduleSend" Variant="Variant.Filled" Color="Color.Info" Style="width: 200px; height: 60px;" FullWidth="false">Proceed To Vote</MudButton>
+    </a>
+</MudContainer>
+
+
+
+@code {
+    private ElectionType electionType = new ElectionType();
+
+    ObjectPosition ImagePosition = ObjectPosition.Center;
+
+    void SetImagePosition(ObjectPosition value)
+    {
+        ImagePosition = value;
+    }
+
+}
+
+

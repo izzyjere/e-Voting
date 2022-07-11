@@ -32,6 +32,14 @@
                    <MudTextField @bind-Value="politicalParty.Manifesto" Label="election Status" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
+
+            <MudButton HtmlTag="label"
+                Variant="Variant.Filled"
+                Color="Color.Info"
+                StartIcon="@Icons.Filled.CloudUpload"
+            for="fileInput">
+                Upload Party Logo
+            </MudButton>
         </MudGrid>
         <MudButton Variant="Variant.Filled" Color="Color.Info">Save Political Party</MudButton>
     </MudCardContent>
@@ -100,5 +108,15 @@
             await Delete(id);
             snackBar.Add("Political Party Deleted.", Severity.Success);
         }
+    }
+
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            files.Add(file);
+        }
+        //TODO upload the files to the server
     }
 }

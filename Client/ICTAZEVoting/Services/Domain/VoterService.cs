@@ -12,7 +12,12 @@ namespace ICTAZEVoting.Services.Domain
 {
     public class VoterService : IVoterService
     {
-        public Task<IResult> Delete(Voter entity)
+        readonly HttpClient httpClient;
+        public VoterService(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;                                                                                                                                                     
+        }
+        public Task<IResult> Delete(string id)
         {
             throw new NotImplementedException();
         }

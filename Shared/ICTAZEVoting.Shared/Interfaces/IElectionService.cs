@@ -32,5 +32,6 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> DeleteElectionPosition(string id);
         Task<List<ElectionPosition>> GetElectionPositionList(string electionId);
         Task<List<ElectionPosition>> GetElectionPositionList();
+        Task<IResult> DeletePoliticalParty(string id);
     }
 }

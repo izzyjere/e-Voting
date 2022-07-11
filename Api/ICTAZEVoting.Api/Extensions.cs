@@ -185,6 +185,58 @@ namespace ICTAZEVoting.Api
                 return Result.Fail("Not found.");
 
             });
+            app.MapGet("/elections/parties", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            {
+                var result = await unitOfWork.Repository<PoliticalParty>().Entities().Include(p=>p.Candidates).ThenInclude(c=>c.Position).ToListAsync();
+                return Result<IEnumerable<PoliticalParty>>.Success(result);
+            });
+            app.MapGet("/elections/parties/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var PoliticalParty = await unitOfWork.Repository<PoliticalParty>().Entities().Include(p => p.Candidates).ThenInclude(c => c.Position).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (PoliticalParty == null)
+                    {
+                        return Result<PoliticalParty>.Fail("Not found.");
+                    }
+                    return Result<PoliticalParty>.Success(PoliticalParty);
+                }
+                return Result<PoliticalParty>.Fail("Not found.");
+            });
+            app.MapPost("/elections/parties/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] PoliticalParty entity) =>
+            {
+                var result = await unitOfWork.Repository<PoliticalParty>().Add(entity);
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                return result ? Result.Success("Political Party was created.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapPut("/elections/parties/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] PoliticalParty entity) =>
+            {
+                var result = await unitOfWork.Repository<PoliticalParty>().Update(entity);
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                return result ? Result.Success("Political Party was updated.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapDelete("/elections/parties/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var entity = await unitOfWork.Repository<PoliticalParty>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (entity == null)
+                    {
+                        return Result.Fail("Not found.");
+                    }
+                    else
+                    {
+                        var result = await unitOfWork.Repository<PoliticalParty>().Delete(entity);
+                        result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                        return result ? Result.Success($"{entity.Name} was deleted.") : Result.Fail("An error occured, try again.");
+                    }
+
+                }
+                return Result.Fail("Not found.");
+
+            });
             app.MapPost("/userprofile", [Authorize] async (SystemDbContext db, UserManager<User> userManager, [FromBody]UserProfileRequest request) =>
              {
                  var myGuid = Guid.Empty;

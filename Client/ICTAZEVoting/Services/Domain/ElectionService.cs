@@ -39,6 +39,10 @@ namespace ICTAZEVoting.Services.Domain
         public Task<IResult> DeleteElectionPosition(string id)
         {
             throw new NotImplementedException();
+        }  
+        public Task<IResult> DeletePoliticalParty(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IResult> DeleteElectionType(string id)

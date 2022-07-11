@@ -14,26 +14,20 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudGrid>
-            <MudItem xs="12" sm="6" md="4" lg="3">
+        <MudGrid Justify="Justify.FlexEnd">
+            <MudItem xs="12" sm="6" md="4">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
                     <MudTextField @bind-Value="politicalParty.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
 
-            <MudItem xs="12" sm="6" md="4" lg="3">
+            <MudItem xs="12" sm="6" md="4">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
                     <MudTextField @bind-Value="politicalParty.Slogan" Label="Slogan" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
-
-            <MudItem xs="12" sm="6" md="4" lg="3">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField Lines="4" @bind-Value="politicalParty.Manifesto" Label="Manifesto" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-                </Animate>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4" lg="3">
-                <MudButton HtmlTag="label"
+            <MudItem xs="12" sm="6" md="4">
+                <MudButton Class="mt-6" HtmlTag="label"
                            Variant="Variant.Filled"
                            Color="Color.Info"
                            StartIcon="@Icons.Filled.CloudUpload"
@@ -41,37 +35,59 @@
                     Upload Party Logo
                 </MudButton>
             </MudItem>
+            <MudItem xs="12">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudTextField Lines="4" @bind-Value="politicalParty.Manifesto" Label="Manifesto" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                </Animate>
+            </MudItem>
         </MudGrid>
-        <MudButton Variant="Variant.Filled" Color="Color.Info">Save Political Party</MudButton>
+        <MudButton Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Political Party</MudButton>
     </MudCardContent>
 </MudCard>
 
 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-    <MudTable Style="color: white" Elevation="25" Items="politicalparties">
+    <MudTable Bordered="true" Hover="true" Style="color: white; padding:2em;" Elevation="25" Items="politicalParties">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Election Types</MudText>
+            <MudText Typo="Typo.h4">Political Parties</MudText>
             <MudSpacer />
             <MudTextField @bind-Value="searchString" Placeholder="Search for Political Parties..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Election Type</MudTh>
+            <MudTh>Party Name</MudTh>
+            <MudTh>Slogan</MudTh>
+            <MudTh>Manifesto</MudTh>
+            <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Election Type">@context.Name</MudTd>
-            <MudTd DataLabel="Payments">
-                @if (context.Candidates.Any())
-                {
-                    foreach (var candidate in context.Candidates)
-                    {
-                        <MudSelectItem T="Guid" Value="@candidate.Id">@candidate.PersonalDetails.FirstName @candidate.PersonalDetails.LastName</MudSelectItem>
-                    }
-                }
+            <MudTd DataLabel="Party">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderAvatar>
+                            <MudAvatar Class="mud-elevation-25">
+                                <MudImage Src="@context.LogoUrl" />
+                            </MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1" ><b>@context.Name</b></MudText>
+                            <MudText Typo="Typo.body2">@context.Candidates?.Count Candidates</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                </MudCard>
             </MudTd>
-            <MudTd DataLabel="">
-                <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
-                <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+            <MudTd DataLabel="Slogan">
+                @context.Slogan
+            </MudTd>
+            <MudTd DataLabel="Manifesto">
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary">Show Manifesto</MudButton>
+            </MudTd>
+            <MudTd DataLabel="Actions">
+                <MudFab @onclick="@(()=>Edit(context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                <MudFab @onclick="@(()=>Delete(context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
             </MudTd>
         </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
     </MudTable>
 </Animate>
 
@@ -83,7 +99,7 @@
         Deleting can <b><i>not</i></b> be undone!
     </MessageContent>
     <YesButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+        <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Error">Delete</MudButton>
     </YesButton>
 </MudMessageBox>
 
@@ -91,35 +107,75 @@
 @code {
     private string searchString = "";
     private PoliticalParty politicalParty = new PoliticalParty();
-    private List<PoliticalParty> politicalparties = new List<PoliticalParty>();
+    private List<PoliticalParty> politicalParties = new List<PoliticalParty>();
 
+    bool isEditing;
     protected override async Task OnInitializedAsync()
     {
-
+        await Refresh();
     }
-
-    private void Update(PoliticalParty politicalParty)
+    async Task Refresh()
     {
-        Update(politicalParty);
-        politicalParty = new PoliticalParty();
-        snackBar.Add("Political Party Saved.", Severity.Success);
+        politicalParty = new();
+        isEditing = false;
+        politicalParties = await electionService.GetPoliticalPartyList();
+        StateHasChanged();
     }
-    private void Edit(Guid id)
+    async Task Save()
     {
-        politicalParty = politicalparties.FirstOrDefault(c => c.Id == id);
-    }
+        if(!isEditing)
+        {
+            //adding
+            var result = await electionService.AddPoliticalParty(politicalParty);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+        }
+        else
+        {
+            var result = await electionService.UpdatePoliticalParty(politicalParty);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
 
-    MudMessageBox mbox { get; set; }
+        }
+    }
+    private async void Edit(PoliticalParty politicalParty)
+    {
+        this.politicalParty = politicalParty;
+        isEditing = true;
+        StateHasChanged();
+    }
+    MudMessageBox mbox;
     private async Task Delete(Guid id)
     {
         bool? confirmed = await mbox.Show();
         if (confirmed == true)
         {
-            await Delete(id);
-            snackBar.Add("Political Party Deleted.", Severity.Success);
+            var result =  await electionService.DeletePoliticalParty(id.ToString());
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
         }
     }
-
     IList<IBrowserFile> files = new List<IBrowserFile>();
     private void UploadFiles(InputFileChangeEventArgs e)
     {

@@ -22,8 +22,9 @@ using Microsoft.AspNetCore.Authorization;
 using ICTAZEVoting.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using ICTAZEVoting.Core.Data.Repositories;
-using System.Data;
+using System.Security.Cryptography;
 using SkiaSharp;
+using ICTAZEVoting.Shared.Security;
 
 namespace ICTAZEVoting.Api
 {
@@ -64,8 +65,15 @@ namespace ICTAZEVoting.Api
             });
             app.MapPost("/voters/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity) =>
             {
+                //Generate Key
+                var Secrete = Guid.NewGuid().ToString();
+                var keyGuid = Guid.NewGuid().ToString();
+                var IV = Guid.NewGuid().ToString();
+                var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, Encoding.ASCII.GetBytes(keyGuid), Encoding.ASCII.GetBytes(IV));
+                entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(Encoding.ASCII.GetBytes(IV)) };
                 var result = await unitOfWork.Repository<Voter>().Add(entity);
-                return result ? Result.Success("Voter was registered.") : Result.Fail("An error has occured. Try again.");
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                return result ? Result<string>.Success(keyGuid,"Voter was registered.") : Result<string>.Fail("An error has occured. Try again.");
             });
             app.MapPut("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity) =>
             {

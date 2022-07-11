@@ -17,5 +17,9 @@ namespace ICTAZEVoting.Shared.Constants
         public const string EditPoliticalParty = "elections/parties/update";
         public const string DeletePoliticalParty = "elections/parties/delete";
         public const string GetPoliticalParties= "elections/parties";
+        public const string AddVoter = "voters/add";
+        public const string GetVoters = "voters";
+        public const string UpdateVoter = "voters/update";
+        public const string DeleteVoter = "voters/delete";
     }
 }

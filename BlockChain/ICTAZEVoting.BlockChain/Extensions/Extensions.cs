@@ -1,14 +1,7 @@
-﻿using LevelDB;
-
+﻿using ICTAZEVoting.Shared.Security;
+using LevelDB;
 using Newtonsoft.Json;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ICTAZEVoting.BlockChain.Extensions
 {
@@ -27,7 +20,7 @@ namespace ICTAZEVoting.BlockChain.Extensions
             {
                 var itemJson = JsonConvert.SerializeObject(blockChain); //convert blockcahin to json       
                 using var aesCrypto = Aes.Create();
-                byte[] encrypted = EncryptStringToBytes_Aes(itemJson, aesCrypto.Key, aesCrypto.IV);  //encrypt the blockchain
+                byte[] encrypted = EncryptionService.EncryptStringToBytes_Aes(itemJson, aesCrypto.Key, aesCrypto.IV);  //encrypt the blockchain
                 var base64Json = Convert.ToBase64String(encrypted);
                 var key = Convert.ToBase64String(aesCrypto.Key);
                 var iv = Convert.ToBase64String(aesCrypto.IV);
@@ -44,7 +37,7 @@ namespace ICTAZEVoting.BlockChain.Extensions
         public static void UpdateBlock(this DB database, Models.BlockChain blockChain, string key, string IV)
         {
             var itemJson = JsonConvert.SerializeObject(blockChain);//convert blockcahin to json   
-            byte[] encrypted = EncryptStringToBytes_Aes(itemJson, Convert.FromBase64String(key), Convert.FromBase64String(IV));  //encrypt the blockchain
+            byte[] encrypted = EncryptionService.EncryptStringToBytes_Aes(itemJson, Convert.FromBase64String(key), Convert.FromBase64String(IV));  //encrypt the blockchain
             var base64Json = Convert.ToBase64String(encrypted);          
             database.Put(key, base64Json);
         }
@@ -54,91 +47,10 @@ namespace ICTAZEVoting.BlockChain.Extensions
             var iVAsBytes = Convert.FromBase64String(IV);
             var encrypted = database.Get(key);
             var bytes = Convert.FromBase64String(encrypted);
-            var decrypted = DecryptStringFromBytes_Aes(bytes, keyAsBytes, iVAsBytes);
+            var decrypted = EncryptionService.DecryptStringFromBytes_Aes(bytes, keyAsBytes, iVAsBytes);
             var block = JsonConvert.DeserializeObject<Models.BlockChain>(decrypted);
             return block;
         }
-        static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
-        {
-            // Check arguments.
-            if (plainText == null || plainText.Length <= 0)
-                throw new ArgumentNullException("plainText");
-            if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
-            if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
-            byte[] encrypted;
-
-            // Create an Aes object
-            // with the specified key and IV.
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
-
-                // Create an encryptor to perform the stream transform.
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                // Create the streams used for encryption.
-                using (MemoryStream msEncrypt = new MemoryStream())
-                {
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                        {
-                            //Write all data to the stream.
-                            swEncrypt.Write(plainText);
-                        }
-                        encrypted = msEncrypt.ToArray();
-                    }
-                }
-            }
-
-            // Return the encrypted bytes from the memory stream.
-            return encrypted;
-        }
-
-        static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
-        {
-            // Check arguments.
-            if (cipherText == null || cipherText.Length <= 0)
-                throw new ArgumentNullException("cipherText");
-            if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
-            if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
-
-            // Declare the string used to hold
-            // the decrypted text.
-            string plaintext = null;
-
-            // Create an Aes object
-            // with the specified key and IV.
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
-
-                // Create a decryptor to perform the stream transform.
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-                // Create the streams used for decryption.
-                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
-                {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                        {
-
-                            // Read the decrypted bytes from the decrypting stream
-                            // and place them in a string.
-                            plaintext = srDecrypt.ReadToEnd();
-                        }
-                    }
-                }
-            }
-
-            return plaintext;
-        }
+       
     }
 }

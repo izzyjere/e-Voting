@@ -129,6 +129,12 @@ namespace ICTAZEVoting.Core.Data.Contexts
             modelBuilder.Entity<Voter>(e =>
             {
                 e.ToTable("Voters");
+                e.OwnsOne(e => e.SecreteKey, s =>
+                {
+                    s.ToTable("SecreteKeys");
+                    s.Property(s => s.VoterId);
+                    s.WithOwner(s => s.Voter);
+                });
                 e.OwnsOne(v => v.PersonalDetails, p =>
                 {
                     p.ToTable("VoterPersonalDetails");

@@ -37,9 +37,14 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<IResult<string>> Register(Voter entity)
+        public async Task<IResult<string>> Register(Voter entity)
         {
-            throw new NotImplementedException();
+            var result = await httpClient.PostAsJsonAsync(ApiEndpoints.AddVoter,entity);
+            if(result.IsSuccessStatusCode)
+            {
+                return await result.ToResult<string>();
+            }
+            return Result<string>.Fail("An error occured.");
         }
 
         public Task<IResult> Update(Voter entity)

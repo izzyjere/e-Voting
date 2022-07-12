@@ -14,7 +14,7 @@ using ICTAZEVoting.Shared.Requests;
 namespace ICTAZEVoting.WebUI.Pages.Authentication
 {
     public partial class Roles
-    {
+    {  [Inject] IRoleManager roleManager { get; set; }
         private List<RoleResponse> _roleList = new();
         private RoleResponse _role = new();
         private string _searchString = "";
@@ -34,7 +34,12 @@ namespace ICTAZEVoting.WebUI.Pages.Authentication
 
         private async Task GetRolesAsync()
         {
-           
+            var res = await roleManager.GetRolesAsync();
+            if(res.Succeeded)
+            {
+                _roleList = res.Data;
+                _loaded = true;
+            }
         }
 
         private async Task Delete(string id)

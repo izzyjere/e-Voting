@@ -25,5 +25,9 @@ namespace ICTAZEVoting.Shared.Constants
         public const string EditElection = "elections/update";
         public const string DeleteElection = "elections/delete";
         public const string GetElection = "election";
+
+        public const string GetRoles = "roles";
+        public const string AddRole = "roles";
+
     }
 }

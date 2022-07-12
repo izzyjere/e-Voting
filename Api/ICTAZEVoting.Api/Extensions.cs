@@ -41,6 +41,10 @@ namespace ICTAZEVoting.Api
                 else
                     return new Result<TokenResponse>() { Succeeded = false, Messages = new List<string> { "Incorect credentials" }, Data = new TokenResponse() };
             });
+            app.MapGet("/roles",[Authorize(Roles =RoleConstants.AdministratorRole)] async (IRoleService roleService) => {
+                return await roleService.GetAllAsync();
+            });
+
             #endregion
             #region Domain
             app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>

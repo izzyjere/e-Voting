@@ -1,4 +1,6 @@
-﻿namespace ICTAZEVoting.Shared.Responses.Identity
+﻿global using System;
+
+namespace ICTAZEVoting.Shared.Responses.Identity
 {
     public class UserResponse
     {
@@ -12,6 +14,6 @@
         public bool IsActive { get; set; } = true;
         public bool EmailConfirmed { get; set; }
         public string PhoneNumber { get; set; }
-        public List<UserRole> Roles { get; set; }
+        public List<UserRoleModel> Roles { get; set; }
     }
 }

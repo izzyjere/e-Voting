@@ -28,13 +28,13 @@ else
 
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<RoleResponse, object>(x => x.Id)">Id</MudTableSortLabel></MudTh>
+           roless
             <MudTh><MudTableSortLabel SortBy="new Func<RoleResponse, object>(x => x.Name)">Role</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<RoleResponse, object>(x => x.Description)">Description</MudTableSortLabel></MudTh>
             <MudTh Style="text-align:right">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
+            
             <MudTd DataLabel="Role">
                 <MudHighlighter Text="@context.Name" HighlightedText="@_searchString" />
             </MudTd>

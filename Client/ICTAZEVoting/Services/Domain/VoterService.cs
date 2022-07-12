@@ -12,7 +12,12 @@ namespace ICTAZEVoting.Services.Domain
 {
     public class VoterService : IVoterService
     {
-        public Task<IResult> Delete(Voter entity)
+        readonly HttpClient httpClient;
+        public VoterService(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;                                                                                                                                                     
+        }
+        public Task<IResult> Delete(string id)
         {
             throw new NotImplementedException();
         }
@@ -32,9 +37,14 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<IResult<string>> Register(Voter entity)
+        public async Task<IResult<string>> Register(Voter entity)
         {
-            throw new NotImplementedException();
+            var result = await httpClient.PostAsJsonAsync(ApiEndpoints.AddVoter,entity);
+            if(result.IsSuccessStatusCode)
+            {
+                return await result.ToResult<string>();
+            }
+            return Result<string>.Fail("An error occured.");
         }
 
         public Task<IResult> Update(Voter entity)

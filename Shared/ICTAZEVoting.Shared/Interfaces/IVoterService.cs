@@ -15,7 +15,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<List<Voter>> GetAll();
         Task<Voter>GetByUserId(string id);
         Task<Voter> GetById(string id);
-        Task<IResult> Delete(Voter entity);
+        Task<IResult> Delete(string id);
         Task<IResult> VerifyVoter(byte[] facialData);
     }
 }

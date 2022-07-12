@@ -4,6 +4,7 @@ using ICTAZEVoting.Core.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ICTAZEVoting.Core.Migrations
 {
     [DbContext(typeof(SystemDbContext))]
-    partial class SystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220711233236_Init4")]
+    partial class Init4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -373,7 +375,7 @@ namespace ICTAZEVoting.Core.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PolingStationId")
+                    b.Property<Guid?>("PolingStationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RemoteIp")
@@ -709,11 +711,9 @@ namespace ICTAZEVoting.Core.Migrations
 
             modelBuilder.Entity("ICTAZEVoting.Shared.Models.Voter", b =>
                 {
-                    b.HasOne("ICTAZEVoting.Shared.Models.PolingStation", "PolingStation")
+                    b.HasOne("ICTAZEVoting.Shared.Models.PolingStation", null)
                         .WithMany("Voters")
-                        .HasForeignKey("PolingStationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PolingStationId");
 
                     b.OwnsOne("ICTAZEVoting.Shared.Models.SecreteKey", "SecreteKey", b1 =>
                         {
@@ -796,8 +796,6 @@ namespace ICTAZEVoting.Core.Migrations
 
                     b.Navigation("PersonalDetails")
                         .IsRequired();
-
-                    b.Navigation("PolingStation");
 
                     b.Navigation("SecreteKey")
                         .IsRequired();

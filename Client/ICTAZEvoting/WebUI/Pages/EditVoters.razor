@@ -67,15 +67,15 @@
 <br />
 <MudTable Style="color: white" Elevation="25" Items="voters">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Loans</MudText>
+        <MudText Typo="Typo.h4">Voters</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="searchString" Placeholder="Search for Categories..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>voter Number</MudTh>
-        <MudTh>First Name</MudTh>
-        <MudTh>Last Name</MudTh>
+        <MudTh>Voter</MudTh>
         <MudTh>NRC No.</MudTh>
+        <MudTh>Gender</MudTh>
+        <MudTh>Poling Station</MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>

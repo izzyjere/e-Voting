@@ -4,6 +4,7 @@ using ICTAZEVoting.Core.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ICTAZEVoting.Core.Migrations
 {
     [DbContext(typeof(SystemDbContext))]
-    partial class SystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220711231514_Init3")]
+    partial class Init3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,21 +208,6 @@ namespace ICTAZEVoting.Core.Migrations
                     b.ToTable("Candidates", (string)null);
                 });
 
-            modelBuilder.Entity("ICTAZEVoting.Shared.Models.Constituency", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Constituencies", (string)null);
-                });
-
             modelBuilder.Entity("ICTAZEVoting.Shared.Models.Election", b =>
                 {
                     b.Property<Guid>("Id")
@@ -283,26 +270,6 @@ namespace ICTAZEVoting.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ElectionTypes", (string)null);
-                });
-
-            modelBuilder.Entity("ICTAZEVoting.Shared.Models.PolingStation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ConstituencyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConstituencyId");
-
-                    b.ToTable("PolingStations", (string)null);
                 });
 
             modelBuilder.Entity("ICTAZEVoting.Shared.Models.PoliticalParty", b =>
@@ -373,9 +340,6 @@ namespace ICTAZEVoting.Core.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PolingStationId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("RemoteIp")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -388,8 +352,6 @@ namespace ICTAZEVoting.Core.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PolingStationId");
 
                     b.ToTable("Voters", (string)null);
                 });
@@ -634,17 +596,6 @@ namespace ICTAZEVoting.Core.Migrations
                     b.Navigation("Election");
                 });
 
-            modelBuilder.Entity("ICTAZEVoting.Shared.Models.PolingStation", b =>
-                {
-                    b.HasOne("ICTAZEVoting.Shared.Models.Constituency", "Constituency")
-                        .WithMany("PolingStations")
-                        .HasForeignKey("ConstituencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Constituency");
-                });
-
             modelBuilder.Entity("ICTAZEVoting.Shared.Models.SystemAdmin", b =>
                 {
                     b.OwnsOne("ICTAZEVoting.Shared.Models.PersonalDetails", "PersonalDetails", b1 =>
@@ -709,12 +660,6 @@ namespace ICTAZEVoting.Core.Migrations
 
             modelBuilder.Entity("ICTAZEVoting.Shared.Models.Voter", b =>
                 {
-                    b.HasOne("ICTAZEVoting.Shared.Models.PolingStation", "PolingStation")
-                        .WithMany("Voters")
-                        .HasForeignKey("PolingStationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.OwnsOne("ICTAZEVoting.Shared.Models.SecreteKey", "SecreteKey", b1 =>
                         {
                             b1.Property<Guid>("VoterId")
@@ -797,8 +742,6 @@ namespace ICTAZEVoting.Core.Migrations
                     b.Navigation("PersonalDetails")
                         .IsRequired();
 
-                    b.Navigation("PolingStation");
-
                     b.Navigation("SecreteKey")
                         .IsRequired();
                 });
@@ -806,11 +749,6 @@ namespace ICTAZEVoting.Core.Migrations
             modelBuilder.Entity("ICTAZEVoting.Core.Models.User", b =>
                 {
                     b.Navigation("Roles");
-                });
-
-            modelBuilder.Entity("ICTAZEVoting.Shared.Models.Constituency", b =>
-                {
-                    b.Navigation("PolingStations");
                 });
 
             modelBuilder.Entity("ICTAZEVoting.Shared.Models.Election", b =>
@@ -821,11 +759,6 @@ namespace ICTAZEVoting.Core.Migrations
             modelBuilder.Entity("ICTAZEVoting.Shared.Models.ElectionPosition", b =>
                 {
                     b.Navigation("Candidates");
-                });
-
-            modelBuilder.Entity("ICTAZEVoting.Shared.Models.PolingStation", b =>
-                {
-                    b.Navigation("Voters");
                 });
 
             modelBuilder.Entity("ICTAZEVoting.Shared.Models.PoliticalParty", b =>

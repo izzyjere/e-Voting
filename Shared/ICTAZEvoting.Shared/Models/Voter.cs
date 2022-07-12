@@ -4,10 +4,12 @@ using System;
 
 namespace ICTAZEVoting.Shared.Models
 {
-    public class Voter: AuditableEntity<Guid>
+    public class Voter : AuditableEntity<Guid>
     {
         public string VoterNumber { get; set; }
         public PersonalDetails PersonalDetails { get; set; }
-        public string VerificationCipher { get; set; }         
+        public SecreteKey SecreteKey {get; set; } 
+        public Guid PolingStationId { get; set; }
+        public virtual PolingStation PolingStation { get; set; }
     }
 }

@@ -13,6 +13,9 @@ namespace ICTAZEVoting.Core.Models
         public bool IsActive { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
-        
+        public string FirstName { get;set ; }
+        public string LastName { get; internal set; }
+        public string? MiddleName { get; set; }
+        public string NRC { get; set; }
     }
 }

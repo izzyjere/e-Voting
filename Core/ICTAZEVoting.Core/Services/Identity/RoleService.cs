@@ -90,7 +90,7 @@ public class RoleService : IRoleService
         }
         else
         {
-            var existingRole = await _roleManager.FindByNameAsync(request.Name);
+            var existingRole = await _roleManager.FindByIdAsync(request.Id);
             if (existingRole.Name == RoleConstants.AdministratorRole || existingRole.Name == RoleConstants.BasicRole)
             {
                 return await Result<string>.FailAsync(string.Format("Not allowed to modify {0} Role.", existingRole.Name));

@@ -28,7 +28,7 @@ else
 
         </ToolBarContent>
         <HeaderContent>
-           roless
+           
             <MudTh><MudTableSortLabel SortBy="new Func<RoleResponse, object>(x => x.Name)">Role</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<RoleResponse, object>(x => x.Description)">Description</MudTableSortLabel></MudTh>
             <MudTh Style="text-align:right">Actions</MudTh>
@@ -46,21 +46,9 @@ else
                 <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left" OffsetX="true">
 
                     <MudMenuItem>Manage Permission</MudMenuItem>
-
                     <MudMenuItem @onclick="@(() => InvokeModal(@context.Id.ToString()))">Edit</MudMenuItem>
-
                     <MudMenuItem @onclick="@(() => Delete(@context.Id.ToString()))">Delete</MudMenuItem>
-
-                </MudMenu>
-
-                <MudButton Variant="Variant.Filled"
-                       DisableElevation="true"
-                       StartIcon="@Icons.Material.Filled.DoNotTouch"
-                       IconColor="Color.Secondary"
-                       Size="Size.Small"
-                       Color="Color.Surface">
-                    "No Allowed Actions"
-                </MudButton>
+                </MudMenu>      
 
             </MudTd>
         </RowTemplate>

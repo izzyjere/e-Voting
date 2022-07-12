@@ -36,7 +36,7 @@ else
             <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.UserName)">UserName</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.Email)">Email</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.PhoneNumber)">PhoneNumber</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.EmailConfirmed)">Email Confirmation</MudTableSortLabel></MudTh>
+            <MudTh>Role</MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.IsActive)">Active</MudTableSortLabel></MudTh>
             <MudTh Style="text-align:right">Actions</MudTh>
         </HeaderContent>
@@ -56,14 +56,12 @@ else
             <MudTd DataLabel="PhoneNumber">
                 <MudHighlighter Text="@context.PhoneNumber" HighlightedText="@_searchString" />
             </MudTd>
-            <MudTd DataLabel="EmailConfirmed"><MudCheckBox @bind-Checked="@context.EmailConfirmed" ReadOnly Color="Color.Secondary"></MudCheckBox></MudTd>
+            <MudTd DataLabel="Role">@context.Roles.First().RoleName"</MudTd>
             <MudTd DataLabel="Active"><MudCheckBox @bind-Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox></MudTd>
             <MudTd DataLabel="Actions" Style="text-align:right">
                 <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left" OffsetX="true">
-                    <MudMenuItem>View Profile</MudMenuItem>
-                  
-                    <MudMenuItem>Manage Roles</MudMenuItem>
-               
+                    <MudMenuItem>View Profile</MudMenuItem>                  
+                    <MudMenuItem>Manage Roles</MudMenuItem>               
             </MudMenu>
         </MudTd>
     </RowTemplate>

@@ -32,9 +32,10 @@ namespace ICTAZEVoting.Services.Domain
             return await get.ToResult<List<RoleResponse>>();
         }
 
-        public Task<IResult> SaveRole(RoleRequest roleRequest)
+        public async Task<IResult> SaveRole(RoleRequest roleRequest)
         {
-            throw new NotImplementedException();
+            var get = await httpClient.PostAsJsonAsync(ApiEndpoints.AddRole,roleRequest);
+            return await get.ToResult();
         }
     }
 }

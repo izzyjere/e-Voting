@@ -19,15 +19,18 @@ namespace ICTAZEVoting.WebUI.Pages.Authentication
         {
             MudDialog.Cancel();
         }
-
-        protected override async Task OnInitializedAsync()
-        {
-            
-        }
-
         private async Task SaveAsync()
         {
-            
+            var result = await RoleManager.SaveRole(RoleModel);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                MudDialog.Close();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
         }
     }
 }

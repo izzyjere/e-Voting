@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.JSInterop;
 using ICTAZEVoting.Core.Models;
+using ICTAZEVoting.Shared.Responses.Identity;
 
 namespace ICTAZEVoting.WebUI.Pages.Authentication
 {

@@ -1,29 +1,45 @@
 ﻿<EditForm Model="@_registerUserModel" OnValidSubmit="SubmitAsync">
-   
+    <DataAnnotationsValidator />
     <MudDialog>
         <TitleContent>
             @{
                 <MudText Typo="Typo.h6">
                     <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-3 mb-n1" />
-                    "Register User
+                    Register User
                 </MudText>
             }
         </TitleContent>
         <DialogContent>
-            <MudTextField For="@(() => _registerUserModel.UserName)" @bind-Value="_registerUserModel.UserName" Label="User Name" />
-            <MudTextField For="@(() => _registerUserModel.FirstName)" @bind-Value="_registerUserModel.FirstName" Label="First Name" />
-            <MudTextField For="@(() => _registerUserModel.LastName)" @bind-Value="_registerUserModel.LastName" Label="Last Name" />
-            <MudTextField For="@(() => _registerUserModel.Email)" InputType="InputType.Email" @bind-Value="_registerUserModel.Email" Label="Email" />
-            <MudTextField For="@(() => _registerUserModel.PhoneNumber)" @bind-Value="_registerUserModel.PhoneNumber" Label="Phone Number" />
-            <MudTextField For="@(() => _registerUserModel.Password)" InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" @bind-Value="_registerUserModel.Password" Label="Password" />
-            <MudTextField For="@(() => _registerUserModel.ConfirmPassword)" InputType="InputType.Password" @bind-Value="_registerUserModel.ConfirmPassword" Label="Confirm Password" />
-            <MudCheckBox @bind-Checked="@_registerUserModel.ActivateUser" Label="Activate User?" Color="Color.Primary"></MudCheckBox>
-            <MudCheckBox @bind-Checked="@_registerUserModel.AutoConfirmEmail" Label="Auto Confirm Email?" Color="Color.Primary"></MudCheckBox>
+            <MudGrid>
+                <MudItem md="6" xs="12" sm="6">
+                    <MudSelect T="string" For="@(() => _registerUserModel.Role)" @bind-Value="_registerUserModel.Role" Label="Role">
+                        @foreach (var role in roleResponses)
+                        {
+                            <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem md="6" xs="12" sm="6"><MudTextField For="@(() => _registerUserModel.UserName)" @bind-Value="_registerUserModel.UserName" Label="User Name" /></MudItem>
+                <MudItem md="6" xs="12" sm="6"> <MudTextField For="@(() => _registerUserModel.FirstName)" @bind-Value="_registerUserModel.FirstName" Label="First Name" /></MudItem>
+                <MudItem md="6" xs="12" sm="6"> <MudTextField For="@(() => _registerUserModel.LastName)" @bind-Value="_registerUserModel.LastName" Label="Last Name" /></MudItem>
+                <MudItem md="6" xs="12" sm="6"><MudTextField For="@(() => _registerUserModel.NRC)" @bind-Value="_registerUserModel.NRC" Label="NRC" /></MudItem>
+                <MudItem md="6" xs="12" sm="6"><MudTextField For="@(() => _registerUserModel.Email)" InputType="InputType.Email" @bind-Value="_registerUserModel.Email" Label="Email" /></MudItem>
+                <MudItem md="6" xs="12" sm="6"> <MudTextField For="@(() => _registerUserModel.PhoneNumber)" @bind-Value="_registerUserModel.PhoneNumber" Label="Phone Number" /></MudItem>
+                <MudItem md="6" xs="12" sm="6"><MudTextField For="@(() => _registerUserModel.Password)" InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" @bind-Value="_registerUserModel.Password" Label="Password" /></MudItem>
+                <MudItem md="6" xs="12" sm="6"><MudTextField For="@(() => _registerUserModel.ConfirmPassword)" InputType="InputType.Password" @bind-Value="_registerUserModel.ConfirmPassword" Label="Confirm Password" /></MudItem>
+                <MudItem md="6" xs="12" sm="6">
+
+                </MudItem>
+                <MudItem md="6" xs="12" sm="6"><MudCheckBox @bind-Checked="@_registerUserModel.ActivateUser" Label="Activate User?" Color="Color.Primary"></MudCheckBox></MudItem>
+                <MudItem md="6" xs="12" sm="6"> <MudCheckBox @bind-Checked="@_registerUserModel.AutoConfirmEmail" Label="Auto Confirm Email?" Color="Color.Primary"></MudCheckBox></MudItem>
+
+            </MudGrid>
+
         </DialogContent>
         <DialogActions>
-            <MudButton Variant="Variant.Filled" OnClick="Cancel">"Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
             @{
-                <MudButton Variant="Variant.Filled" ButtonType="MudBlazor.ButtonType.Submit" Color="Color.Success">"Register</MudButton>
+                <MudButton Variant="Variant.Filled" ButtonType="MudBlazor.ButtonType.Submit" Color="Color.Success">Register</MudButton>
             }
         </DialogActions>
     </MudDialog>

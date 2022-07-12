@@ -1,4 +1,4 @@
-﻿@page "/identity/user-roles/{Id}"
+﻿@page "/user-roles/{Id}"
 @using Microsoft.AspNetCore.Components
 @if (!_loaded)
 {
@@ -6,6 +6,7 @@
 }
 else
 {
+    <MudText>@Title</MudText>
     <MudTable Hover="true" Elevation="25" Items="UserRolesList" Dense="@_dense" Bordered="@_bordered" Striped="@_striped" Filter="new Func<UserRoleModel, bool>(Search)" @bind-userRole="_userRole">
         <ToolBarContent>
             <div class="justify-center mud-text-align-center">

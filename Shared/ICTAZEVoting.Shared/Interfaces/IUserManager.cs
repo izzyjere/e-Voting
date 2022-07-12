@@ -12,5 +12,6 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> RegisterUser(RegisterRequest request);
         Task<IResult> Delete(string id);
         Task<IResult> Update(UserResponse record);
+        Task<List<UserRoleModel>> GetUserRoles(string id);
     }
 }

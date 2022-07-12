@@ -18,15 +18,10 @@ else
             <div class="justify-center mud-text-align-center">
 
                 <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => InvokeModal())" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Register New User</MudButton>
-                <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetUsersAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>                        <MudButton DisableElevation Variant="Variant.Filled" OnClick="ExportToExcel" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">Export</MudButton>
-
                 <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetUsersAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
-
                 <MudButton DisableElevation Variant="Variant.Filled" OnClick="ExportToExcel" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">Export</MudButton>
-
             </div>
             <MudSpacer />
-
             <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth=false Placeholder="Search For Users" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
 
         </ToolBarContent>
@@ -35,7 +30,7 @@ else
             <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.NRC)">NRC</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.UserName)">UserName</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.Email)">Email</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.PhoneNumber)">PhoneNumber</MudTableSortLabel></MudTh>        
+            <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.PhoneNumber)">PhoneNumber</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<UserResponse, object>(x => x.IsActive)">Active</MudTableSortLabel></MudTh>
             <MudTh Style="text-align:right">Actions</MudTh>
         </HeaderContent>
@@ -45,40 +40,40 @@ else
                     <MudCardHeader>
                         <CardHeaderAvatar>
                             <MudAvatar Class="mud-elevation-25">
-                                @if(string.IsNullOrEmpty(context.PictureUrl))
+                                @if (string.IsNullOrEmpty(context.PictureUrl))
                                 {
-                                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" />
+                                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" />
                                 }
                                 else
                                 {
-                                    <MudImage Src="@context.PictureUrl" /> 
-                                }                               
-                            </MudAvatar>
-                        </CardHeaderAvatar>
-                        <CardHeaderContent>
-                            <MudText Typo="Typo.body1" ><b>@context.FirstName @context.LastName</b></MudText>
-                            <MudText Typo="Typo.body2">@context.Roles.FirstOrDefault().RoleName</MudText>
-                        </CardHeaderContent>
-                    </MudCardHeader>
-                </MudCard>
-            </MudTd>
-            <MudTd DataLabel="NRC">
-                <MudHighlighter Text="@context.NRC" HighlightedText="@_searchString" />
-            </MudTd>
-            <MudTd DataLabel="UserName">
-                <MudHighlighter Text="@context.UserName" HighlightedText="@_searchString" />
-            </MudTd>
-            <MudTd DataLabel="Email">
-                <MudHighlighter Text="@context.Email" HighlightedText="@_searchString" />
-            </MudTd>
-            <MudTd DataLabel="PhoneNumber">
-                <MudHighlighter Text="@context.PhoneNumber" HighlightedText="@_searchString" />
-            </MudTd>           
-            <MudTd DataLabel="Active"><MudCheckBox @bind-Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox></MudTd>
-            <MudTd DataLabel="Actions" Style="text-align:right">
-                <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left" OffsetX="true">
-                    <MudMenuItem>View Profile</MudMenuItem>                  
-                    <MudMenuItem>Manage Roles</MudMenuItem>               
+                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@context.PictureUrl" />
+                                }
+                        </MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1"><b>@context.FirstName @context.LastName</b></MudText>
+                        <MudText Typo="Typo.body2">@context.Roles.FirstOrDefault().RoleName</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            </MudCard>
+        </MudTd>
+        <MudTd DataLabel="NRC">
+            <MudHighlighter Text="@context.NRC" HighlightedText="@_searchString" />
+        </MudTd>
+        <MudTd DataLabel="UserName">
+            <MudHighlighter Text="@context.UserName" HighlightedText="@_searchString" />
+        </MudTd>
+        <MudTd DataLabel="Email">
+            <MudHighlighter Text="@context.Email" HighlightedText="@_searchString" />
+        </MudTd>
+        <MudTd DataLabel="PhoneNumber">
+            <MudHighlighter Text="@context.PhoneNumber" HighlightedText="@_searchString" />
+        </MudTd>
+        <MudTd DataLabel="Active"><MudCheckBox @bind-Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox></MudTd>
+        <MudTd DataLabel="Actions" Style="text-align:right">
+            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left" OffsetX="true">
+                <MudMenuItem>View Profile</MudMenuItem>
+                <MudMenuItem>Manage Roles</MudMenuItem>
             </MudMenu>
         </MudTd>
     </RowTemplate>

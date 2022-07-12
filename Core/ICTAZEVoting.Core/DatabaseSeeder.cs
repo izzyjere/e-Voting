@@ -64,7 +64,7 @@ namespace ICTAZEVoting.Core
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,                    
                     IsActive = true,
-                    PictureUrl = ""                   
+                    PictureUrl =  "images/clarence.png"
                 };                
                 var superUserInDb = await _userManager.FindByEmailAsync(superUser.Email);
                 if (superUserInDb == null)

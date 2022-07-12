@@ -25,5 +25,9 @@ namespace ICTAZEVoting.Shared.Constants
         public const string EditElection = "elections/update";
         public const string DeleteElection = "elections/delete";
         public const string GetElection = "election";
+        public const string AddConstituency = "constituency/add";
+        public const string EditConstituency = "constituency/update";
+        public const string DeleteConstituency = "constituency/delete";
+        public const string GetConstituencies = "constituency";
     }
 }

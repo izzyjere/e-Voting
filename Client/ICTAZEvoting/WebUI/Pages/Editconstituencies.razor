@@ -1,0 +1,143 @@
+﻿@*@page "/constituencies"
+
+@using ICTAZEVoting.Shared
+@using System.Linq
+@using System
+@using ICTAZEVoting.Shared.Models
+@inject MudBlazor.ISnackbar snackBar
+@inject IJSRuntime JsRuntime
+
+<MudCard Elevation="25">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add / Edit Constituencies</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@electionType">
+            <DataAnnotationsValidator/>
+        <MudGrid>
+            <MudItem xs="12" sm="6" md="3">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                   <MudTextField For="()=>electionType.Name" @bind-Value="electionType.Name" Label="Election Type" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                </Animate>
+            </MudItem>
+        </MudGrid>
+        <MudButton Class="mt-6" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success">Save </MudButton>
+        </EditForm>
+        
+    </MudCardContent>
+</MudCard>
+
+<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+    <MudTable Bordered="true"  Hover="true" Style="color: white; padding:2em" Elevation="25" Items="electionTypes">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Election Types</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Search for Election Type..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Election Type</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Election Type"><MudChip Icon="@Icons.Material.Filled.Bookmark" Color="Color.Info" Label="true">@context.Name</MudChip></MudTd>
+            <MudTd DataLabel="Actions">
+                <MudFab @onclick="@(()=>Edit(context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+            </MudTd>
+        </RowTemplate>
+     <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+    </MudTable>
+</Animate>
+
+<MudScrollToTop>
+    <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
+</MudScrollToTop>
+<MudMessageBox @ref="mbox" Title="Warning" CancelText="Cancel">
+    <MessageContent>
+        Deleting can <b><i>not</i></b> be undone!
+    </MessageContent>
+    <YesButton>
+        <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Error">Delete</MudButton>
+    </YesButton>
+</MudMessageBox>
+
+
+@code {
+    private string searchString = "";
+    private Constituency constituency = new Constituency();
+    private List<Constituency> constituencies = new List<Constituency>();
+    bool isEditing;
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+    }
+    async Task Refresh()
+    {
+        constituency = new();
+        isEditing = false;
+        constituency = await electionService.GetElectionTypes();
+        StateHasChanged();
+    }
+    async Task Save()
+    {
+        if(!isEditing)
+        {
+            //adding
+            var result = await electionService.AddElectionType(electionType.Name);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+        }
+        else
+        {
+            var result = await electionService.UpdateElectionType(electionType);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+
+        }
+    }
+    private async void Edit(ElectionType electionType)
+    {
+        this.electionType = electionType;
+        isEditing = true;
+        StateHasChanged();
+    }
+
+
+    MudMessageBox mbox { get; set; }
+    private async Task Delete(Guid id)
+    {
+        bool? confirmed = await mbox.Show();
+        if (confirmed == true)
+        {
+            var result =  await electionService.DeleteElectionType(id.ToString());
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+        }
+    }
+}
+*@

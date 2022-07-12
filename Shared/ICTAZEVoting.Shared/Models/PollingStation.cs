@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ICTAZEVoting.Shared.Models
 {
-    public class PolingStation : Entity<Guid>
+    public class PollingStation : Entity<Guid>
     {
         public string Name { get; set; }
         public Guid ConstituencyId { get; set; }

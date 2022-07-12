@@ -153,11 +153,13 @@ namespace ICTAZEVoting.Api
             app.MapPost("/elections/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Election entity) =>
              {
                  var result = await unitOfWork.Repository<Election>().Add(entity);
+                 result = await unitOfWork.Commit(new CancellationToken()) != 0;
                  return result ? Result.Success("Election was created.") : Result.Fail("An error has occured. Try again.");
              });
-            app.MapPut("/elections/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Election entity) =>
+            app.MapPost("/elections/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Election entity) =>
              {
                  var result = await unitOfWork.Repository<Election>().Update(entity);
+                 result = await unitOfWork.Commit(new CancellationToken()) != 0;
                  return result ? Result.Success("Election was updated.") : Result.Fail("An error has occured. Try again.");
              });
             app.MapGet("/elections/types", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>

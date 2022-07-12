@@ -41,11 +41,11 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> DeleteConstituency(string id);
         Task<List<Constituency>> GetConstituencyList();
         Task<Election> GetConstituency(string Id);
-        Task<IResult> AddPolingStation(PolingStation polingStation);
-        Task<IResult> UpdatePolingStation(PolingStation polingStation);
+        Task<IResult> AddPolingStation(PollingStation polingStation);
+        Task<IResult> UpdatePolingStation(PollingStation polingStation);
         Task<IResult> DeletePolingStation(string id);
-        Task<List<PolingStation>> GetPolingStationList();
-        Task<PolingStation> GetPolingStation(string Id);
+        Task<List<PollingStation>> GetPolingStationList();
+        Task<PollingStation> GetPolingStation(string Id);
 
     }
 }

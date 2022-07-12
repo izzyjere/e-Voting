@@ -1,0 +1,55 @@
+﻿<MudDialog>
+    <DialogContent>
+        <EditForm id="editForm" Model="@Model" OnValidSubmit="SubmitAsync" OnInvalidSubmit="ModelInvalid">           
+            <DataAnnotationsValidator />
+            <MudGrid Justify="Justify.SpaceBetween">  
+                <MudItem xs="12">
+                    <MudTextField For="()=>Model.Position" FullWidth="true" @bind-Value="Model.Position" Label="Enter position" Variant="Variant.Outlined"/>
+                </MudItem>                 
+            </MudGrid>
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton ButtonType="MudBlazor.ButtonType.Submit" UserAttributes="@_attr" StartIcon="@Icons.Material.Filled.Save" Color="Color.Success" Variant="Variant.Filled">Submit</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance Dialog{ get; set; }
+    [Parameter] public ElectionPosition? Model { get; set; }  
+    [Parameter] public bool IsEditing { get; set; }
+    Dictionary<string, object> _attr { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        _attr = new();
+        _attr.Add("form", "editForm");
+
+        if(!IsEditing)
+        {
+            Model = new();
+        }
+        else
+        {
+
+        }
+
+
+    }
+
+    async Task SubmitAsync()
+    {
+        if(!string.IsNullOrEmpty(Model.Position))
+        {
+            Dialog.Close(DialogResult.Ok(Model));
+        }
+        else
+        {
+            ModelInvalid(); 
+        }
+
+    }
+    void ModelInvalid() => snackBar.Add("Please fill in all required fields",Severity.Error);
+
+    void Cancel() => Dialog.Cancel();
+}

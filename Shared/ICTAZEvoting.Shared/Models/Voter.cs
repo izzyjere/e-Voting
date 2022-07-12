@@ -10,6 +10,6 @@ namespace ICTAZEVoting.Shared.Models
         public PersonalDetails PersonalDetails { get; set; }
         public SecreteKey SecreteKey {get; set; } 
         public Guid PolingStationId { get; set; }
-        public virtual PolingStation PolingStation { get; set; }
+        public virtual PollingStation PolingStation { get; set; }
     }
 }

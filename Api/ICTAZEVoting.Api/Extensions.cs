@@ -44,7 +44,10 @@ namespace ICTAZEVoting.Api
             app.MapGet("/roles",[Authorize(Roles =RoleConstants.AdministratorRole)] async (IRoleService roleService) => {
                 return await roleService.GetAllAsync();
             });
-
+            app.MapPost("/roles/add", async (IRoleService roleService,[FromBody] RoleRequest request) =>
+            {
+                return await roleService.AddEditAsync(request);
+            });
             #endregion
             #region Domain
             app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>

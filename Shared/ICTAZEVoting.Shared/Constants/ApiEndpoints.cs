@@ -6,6 +6,8 @@ namespace ICTAZEVoting.Shared.Constants
 {
     public static class ApiEndpoints
     {
+        public const string GetRoles = "roles";
+        public const string AddRole = "roles/add";
         public const string Login = "token";
         public const string PictureUpload = "profile-picture";
         public const string UserProfile = "userprofile";
@@ -26,8 +28,7 @@ namespace ICTAZEVoting.Shared.Constants
         public const string DeleteElection = "elections/delete";
         public const string GetElection = "election";
 
-        public const string GetRoles = "roles";
-        public const string AddRole = "roles";
+       
 
     }
 }

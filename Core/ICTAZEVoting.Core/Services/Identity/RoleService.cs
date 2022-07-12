@@ -74,7 +74,7 @@ public class RoleService : IRoleService
 
     public async Task<Result<string>> AddEditAsync(RoleRequest request)
     {
-        if (request.Id == "")
+        if (string.IsNullOrEmpty(request.Id))
         {
             var existingRole = await _roleManager.FindByNameAsync(request.Name);
             if (existingRole != null) return await Result<string>.FailAsync("Similar Role already exists.");

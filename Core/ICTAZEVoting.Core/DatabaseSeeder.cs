@@ -37,7 +37,7 @@ namespace ICTAZEVoting.Core
         }
         private void AddAdministrator()
         {
-            dminTask.Run(async () =>
+            Task.Run(async () =>
             {
                 //Check if Role Exists
                 var adminRole = new Role
@@ -57,7 +57,10 @@ namespace ICTAZEVoting.Core
                 var superUser = new User                 {
                    
                     Email = "admin@example.com",
-                    UserName = "testAdmin",                    
+                    UserName = "testAdmin",
+                    FirstName = "Wisdom",
+                    LastName = "Jere",
+                    NRC = "150279/34/1",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,                    
                     IsActive = true,

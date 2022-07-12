@@ -22,6 +22,17 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
+        public Task<IResult<string>> GetProfilePictureAsync(string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IResult<UserResponse>> GetUser(string id)
+        {
+            var get = await _httpClient.GetAsync(ApiEndpoints.GetUsers + $"/{id}");
+            return await get.ToResult<UserResponse>();
+        }
+
         public async Task<List<UserRoleModel>> GetUserRoles(string id)
         {
             var get = await _httpClient.GetAsync(ApiEndpoints.GetUserRoles+$"/{id}");            
@@ -37,6 +48,11 @@ namespace ICTAZEVoting.Services.Domain
         }
 
         public Task<IResult> RegisterUser(RegisterRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IResult> ToggleUserStatusAsync(ToggleUserStatusRequest request)
         {
             throw new NotImplementedException();
         }

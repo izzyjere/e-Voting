@@ -14,6 +14,7 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
+        <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@candidate">
 <MudGrid>
     <MudItem xs="12" sm="6" md="3">
         <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
@@ -57,7 +58,8 @@
         </Animate>
     </MudItem>
     </MudGrid>
-            <MudButton Variant="Variant.Filled" Color="Color.Info">Save Candidate</MudButton>
+            <MudButton Class="mt-6" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success">Save </MudButton>
+            </EditForm>
     </MudCardContent>
 </MudCard>
 
@@ -106,6 +108,8 @@
         candidate.PersonalDetails = new PersonalDetails();  
     }
 
+    bool isEditing;
+    
     private void Update(Candidate candidate)
     {
         Update(candidate);
@@ -116,6 +120,49 @@
     {
         candidate = candidates.FirstOrDefault(c => c.Id == id);
     }
+
+
+    async Task Save()
+    {
+        if(!isEditing)
+        {
+            //adding
+            var result = await electionService.AddCandidate(candidate);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+        }
+        else
+        {
+            var result = await electionService.UpdateCandidate(candidate);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+
+        }
+    }
+
+
+    async Task Refresh()
+    {
+        candidate = new();
+        isEditing = false;
+        candidates = await electionService.GetCandidateList();
+        StateHasChanged();
+    }
+
 
     MudMessageBox mbox { get; set; }
     private async Task Delete(Guid id)

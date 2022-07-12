@@ -13,7 +13,8 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<ElectionType> GetElectionType(string id);
         Task<Candidate> GetCandidate(string id);
         Task<IResult> DeleteCandidate(string id);
-        Task<IResult> RegisterCandidate(Candidate candidate);
+        Task<IResult> AddCandidate(Candidate candidate);
+        Task<List<Candidate>> GetCandidateList();
         Task<IResult> DisqualifyCandidate(string id);
         Task<IResult> UpdateCandidate(Candidate candidate);
         Task<IResult> AddPoliticalParty(PoliticalParty politicalParty);
@@ -35,6 +36,16 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> DeleteElection(string id);
         Task<List<Election>> GetElectionList();
         Task<Election> GetElection(string Id);
+        Task<IResult> AddConstituency(Constituency election);
+        Task<IResult> UpdateConstituency(Constituency election);
+        Task<IResult> DeleteConstituency(string id);
+        Task<List<Constituency>> GetConstituencyList();
+        Task<Election> GetConstituency(string Id);
+        Task<IResult> AddPolingStation(PolingStation polingStation);
+        Task<IResult> UpdatePolingStation(PolingStation polingStation);
+        Task<IResult> DeletePolingStation(string id);
+        Task<List<PolingStation>> GetPolingStationList();
+        Task<PolingStation> GetPolingStation(string Id);
 
     }
 }

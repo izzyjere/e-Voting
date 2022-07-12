@@ -1,7 +1,347 @@
 ﻿@page "/electionstats"
 
-<h3>ElectionStatistics</h3>
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabPanel Text="Presidential">
+        <MudGrid>
+    <MudItem xs="12" sm="6" md="3">
+        <a Href="candidates">
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.EmojiPeople" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Candidates</MudText>
+                    <MudText Typo="Typo.h5">10</MudText>
+                </div>
+            </MudPaper>
+        </Animate>
+        </a>
+    </MudItem>
+
+<MudItem xs="12" sm="6" md="3">
+    <a Href="voters">
+    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.WhereToVote" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Voters</MudText>
+                <MudText Typo="Typo.h5">7,187,422</MudText>
+            </div>
+        </MudPaper>
+    </Animate>
+    </a>
+</MudItem>
+
+<MudItem xs="12" sm="6" md="3">
+    <a Href="electionstats">
+    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.HowToVote" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Votes Casted</MudText>
+                <MudText Typo="Typo.h5">4,000</MudText>
+            </div>
+        </MudPaper>
+    </Animate>
+    </a>
+</MudItem>
+<MudItem xs="12" sm="6" md="3">
+    <a Href="candidates">
+    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Ballot" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Polling Booths</MudText>
+                <MudText Typo="Typo.h5">50</MudText>
+            </div>
+        </MudPaper>
+    </Animate>
+    </a>
+</MudItem>
+</MudGrid>
+        <MudGrid>
+            <MudItem xs="12" sm="12" md="6">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">Presidential > Consolidated</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudPaper Class="pa-4">
+                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@President" Width="300px" Height="300px" />
+                        </MudPaper>
+                    </MudCard>
+                </Animate>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="6">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">Presidential > Province</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudPaper Class="pa-4">
+                            <div>
+                                <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@PresidentProvince" @bind-SelectedIndex="Index3" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+                            </div>
+                        </MudPaper>
+                    </MudCard>
+                </Animate>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="6">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">Candidates Disagreggeted by Gender</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudPaper Class="pa-4">
+                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data4" @bind-SelectedIndex="Index4" InputLabels="@Gender2" Width="300px" Height="300px" />
+                        </MudPaper>
+                    </MudCard>
+                </Animate>
+            </MudItem>
+
+            <MudItem xs="12" sm="8" md="6">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">Voters Disagreggeted by Gender</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudPaper Class="pa-4">
+                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data3" @bind-SelectedIndex="Index3" InputLabels="@Gender" Width="300px" Height="300px" />
+                        </MudPaper>
+                    </MudCard>
+                </Animate>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+    <MudTabPanel Text="Parliamentary">
+        <MudGrid>
+            <MudGrid>
+                <MudItem xs="12" sm="6" md="3">
+                    <a Href="candidates">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                                <MudIcon Icon="@Icons.Material.Filled.EmojiPeople" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                                <div>
+                                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Candidates</MudText>
+                                    <MudText Typo="Typo.h5">10</MudText>
+                                </div>
+                            </MudPaper>
+                        </Animate>
+                    </a>
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="3">
+                    <a Href="voters">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                                <MudIcon Icon="@Icons.Material.Filled.WhereToVote" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                                <div>
+                                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Voters</MudText>
+                                    <MudText Typo="Typo.h5">7,187,422</MudText>
+                                </div>
+                            </MudPaper>
+                        </Animate>
+                    </a>
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="3">
+                    <a Href="electionstats">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                                <MudIcon Icon="@Icons.Material.Filled.HowToVote" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                                <div>
+                                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Votes Casted</MudText>
+                                    <MudText Typo="Typo.h5">4,000</MudText>
+                                </div>
+                            </MudPaper>
+                        </Animate>
+                    </a>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="3">
+                    <a Href="candidates">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                                <MudIcon Icon="@Icons.Material.Filled.Ballot" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                                <div>
+                                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Polling Booths</MudText>
+                                    <MudText Typo="Typo.h5">50</MudText>
+                                </div>
+                            </MudPaper>
+                        </Animate>
+                    </a>
+                </MudItem>
+            </MudGrid>
+            <MudItem xs="12" sm="12" md="6">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">Presidential > Consolidated</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudPaper Class="pa-4">
+                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@President" Width="300px" Height="300px" />
+                        </MudPaper>
+                    </MudCard>
+                </Animate>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="6">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">Presidential > Province</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudPaper Class="pa-4">
+                            <div>
+                                <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@PresidentProvince" @bind-SelectedIndex="Index3" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+                            </div>
+                        </MudPaper>
+                    </MudCard>
+                </Animate>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="6">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">Candidates Disagreggeted by Gender</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudPaper Class="pa-4">
+                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data4" @bind-SelectedIndex="Index4" InputLabels="@Gender2" Width="300px" Height="300px" />
+                        </MudPaper>
+                    </MudCard>
+                </Animate>
+            </MudItem>
+
+            <MudItem xs="12" sm="8" md="6">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">Voters Disagreggeted by Gender</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudPaper Class="pa-4">
+                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data3" @bind-SelectedIndex="Index3" InputLabels="@Gender" Width="300px" Height="300px" />
+                        </MudPaper>
+                    </MudCard>
+                </Animate>
+            </MudItem>
+
+            <MudItem xs="12" sm="12" md="6">
+                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                    <MudCard Elevation="25">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">Voters > Province</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudPaper Class="pa-4">
+                            <div>
+                                <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@VotersPerProvince" @bind-SelectedIndex="Index5" XAxisLabels="@XAxisLabels5" Width="100%" Height="350px"></MudChart>
+                            </div>
+                        </MudPaper>
+                    </MudCard>
+                </Animate>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+    <MudTabPanel Text="Tab Three">
+        <MudText>Content Three</MudText>
+    </MudTabPanel>
+    <MudTabPanel Text="Tab Disabled" Disabled="true">
+        <MudText>Content Disabled</MudText>
+    </MudTabPanel>
+</MudTabs>
+
+
+
+<MudScrollToTop>
+    <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
+</MudScrollToTop>
 
 @code {
 
+    private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
+    int dataSize = 4;
+    double[] data = { 77, 25, 20, 5 };
+    string[] President = { "Clarence Simukanzye", "Wisdom Jere", "Ndanji Bupe Soko", "Bulaya Mwanaute" };
+
+
+
+    Random random = new Random();
+
+    void RandomizeData()
+    {
+        var new_data = new double[dataSize];
+        for (int i = 0; i < new_data.Length; i++)
+            new_data[i] = random.NextDouble() * 100;
+        data = new_data;
+        StateHasChanged();
+    }
+
+    void AddDataSize()
+    {
+        if (dataSize < 20)
+        {
+            dataSize = dataSize + 1;
+            RandomizeData();
+        }
+    }
+    void RemoveDataSize()
+    {
+        if (dataSize > 0)
+        {
+            dataSize = dataSize - 1;
+            RandomizeData();
+        }
+    }
+
+
+    private int Index2 = -1; //default value cannot be 0 -> first selectedindex is 0.
+
+    public List<ChartSeries> PresidentProvince = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "Clarence simukanzye", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
+        new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
+        new ChartSeries() { Name = "Ndanji Bupe Soko", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18, 10 } },
+        new ChartSeries() { Name = "Bulaya Mwanaute", Data = new double[] { 20, 15, 2, 6, 10, 50, 19, 46, 80, 4 } },
+    };
+    public string[] XAxisLabels = { "Northen", "North Western", "Luapula", "Lusaka", "Muchinga", "Central", "Southern", "Eastern", "Copperbelt", "Western" };
+
+    private int Index3 = -1; //default value cannot be 0 -> first selectedindex is 0.
+    int dataSize3 = 2;
+    double[] data3 = { 77, 62 };
+    string[] Gender = { "Male", "Female", "Other" };
+
+    private int Index4 = -1; //default value cannot be 0 -> first selectedindex is 0.
+    int dataSize4 = 2;
+    double[] data4 = { 77, 25 };
+    string[] Gender2 = { "Male", "Female", "Other" };
+
+    private int Index5 = -1; //default value cannot be 0 -> first selectedindex is 0.
+
+    public List<ChartSeries> VotersPerProvince = new List<ChartSeries>()
+    {
+        new ChartSeries() {  Data = new double[] { 100, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
+    //    new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
+    //    new ChartSeries() { Name = "2000", Data = new double[] { 100, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
+    //    new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
+    //
+    };
+    public string[] XAxisLabels5 = { "Northen", "North Western", "Luapula", "Lusaka", "Muchinga", "Central", "Southern", "Eastern", "Copperbelt", "Western" };
 }

@@ -9,5 +9,6 @@ namespace ICTAZEVoting.Shared.Models
     public class SystemAdmin : AuditableEntity<Guid> 
     {
         public  PersonalDetails PersonalDetails { get; set; }
+
     }
 }

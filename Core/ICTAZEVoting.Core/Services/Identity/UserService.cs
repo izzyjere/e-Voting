@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Text.Encodings.Web;
 using ICTAZEVoting.Shared.Constants;
+using System.Collections.Generic;
 
 namespace ICTAZEVoting.Core.Services.Identity
 {
@@ -41,9 +42,28 @@ namespace ICTAZEVoting.Core.Services.Identity
         public async Task<Result<List<UserResponse>>> GetAllAsync()
         {
             var users = new List<User> { };
+            var result = new List<UserResponse>();
             users = await _userManager.Users.Include(u => u.Roles).ThenInclude(ur => ur.Role).ToListAsync();
-
-            var result = _mapper.Map<List<UserResponse>>(users);
+            foreach (var item in users)
+            {
+                var res = new UserResponse
+                {
+                   Email = item.Email,
+                   FirstName = item.FirstName,
+                   LastName = item.LastName,
+                   MiddleName = item.MiddleName,
+                   UserName = item.UserName,
+                   Id = item.Id,
+                   EmailConfirmed = item.EmailConfirmed,
+                   PictureUrl = item.PictureUrl,
+                   IsActive = item .IsActive,
+                   PhoneNumber = item .PhoneNumber,
+                   NRC = item .NRC                 
+                };
+                res.Roles = new();
+                item.Roles.ForEach(r=> res.Roles.Add(new UserRoleModel { RoleDescription = r.Role.Description, RoleName = r.Role.Name, Selected = true}));
+                result.Add(res);
+            }            
             return await Result<List<UserResponse>>.SuccessAsync(result);
         }
         public async Task<IResult<UserResponse>> GetByIdAsync(Guid userId)

@@ -1,4 +1,4 @@
-﻿namespace ICTAZEVoting.Core.Models
+﻿namespace ICTAZEVoting.Shared.Responses.Identity
 {
     public class GetAllUsersResponse
     {

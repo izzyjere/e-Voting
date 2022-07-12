@@ -6,6 +6,9 @@ namespace ICTAZEVoting.Shared.Constants
 {
     public static class ApiEndpoints
     {
+        public const string GetRoles = "roles";
+        public const string AddRole = "roles/add";
+        public const string GetUsers = "users";
         public const string Login = "token";
         public const string PictureUpload = "profile-picture";
         public const string UserProfile = "userprofile";
@@ -24,14 +27,9 @@ namespace ICTAZEVoting.Shared.Constants
         public const string AddElection = "elections/add";
         public const string EditElection = "elections/update";
         public const string DeleteElection = "elections/delete";
-        public const string GetElections = "elections";
-        public const string AddConstituency = "constituency/add";
-        public const string EditConstituency = "constituency/update";
-        public const string DeleteConstituency = "constituency/delete";
-        public const string GetConstituencies = "constituencies";
-        public const string AddPolingStation = "polingstation/add";
-        public const string EditPolingStation = "polingstation/update";
-        public const string DeletePolingStation = "polingstation/delete";
-        public const string GetPolingStations = "polingstations";
+        public const string GetElection = "election";
+
+       
+
     }
 }

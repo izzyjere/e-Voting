@@ -21,5 +21,9 @@ namespace ICTAZEVoting.Shared.Constants
         public const string GetVoters = "voters";
         public const string UpdateVoter = "voters/update";
         public const string DeleteVoter = "voters/delete";
+        public const string AddElection = "elections/add";
+        public const string EditElection = "elections/update";
+        public const string DeleteElection = "elections/delete";
+        public const string GetElection = "election";
     }
 }

@@ -8,7 +8,6 @@ namespace ICTAZEVoting.Shared.Interfaces
 {
     public interface IElectionService
     {
-        Task<Election> GetElection(string Id);
         Task<Election> GetCurrentElection();
         Task<List<ElectionType>> GetElectionTypes();
         Task<ElectionType> GetElectionType(string id);
@@ -31,5 +30,11 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<List<ElectionPosition>> GetElectionPositionList(string electionId);
         Task<List<ElectionPosition>> GetElectionPositionList();
         Task<IResult> DeletePoliticalParty(string id);
+        Task<IResult> AddElection(Election election);
+        Task<IResult> UpdateElection(Election election);
+        Task<IResult> DeleteElection(string id);
+        Task<List<Election>> GetElectionList();
+        Task<Election> GetElection(string Id);
+
     }
 }

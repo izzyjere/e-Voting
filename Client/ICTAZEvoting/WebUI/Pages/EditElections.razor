@@ -10,7 +10,7 @@
 <MudCard Elevation="25">
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h6">Add / Edit Candidates</MudText>
+            <MudText Typo="Typo.h6">Add / Edit Elections</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
@@ -23,12 +23,12 @@
 
             <MudItem xs="12" sm="6" md="3">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField @bind-Value="election.Name" Label="NRC Number" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    <MudTextField @bind-Value="election.Name" Label="Election Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
             <MudItem xs="12" sm="6" md="3">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudSelect T="Guid" Variant="Variant.Outlined" Label="Select Election Type" @bind-Value="electionType.Id">
+                    <MudSelect T="Guid" Variant="Variant.Outlined" Label="Election Type" @bind-Value="electionType.Id">
                         @foreach (var type in electionTypes)
                         {
                             <MudSelectItem T="Guid" Value="@electionType.Id">@electionType.Name</MudSelectItem>
@@ -45,12 +45,12 @@
 
             <MudItem xs="12" sm="6" md="3">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField @bind-Value="election.Status" Label="election Status" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    <MudTextField @bind-Value="election.Status" Label="Election Status" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
 
         </MudGrid>
-        <MudButton Variant="Variant.Filled" Color="Color.Info">Save Candidate</MudButton>
+        <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Election</MudButton>
     </MudCardContent>
 </MudCard>
 
@@ -71,7 +71,7 @@
         <RowTemplate>
             <MudTd DataLabel="Election Date">@context.ElectionDate</MudTd>
             <MudTd DataLabel="">
-                <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                <MudFab @onclick="@(()=>Edit(@context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
                 <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
             </MudTd>
         </RowTemplate>
@@ -97,20 +97,57 @@
     private List<Election> elections = new List<Election>();
     private ElectionType electionType = new ElectionType();
     private List<ElectionType> electionTypes = new List<ElectionType>();
+
+    bool isEditing;
     protected override async Task OnInitializedAsync()
     {
-
+        await Refresh();
     }
 
-    private void Update(Election election)
+    async Task Refresh()
     {
-        Update(election);
-        election = new Election();
-        snackBar.Add("Election Saved.", Severity.Success);
+        election = new();
+        isEditing = false;
+        elections = await electionService.GetElectionList();
+        StateHasChanged();
     }
-    private void Edit(Guid id)
+    
+    async Task Save()
     {
-        election = elections.FirstOrDefault(c => c.Id == id);
+        if(!isEditing)
+        {
+            //adding
+            var result = await electionService.AddElection(election);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+        }
+        else
+        {
+            var result = await electionService.UpdateElection(election);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+
+        }
+    }
+    private void Edit(Election election)
+    {
+        this.election = election;
+        isEditing = true;
+        StateHasChanged();
     }
 
     MudMessageBox mbox { get; set; }
@@ -119,8 +156,16 @@
         bool? confirmed = await mbox.Show();
         if (confirmed == true)
         {
-            await Delete(id);
-            snackBar.Add("Election Deleted.", Severity.Success);
+            var result =  await electionService.DeleteElection(id.ToString());
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
         }
     }
 

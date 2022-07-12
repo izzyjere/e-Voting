@@ -157,5 +157,39 @@ namespace ICTAZEVoting.Services.Domain
             var add = await httpClient.PostAsJsonAsync(ApiEndpoints.EditPoliticalParty, politicalParty);
             return await add.ToResult();
         }
+
+        public async Task<IResult> AddElection(Election election)
+        {
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddElection, election);
+            return await add.ToResult();
+        }
+
+        public async Task<IResult> UpdateElection(Election type)
+        {
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.EditElection, type);
+            return await add.ToResult();
+        }
+
+        public async Task<IResult> DeleteElection(string id)
+        {
+            var delete = await httpClient.DeleteAsync($"{ApiEndpoints.DeleteElection}/{id}");
+            if (delete.IsSuccessStatusCode)
+            {
+                return await delete.ToResult();
+            }
+            return Result.Fail("An error occured. Check your internet connection.");
+        }
+
+        public async Task<List<Election>> GetElectionList()
+        {
+            var get = await httpClient.GetAsync(ApiEndpoints.GetElection);
+            var list = new List<Election>();
+            if (get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<List<Election>>();
+                list = res.Data;
+            }
+            return list;
+        }
     }
 }

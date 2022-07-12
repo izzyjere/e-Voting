@@ -14,6 +14,7 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
+        <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@election">
         <MudGrid>
             <MudItem xs="12" sm="6" md="3">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
@@ -51,6 +52,7 @@
 
         </MudGrid>
         <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Election</MudButton>
+        </EditForm>
     </MudCardContent>
 </MudCard>
 

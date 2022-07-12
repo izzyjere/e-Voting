@@ -26,7 +26,22 @@ namespace ICTAZEVoting.Services.Domain
             var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddElectionType, type);
             return await add.ToResult();
         }
-
+        public async Task<IResult> AddCandidate(Candidate candidate)
+        {
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddElectionType, candidate);
+            return await add.ToResult();
+        }
+        public async Task<List<Candidate>> GetCandidateList()
+        {
+            var get = await httpClient.GetAsync(ApiEndpoints.GetCandidates);
+            var list = new List<Candidate>();
+            if (get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<List<Candidate>>();
+                list = res.Data;
+            }
+            return list;
+        }
         public async Task<IResult> AddPoliticalParty(PoliticalParty politicalParty)
         {
             var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddPoliticalParty, politicalParty);

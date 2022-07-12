@@ -27,9 +27,20 @@ namespace ICTAZEVoting.Shared.Constants
         public const string AddElection = "elections/add";
         public const string EditElection = "elections/update";
         public const string DeleteElection = "elections/delete";
-        public const string GetElection = "election";
+        public const string GetElections = "election";
+        public const string AddConstituency = "constituency/add";
+        public const string EditConstituency = "constituency/update";
+        public const string DeleteConstituency = "constituency/delete";
+        public const string GetConstituencies = "constituencies";
+        public const string AddPolingStation = "polingstation/add";
+        public const string EditPolingStation = "polingstation/update";
+        public const string DeletePolingStation = "polingstation/delete";
+        public const string GetPolingStations = "polingstations";
+        public const string AddCandidate = "candidate/add";
+        public const string EditCandidate = "candidate/update";
+        public const string DeleteCandidate = "candidate/delete";
+        public const string GetCandidates = "candidates";
 
-       
 
     }
 }

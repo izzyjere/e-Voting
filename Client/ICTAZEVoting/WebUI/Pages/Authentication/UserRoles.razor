@@ -13,9 +13,9 @@ else
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="SaveAsync" ButtonType="MudBlazor.ButtonType.Submit">Update User Roles</MudButton>
             
             </div>
-            <MudToolBarSpacer />
+            <MudSpacer />
         
-             <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth=false Placeholder="Search For User Roles"]" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
+             <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth=false Placeholder="Search For User Roles" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
           
         </ToolBarContent>
         <HeaderContent>
@@ -24,13 +24,13 @@ else
             <MudTh><MudTableSortLabel SortBy="new Func<UserRoleModel, object>(x => x.Selected)">Status</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Role Name"]">
+            <MudTd DataLabel="Role Name">
                 <MudHighlighter Text="@context.RoleName" HighlightedText="@_searchString" />
             </MudTd>
-            <MudTd DataLabel="Description"]">
+            <MudTd DataLabel="Description">
                 <MudHighlighter Text="@context.RoleDescription" HighlightedText="@_searchString" />
             </MudTd>
-            <MudTd DataLabel="Role"><MudCheckBox @bind-Checked="@context.Selected" Disabled="@(!_canEditUsers)" Color="Color.Secondary"></MudCheckBox></MudTd>
+            <MudTd DataLabel="Role"><MudCheckBox @bind-Checked="@context.Selected"  Color="Color.Secondary"></MudCheckBox></MudTd>
         </RowTemplate>
         <FooterContent>
             <MudSwitch @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">Dense</MudSwitch>

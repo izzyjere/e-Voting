@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 
@@ -24,6 +25,12 @@ namespace ICTAZEVoting.Services.Identity
             this.authenticationStateProvider = authenticationStateProvider;
             Client = httpClient;
         }
+
+        public async Task<ClaimsPrincipal> CurrentUser()
+        {
+            return (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+        }
+
         public async Task<AuthenticationState> GetAuthenticationState()
         {
             return await authenticationStateProvider.GetAuthenticationStateAsync();

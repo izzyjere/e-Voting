@@ -15,8 +15,6 @@ namespace ICTAZEVoting.WebUI.Pages.Authentication
 {
     public partial class Roles
     {
-        [Inject] private IRoleManager RoleManager { get; set; }       
-
         private List<RoleResponse> _roleList = new();
         private RoleResponse _role = new();
         private string _searchString = "";
@@ -36,18 +34,7 @@ namespace ICTAZEVoting.WebUI.Pages.Authentication
 
         private async Task GetRolesAsync()
         {
-            var response = await RoleManager.GetRolesAsync();
-            if (response.Succeeded)
-            {
-                _roleList = response.Data;
-            }
-            else
-            {
-                foreach (var message in response.Messages)
-                {
-                    snackBar.Add(message, Severity.Error);
-                }
-            }
+           
         }
 
         private async Task Delete(string id)

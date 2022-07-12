@@ -1,4 +1,4 @@
-﻿@page "/identity/users"
+﻿@page "/users"
 @using ICTAZEVoting.Core.Models
 
 <style>
@@ -25,7 +25,7 @@ else
                 <MudButton DisableElevation Variant="Variant.Filled" OnClick="ExportToExcel" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">Export</MudButton>
 
             </div>
-            <MudToolBarSpacer />
+            <MudSpacer />
 
             <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth=false Placeholder="Search For Users" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
 

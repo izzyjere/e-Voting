@@ -1,4 +1,4 @@
-﻿@page "/identity/roles"
+﻿@page "/roles"
 @using System.ComponentModel.Design
 
 <style>
@@ -22,7 +22,7 @@ else
                 <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetRolesAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
 
             </div>
-            <MudToolBarSpacer />
+            <MudSpacer />
 
             <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Search for Roles..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
 

@@ -37,7 +37,7 @@ namespace ICTAZEVoting.Core
         }
         private void AddAdministrator()
         {
-            Task.Run(async () =>
+            dminTask.Run(async () =>
             {
                 //Check if Role Exists
                 var adminRole = new Role

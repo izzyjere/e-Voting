@@ -71,6 +71,10 @@ namespace ICTAZEVoting.WebUI.Pages.Authentication
         void ManageRoles(string id)
         {
             Navigation.NavigateTo($"user-roles/{id}");
+        }  
+        void ViewProfile(string id)
+        {
+            Navigation.NavigateTo($"user-profile/{id}");
         }
         private async Task ExportToExcel()
         {

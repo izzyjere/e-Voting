@@ -182,7 +182,7 @@ namespace ICTAZEVoting.Services.Domain
 
         public async Task<List<Election>> GetElectionList()
         {
-            var get = await httpClient.GetAsync(ApiEndpoints.GetElection);
+            var get = await httpClient.GetAsync(ApiEndpoints.GetElections);
             var list = new List<Election>();
             if (get.IsSuccessStatusCode)
             {
@@ -192,9 +192,10 @@ namespace ICTAZEVoting.Services.Domain
             return list;
         }
 
-        public Task<IResult> AddConstituency(Election election)
+        public async Task<IResult> AddConstituency(Constituency constituency)
         {
-            throw new NotImplementedException();
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddConstituency, constituency);
+            return await add.ToResult();
         }
 
         public async Task<IResult> UpdateConstituency(Constituency constituency)
@@ -219,11 +220,6 @@ namespace ICTAZEVoting.Services.Domain
             return Result.Fail("An error occured. Check your internet connection.");
         }
 
-        public Task<IResult> UpdateConstituency(Election election)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<Constituency>> GetConstituencyList()
         {
             var get = await httpClient.GetAsync(ApiEndpoints.GetConstituencies);
@@ -234,6 +230,45 @@ namespace ICTAZEVoting.Services.Domain
                 list = res.Data;
             }
             return list;
+        }
+
+        public async Task<IResult> AddPolingStation(PolingStation polingStation)
+        {
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddPolingStation, polingStation);
+            return await add.ToResult();
+        }
+
+        public async Task<IResult> UpdatePolingStation(PolingStation polingStation)
+        {
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.EditPolingStation, polingStation);
+            return await add.ToResult();
+        }
+
+        public async Task<IResult> DeletePolingStation(string id)
+        {
+            var delete = await httpClient.DeleteAsync($"{ApiEndpoints.DeletePolingStation}/{id}");
+            if (delete.IsSuccessStatusCode)
+            {
+                return await delete.ToResult();
+            }
+            return Result.Fail("An error occured. Check your internet connection.");
+        }
+
+        public async Task<List<PolingStation>> GetPolingStationList()
+        {
+            var get = await httpClient.GetAsync(ApiEndpoints.GetPolingStations);
+            var list = new List<PolingStation>();
+            if (get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<List<PolingStation>>();
+                list = res.Data;
+            }
+            return list;
+        }
+
+        public Task<PolingStation> GetPolingStation(string Id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@*@page "/constituencies"
+﻿@page "/constituencies"
 
 @using ICTAZEVoting.Shared
 @using System.Linq
@@ -14,12 +14,12 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@electionType">
+        <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@constituency">
             <DataAnnotationsValidator/>
         <MudGrid>
             <MudItem xs="12" sm="6" md="3">
                 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                   <MudTextField For="()=>electionType.Name" @bind-Value="electionType.Name" Label="Election Type" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                   <MudTextField For="()=>constituency.Name" @bind-Value="constituency.Name" Label="Constituency Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
                 </Animate>
             </MudItem>
         </MudGrid>
@@ -30,18 +30,18 @@
 </MudCard>
 
 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-    <MudTable Bordered="true"  Hover="true" Style="color: white; padding:2em" Elevation="25" Items="electionTypes">
+    <MudTable Bordered="true"  Hover="true" Style="color: white; padding:2em" Elevation="25" Items="constituencies">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Election Types</MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="searchString" Placeholder="Search for Election Type..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="searchString" Placeholder="Search for Constituencies..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Election Type</MudTh>
+            <MudTh>Constituency</MudTh>
             <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Election Type"><MudChip Icon="@Icons.Material.Filled.Bookmark" Color="Color.Info" Label="true">@context.Name</MudChip></MudTd>
+            <MudTd DataLabel="Constituency"><MudChip Icon="@Icons.Material.Filled.Bookmark" Color="Color.Info" Label="true">@context.Name</MudChip></MudTd>
             <MudTd DataLabel="Actions">
                 <MudFab @onclick="@(()=>Edit(context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
                 <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
@@ -79,7 +79,7 @@
     {
         constituency = new();
         isEditing = false;
-        constituency = await electionService.GetElectionTypes();
+        constituencies = await electionService.GetConstituencyList();
         StateHasChanged();
     }
     async Task Save()
@@ -87,7 +87,7 @@
         if(!isEditing)
         {
             //adding
-            var result = await electionService.AddElectionType(electionType.Name);
+            var result = await electionService.AddConstituency(constituency);
             if(result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
@@ -100,7 +100,7 @@
         }
         else
         {
-            var result = await electionService.UpdateElectionType(electionType);
+            var result = await electionService.UpdateConstituency(constituency);
             if(result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
@@ -113,9 +113,9 @@
 
         }
     }
-    private async void Edit(ElectionType electionType)
+    private async void Edit(Constituency constituency)
     {
-        this.electionType = electionType;
+        this.constituency = constituency;
         isEditing = true;
         StateHasChanged();
     }
@@ -127,7 +127,7 @@
         bool? confirmed = await mbox.Show();
         if (confirmed == true)
         {
-            var result =  await electionService.DeleteElectionType(id.ToString());
+            var result =  await electionService.DeleteConstituency(id.ToString());
             if(result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
@@ -140,4 +140,3 @@
         }
     }
 }
-*@

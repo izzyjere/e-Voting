@@ -12,10 +12,9 @@ namespace ICTAZEVoting.WebUI.Pages.Authentication
     public partial class UserRoles
     {
         [Parameter] public string Id { get; set; }
-        [Parameter] public string Title { get; set; }
-        [Parameter] public string Description { get; set; }
+        [Parameter] public string Title { get; set; }         
         public List<UserRoleModel> UserRolesList { get; set; } = new();
-
+        [Inject] IUserManager userManager { get; set; }  
         private UserRoleModel _userRole = new();
         private string _searchString = "";
         private bool _dense = false;
@@ -27,13 +26,14 @@ namespace ICTAZEVoting.WebUI.Pages.Authentication
         private bool _loaded;
 
         protected override async Task OnInitializedAsync()
-        {          
-
-            
-
+        {
+            await Load();
+        }
+        async Task Load()
+        {
+            UserRolesList = await userManager.GetUserRoles(Id);
             _loaded = true;
         }
-
         private async Task SaveAsync()
         {
             

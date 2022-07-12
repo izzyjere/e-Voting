@@ -9,6 +9,7 @@ namespace ICTAZEVoting.Shared.Constants
         public const string GetRoles = "roles";
         public const string AddRole = "roles/add";
         public const string GetUsers = "users";
+        public const string GetUserRoles = "users/roles";
         public const string Login = "token";
         public const string PictureUpload = "profile-picture";
         public const string UserProfile = "userprofile";

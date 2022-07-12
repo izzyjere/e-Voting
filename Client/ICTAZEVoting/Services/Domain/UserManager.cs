@@ -22,6 +22,14 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
+        public async Task<List<UserRoleModel>> GetUserRoles(string id)
+        {
+            var get = await _httpClient.GetAsync(ApiEndpoints.GetUserRoles+$"/{id}");            
+            var res = await get.ToResult<UserRolesResponse>();
+            return res.Data.UserRoles;
+
+        }
+
         public async Task<IResult<List<UserResponse>>> GetUsers()
 {
             var get = await _httpClient.GetAsync(ApiEndpoints.GetUsers);

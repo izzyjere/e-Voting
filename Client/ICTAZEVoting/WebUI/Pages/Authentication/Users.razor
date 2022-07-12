@@ -73,7 +73,7 @@ else
         <MudTd DataLabel="Actions" Style="text-align:right">
             <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left" OffsetX="true">
                 <MudMenuItem>View Profile</MudMenuItem>
-                <MudMenuItem>Manage Roles</MudMenuItem>
+                <MudMenuItem OnClick="()=>ManageRoles(context.Id.ToString())">Manage Roles</MudMenuItem>
             </MudMenu>
         </MudTd>
     </RowTemplate>

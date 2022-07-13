@@ -4,6 +4,7 @@
 @using System.Linq
 @using System
 @using ICTAZEVoting.Shared.Models
+@using ICTAZEVoting.Shared.Responses.Domain
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
 
@@ -14,6 +15,7 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
+        <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@candidate">
 <MudGrid>
     <MudItem xs="12" sm="6" md="3">
         <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
@@ -57,7 +59,8 @@
         </Animate>
     </MudItem>
     </MudGrid>
-            <MudButton Variant="Variant.Filled" Color="Color.Info">Save Candidate</MudButton>
+            <MudButton Class="mt-6" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success">Save </MudButton>
+            </EditForm>
     </MudCardContent>
 </MudCard>
 
@@ -74,10 +77,9 @@
         <MudTh>Last Name</MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Candidate Number">@context.CandidateNumber</MudTd>
+    <RowTemplate>      
         <MudTd DataLabel="">
-            <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Edit(@context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
             <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
         </MudTd>
     </RowTemplate>
@@ -100,22 +102,61 @@
 @code{
     private string searchString = "";
     private Candidate candidate = new Candidate();
-    private List<Candidate> candidates = new List<Candidate>();
+    private List<CandidateResponse> candidates = new List<CandidateResponse>();
     protected override async Task OnInitializedAsync()
     {
         candidate.PersonalDetails = new PersonalDetails();  
     }
 
-    private void Update(Candidate candidate)
+    bool isEditing;
+    
+    private void Edit(CandidateResponse candidate)
     {
-        Update(candidate);
-        candidate = new Candidate();
+       
         snackBar.Add("Candidate Saved.", Severity.Success);
     }
-    private void Edit(Guid id)
+    
+    async Task Save()
     {
-        candidate = candidates.FirstOrDefault(c => c.Id == id);
+        if(!isEditing)
+        {
+            //adding
+            var result = await electionService.AddCandidate(candidate);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+        }
+        else
+        {
+            var result = await electionService.UpdateCandidate(candidate);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+
+        }
     }
+
+
+    async Task Refresh()
+    {
+        candidate = new();
+        isEditing = false;
+        candidates = await electionService.GetCandidateList();
+        StateHasChanged();
+    }
+
 
     MudMessageBox mbox { get; set; }
     private async Task Delete(Guid id)

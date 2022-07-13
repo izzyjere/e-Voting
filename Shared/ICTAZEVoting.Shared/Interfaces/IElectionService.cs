@@ -4,6 +4,8 @@ global using ICTAZEVoting.Shared.Wrapper;
 global using System.Collections.Generic;
 global using System.Threading.Tasks;
 
+using ICTAZEVoting.Shared.Responses.Domain;
+
 namespace ICTAZEVoting.Shared.Interfaces
 {
     public interface IElectionService
@@ -13,7 +15,8 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<ElectionType> GetElectionType(string id);
         Task<Candidate> GetCandidate(string id);
         Task<IResult> DeleteCandidate(string id);
-        Task<IResult> RegisterCandidate(Candidate candidate);
+        Task<IResult> AddCandidate(Candidate candidate);
+        Task<List<CandidateResponse>> GetCandidateList();
         Task<IResult> DisqualifyCandidate(string id);
         Task<IResult> UpdateCandidate(Candidate candidate);
         Task<IResult> AddPoliticalParty(PoliticalParty politicalParty);
@@ -33,8 +36,18 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> AddElection(Election election);
         Task<IResult> UpdateElection(Election election);
         Task<IResult> DeleteElection(string id);
-        Task<List<Election>> GetElectionList();
+        Task<List<ElectionResponse>> GetElectionList();
         Task<Election> GetElection(string Id);
+        Task<IResult> AddConstituency(Constituency election);
+        Task<IResult> UpdateConstituency(Constituency election);
+        Task<IResult> DeleteConstituency(string id);
+        Task<List<Constituency>> GetConstituencyList();
+        Task<Election> GetConstituency(string Id);
+        Task<IResult> AddPolingStation(PollingStation polingStation);
+        Task<IResult> UpdatePolingStation(PollingStation polingStation);
+        Task<IResult> DeletePolingStation(string id);
+        Task<List<PollingStation>> GetPolingStationList();
+        Task<PollingStation> GetPolingStation(string Id);
 
     }
 }

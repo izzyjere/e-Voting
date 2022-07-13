@@ -7,6 +7,6 @@ namespace ICTAZEVoting.Shared.Models
     public class Constituency  : Entity<Guid>
     {
         public string Name { get; set; }
-        public List<PolingStation> PolingStations { get; set; }
+        public List<PollingStation> PolingStations { get; set; }
     }
 }

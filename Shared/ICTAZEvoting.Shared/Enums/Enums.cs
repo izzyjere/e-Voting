@@ -15,7 +15,7 @@
     }
     public enum ElectionStatus
     {
-       Closed, Open
+      Pending, Open, Closed
     }
 
 }

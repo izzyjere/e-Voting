@@ -18,8 +18,7 @@ else
             <div class="justify-center mud-text-align-center">
 
                 <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => InvokeModal())" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Create</MudButton>
-                <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetRolesAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
-                <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetRolesAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>
+                <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetRolesAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">Reload</MudButton>              
 
             </div>
             <MudSpacer />
@@ -28,13 +27,13 @@ else
 
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<RoleResponse, object>(x => x.Id)">Id</MudTableSortLabel></MudTh>
+           
             <MudTh><MudTableSortLabel SortBy="new Func<RoleResponse, object>(x => x.Name)">Role</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<RoleResponse, object>(x => x.Description)">Description</MudTableSortLabel></MudTh>
             <MudTh Style="text-align:right">Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
+            
             <MudTd DataLabel="Role">
                 <MudHighlighter Text="@context.Name" HighlightedText="@_searchString" />
             </MudTd>
@@ -46,21 +45,9 @@ else
                 <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left" OffsetX="true">
 
                     <MudMenuItem>Manage Permission</MudMenuItem>
-
                     <MudMenuItem @onclick="@(() => InvokeModal(@context.Id.ToString()))">Edit</MudMenuItem>
-
                     <MudMenuItem @onclick="@(() => Delete(@context.Id.ToString()))">Delete</MudMenuItem>
-
-                </MudMenu>
-
-                <MudButton Variant="Variant.Filled"
-                       DisableElevation="true"
-                       StartIcon="@Icons.Material.Filled.DoNotTouch"
-                       IconColor="Color.Secondary"
-                       Size="Size.Small"
-                       Color="Color.Surface">
-                    "No Allowed Actions"
-                </MudButton>
+                </MudMenu>      
 
             </MudTd>
         </RowTemplate>

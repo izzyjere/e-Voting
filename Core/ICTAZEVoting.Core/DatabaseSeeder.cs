@@ -57,11 +57,14 @@ namespace ICTAZEVoting.Core
                 var superUser = new User                 {
                    
                     Email = "admin@example.com",
-                    UserName = "testAdmin",                    
+                    UserName = "testAdmin",
+                    FirstName = "Wisdom",
+                    LastName = "Jere",
+                    NRC = "150279/34/1",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,                    
                     IsActive = true,
-                    PictureUrl = ""                   
+                    PictureUrl =  "images/clarence.png"
                 };                
                 var superUserInDb = await _userManager.FindByEmailAsync(superUser.Email);
                 if (superUserInDb == null)

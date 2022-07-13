@@ -1,5 +1,6 @@
 ﻿
 using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Responses.Identity;
 
 using Microsoft.AspNetCore.Components;
 
@@ -14,10 +15,16 @@ namespace ICTAZEVoting.WebUI.Pages.Authentication
 
         private readonly RegisterRequest _registerUserModel = new();
         [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
-
+        List<RoleResponse> roleResponses = new List<RoleResponse>();
+        [Inject] IRoleManager roleManager { get; set; }
         private void Cancel()
         {
             MudDialog.Cancel();
+        }
+        protected override async Task OnInitializedAsync()
+        {
+            var res = await roleManager.GetRolesAsync();
+            roleResponses = res.Data;
         }
 
         private async Task SubmitAsync()

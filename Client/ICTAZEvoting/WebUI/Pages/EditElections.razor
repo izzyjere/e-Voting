@@ -253,7 +253,7 @@
         election.ElectionDate = record.ElectionDate;
         election.Name = record.Name;
         election.Status = record.Status;
-        record.Positions.ForEach(p=> election.Positions.Add(new ElectionPosition{Position = p.Position, ElectionId = p.ElectionId}));
+        record.Positions.ForEach(p=> election.Positions.Add(new ElectionPosition{Id=p.Id, Position = p.Position, ElectionId = p.ElectionId}));
         isEditing = true;
         StateHasChanged();
     }

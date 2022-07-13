@@ -20,6 +20,7 @@ namespace ICTAZEVoting.Shared.Responses.Domain
     }
     public class ElectionPositionResponse
     {
+        public Guid Id { get; set; }
         public Guid ElectionId { get; set; }
         public string Position { get; set; }
     }

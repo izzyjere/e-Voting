@@ -46,4 +46,11 @@ namespace ICTAZEVoting.Core.Mappings
             CreateMap<AuditResponse, Audit>().ReverseMap();
         }
     }
+    public class CandidateProfile : Profile
+    {
+        public CandidateProfile()
+        {
+            CreateMap<Candidate, CandidateResponse>().ReverseMap();
+        }
+    }
 }

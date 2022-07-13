@@ -101,10 +101,11 @@ namespace ICTAZEVoting.Api
                 var result = await unitOfWork.Repository<Voter>().Update(entity);
                 return result ? Result.Success("Voter details were updated.") : Result.Fail("An error has occured. Try again.");
             });
-            app.MapGet("/candidates", [Authorize(Roles = $"{RoleConstants.AdministratorRole},{RoleConstants.BasicRole}")] async (IUnitOfWork<Guid> unitOfWork) =>
+            app.MapGet("/candidates", [Authorize(Roles = $"{RoleConstants.AdministratorRole},{RoleConstants.BasicRole}")] async (IUnitOfWork<Guid> unitOfWork,IMapper mapper) =>
             {
-                var result = await unitOfWork.Repository<Candidate>().Entities().Include(c => c.Position).ThenInclude(p => p.Election).Include(c => c.PoliticalParty).ToListAsync();
-                return Result<IEnumerable<Candidate>>.Success(result);
+                var candidates = await unitOfWork.Repository<Candidate>().Entities().Include(c => c.Position).ThenInclude(p => p.Election).Include(c => c.PoliticalParty).ToListAsync();
+                var result =  mapper.Map<List<CandidateResponse>>(candidates);
+                return Result<IEnumerable<CandidateResponse>>.Success(result);
             });
             app.MapGet("/candidates/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {

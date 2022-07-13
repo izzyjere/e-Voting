@@ -32,13 +32,13 @@ namespace ICTAZEVoting.Services.Domain
             var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddElectionType, candidate);
             return await add.ToResult();
         }
-        public async Task<List<Candidate>> GetCandidateList()
+        public async Task<List<CandidateResponse>> GetCandidateList()
         {
             var get = await httpClient.GetAsync(ApiEndpoints.GetCandidates);
-            var list = new List<Candidate>();
+            var list = new List<CandidateResponse>();
             if (get.IsSuccessStatusCode)
             {
-                var res = await get.ToResult<List<Candidate>>();
+                var res = await get.ToResult<List<CandidateResponse>>();
                 list = res.Data;
             }
             return list;

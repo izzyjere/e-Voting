@@ -4,6 +4,7 @@
 @using System.Linq
 @using System
 @using ICTAZEVoting.Shared.Models
+@using ICTAZEVoting.Shared.Responses.Domain
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
 
@@ -76,10 +77,9 @@
         <MudTh>Last Name</MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Candidate Number">@context.CandidateNumber</MudTd>
+    <RowTemplate>      
         <MudTd DataLabel="">
-            <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Edit(@context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
             <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
         </MudTd>
     </RowTemplate>
@@ -102,7 +102,7 @@
 @code{
     private string searchString = "";
     private Candidate candidate = new Candidate();
-    private List<Candidate> candidates = new List<Candidate>();
+    private List<CandidateResponse> candidates = new List<CandidateResponse>();
     protected override async Task OnInitializedAsync()
     {
         candidate.PersonalDetails = new PersonalDetails();  
@@ -110,18 +110,12 @@
 
     bool isEditing;
     
-    private void Update(Candidate candidate)
+    private void Edit(CandidateResponse candidate)
     {
-        Update(candidate);
-        candidate = new Candidate();
+       
         snackBar.Add("Candidate Saved.", Severity.Success);
     }
-    private void Edit(Guid id)
-    {
-        candidate = candidates.FirstOrDefault(c => c.Id == id);
-    }
-
-
+    
     async Task Save()
     {
         if(!isEditing)

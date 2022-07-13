@@ -150,7 +150,7 @@
     public void ProcessImage(string imageString)
     {
         byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
-        var fileName = httpClient.PostAsJsonAsync(ApiEndpoints.PictureUpload, new UploadRequest { Data = imageData });
+       //
        
     }
 

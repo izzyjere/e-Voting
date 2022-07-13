@@ -27,6 +27,8 @@ using SkiaSharp;
 using ICTAZEVoting.Shared.Security;
 using AutoMapper;
 using ICTAZEVoting.Shared.Responses.Domain;
+using ICTAZEVoting.Api.Utility;
+using System.Net.Http.Headers;
 
 namespace ICTAZEVoting.Api
 {
@@ -332,8 +334,13 @@ namespace ICTAZEVoting.Api
                 return Result.Success(fileName);
             });
             #endregion
+            app.MapPost("/upload", [Authorize]async (IUploadService service,[FromBody]UploadRequest request, HttpContext context) =>
+            {  
+                return await service.UploadFileAsync(request);
+            });
             return app;
         }
+
         internal static string ToImageFile(this byte[] bytes, string path)
         {
             var image = SKImage.FromEncodedData(bytes);
@@ -457,7 +464,8 @@ namespace ICTAZEVoting.Api
             services.AddServerIdentity()
                     .AddMappings()
                     .AddIdentityServices()
-                    .AddDomainServices();
+                    .AddDomainServices()
+                    .AddTransient<IUploadService,UploadService>();
             return services;
         }
         internal static IServiceCollection AddJwtAuthentication(this IServiceCollection services, AppConfiguration appConfig)

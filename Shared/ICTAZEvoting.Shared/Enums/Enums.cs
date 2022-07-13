@@ -6,6 +6,12 @@
         Male,
         Female
     }
+    public enum UploadType
+    {
+        Other,
+        ProfilePicture,
+        Biometric
+    }
     public enum AuditType
     {
         None,

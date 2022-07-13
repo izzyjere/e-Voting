@@ -14,38 +14,38 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-      <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@politicalParty">
-           <MudGrid Justify="Justify.FlexEnd">
-            <MudItem xs="12" sm="6" md="4">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField For="()=>politicalParty.Name" @bind-Value="politicalParty.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-                </Animate>
-            </MudItem>
+        <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@politicalParty">
+            <MudGrid Justify="Justify.FlexEnd">
+                <MudItem xs="12" sm="6" md="4">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudTextField For="()=>politicalParty.Name" @bind-Value="politicalParty.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    </Animate>
+                </MudItem>
 
-            <MudItem xs="12" sm="6" md="4">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField  For="()=>politicalParty.Slogan" @bind-Value="politicalParty.Slogan" Label="Slogan" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-                </Animate>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4"> 
-                <InputFile OnChange="UploadFiles" hidden accept=".png,.jpeg,.gif,.webp,.svg" id="fileInput"></InputFile>
-                <MudButton Class="mt-6" HtmlTag="label"
-                           Variant="Variant.Filled"
-                           Color="Color.Info"
-                           StartIcon="@Icons.Filled.CloudUpload"
-                           for="fileInput">
-                    Upload Party Logo
-                </MudButton>
-            </MudItem>
-            <MudItem xs="12">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField Lines="4"  For="()=>politicalParty.Manifesto" @bind-Value="politicalParty.Manifesto" Label="Manifesto" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-                </Animate>
-            </MudItem>
-        </MudGrid>
-        <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Political Party</MudButton>
-      </EditForm>
-       
+                <MudItem xs="12" sm="6" md="4">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudTextField For="()=>politicalParty.Slogan" @bind-Value="politicalParty.Slogan" Label="Slogan" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    </Animate>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <InputFile OnChange="UploadFiles" hidden accept=".png,.jpeg,.gif,.webp,.svg" id="fileInput"></InputFile>
+                    <MudButton Class="mt-6" HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Info"
+                               StartIcon="@Icons.Filled.CloudUpload"
+                               for="fileInput">
+                        Upload Party Logo
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="12">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudTextField Lines="4" For="()=>politicalParty.Manifesto" @bind-Value="politicalParty.Manifesto" Label="Manifesto" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    </Animate>
+                </MudItem>
+            </MudGrid>
+            <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Political Party</MudButton>
+        </EditForm>
+
     </MudCardContent>
 </MudCard>
 
@@ -68,18 +68,18 @@
                     <MudCardHeader>
                         <CardHeaderAvatar>
                             <MudAvatar Square="true" Class="mud-elevation-25">
-                                @if(string.IsNullOrEmpty(context.LogoUrl))
+                                @if (string.IsNullOrEmpty(context.LogoUrl))
                                 {
                                     <MudIcon Icon="@Icons.Material.Filled.Campaign" Size="Size.Large" />
                                 }
                                 else
                                 {
-                                   <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@context.LogoUrl" /> 
-                                }                               
+                                    <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@context.LogoUrl" />
+                                }
                             </MudAvatar>
                         </CardHeaderAvatar>
                         <CardHeaderContent>
-                            <MudText Typo="Typo.body1" ><b>@context.Name</b></MudText>
+                            <MudText Typo="Typo.body1"><b>@context.Name</b></MudText>
                             <MudText Typo="Typo.body2">@context.Candidates?.Count Candidates</MudText>
                         </CardHeaderContent>
                     </MudCardHeader>
@@ -134,11 +134,11 @@
     }
     async Task Save()
     {
-        if(!isEditing)
+        if (!isEditing)
         {
             //adding
             var result = await electionService.AddPoliticalParty(politicalParty);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
@@ -151,15 +151,15 @@
         else
         {
             var request = new PoliticalPartyUpdateRequest
-            {   
-                Id = politicalParty.Id,
-                Name = politicalParty.Name,
-                Manifesto = politicalParty.Slogan,
-                Slogan = politicalParty.Slogan,
-                LogoUrl = politicalParty.LogoUrl
-            };
+                {
+                    Id = politicalParty.Id,
+                    Name = politicalParty.Name,
+                    Manifesto = politicalParty.Slogan,
+                    Slogan = politicalParty.Slogan,
+                    LogoUrl = politicalParty.LogoUrl
+                };
             var result = await electionService.UpdatePoliticalParty(request);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
@@ -183,8 +183,8 @@
         bool? confirmed = await mbox.Show();
         if (confirmed == true)
         {
-            var result =  await electionService.DeletePoliticalParty(id.ToString());
-            if(result.Succeeded)
+            var result = await electionService.DeletePoliticalParty(id.ToString());
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
@@ -196,9 +196,33 @@
         }
     }
     IList<IBrowserFile> files = new List<IBrowserFile>();
-    private void UploadFiles(InputFileChangeEventArgs e)
+    private async void UploadFiles(InputFileChangeEventArgs e)
     {
-        
+        if (e.File.Size > 5000000)
+        {
+            snackBar.Add("Allowed file size is 5mbs", Severity.Error);
+            return;
+        }
         //TODO upload the files to the server
+        var ms = new MemoryStream();
+        var stream = e.File.OpenReadStream(5000000);
+        await stream.CopyToAsync(ms);
+        var request = new UploadRequest
+            {
+                Data = ms.GetBuffer(),
+                FileName = e.File.Name,
+                Type = UploadType.ProfilePicture
+            };
+        var rs = await fileService.UploadFile(request);
+        if(rs.Succeeded)
+        {
+            politicalParty.LogoUrl = rs.Data;
+            snackBar.Add("Upload Successiful.", Severity.Success);
+        }
+        else
+        {
+             snackBar.Add(rs.Messages.First(), Severity.Error);
+        }
+
     }
 }

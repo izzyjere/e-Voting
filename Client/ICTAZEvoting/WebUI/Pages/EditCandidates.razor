@@ -8,7 +8,7 @@
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
 
-    <MudCard Elevation="25">
+<MudCard Elevation="25">
     <MudCardHeader>
         <CardHeaderContent>
             <MudText Typo="Typo.h6">Add / Edit Candidates</MudText>
@@ -16,74 +16,96 @@
     </MudCardHeader>
     <MudCardContent>
         <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@candidate">
-<MudGrid>
-    <MudItem xs="12" sm="6" md="3">
-        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
-            <MudTextField @bind-Value="candidate.CandidateNumber" Label="Candidate Number" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-            <MudTextField @bind-Value="candidate.PersonalDetails.NRC" Label="NRC Number" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-            <MudDatePicker @bind-Date="candidate.PersonalDetails.DateOfBirth" Label="Date of Birth" Editable="true" Placeholder="Select Date" Variant="Variant.Outlined" Style="width:100%" />
-        </Animate>
-    </MudItem>
-    <MudItem xs="12" sm="6" md="3">
-        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
-             <MudTextField @bind-Value="candidate.PersonalDetails.FirstName" Label="First Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-            <MudTextField @bind-Value="candidate.PersonalDetails.PhoneNumber" Label="Phone" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-            <MudTextField @bind-Value="candidate.PersonalDetails.Email" Label="Email Address" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-        </Animate>
-    </MudItem>
-    <MudItem xs="12" sm="6" md="3">
-        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
-            <MudTextField @bind-Value="candidate.PersonalDetails.MiddleName" Label="Middle Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-            <MudSelect T="Gender" @bind-Value="candidate.PersonalDetails.Gender" Label="Gender" Variant="Variant.Outlined" Margin="Margin.Normal">
-                @foreach(var item in Enum.GetValues<Gender>())
-                    {
-                        <MudSelectItem T="Gender" Value="@item">
-                            @item.ToString()
-                        </MudSelectItem>
-                    }
-            </MudSelect>
-        </Animate>
-    </MudItem>
-    <MudItem xs="12" sm="6" md="3">
-        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
-            <MudTextField @bind-Value="candidate.PersonalDetails.LastName" Label="Last Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-            @*<MudTextField @bind-Value="candidate.PersonalDetails.PictureUrl" Label="Passport Size Photo" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>*@
-            <MudButton HtmlTag="label"
-           Variant="Variant.Filled"
-           Color="Color.Info"
-           StartIcon="@Icons.Filled.CloudUpload"
-           for="fileInput">
-            Upload Photo
-            </MudButton>
-     
-        </Animate>
-    </MudItem>
-    </MudGrid>
+            <MudGrid>
+                 <MudItem xs="12" sm="6" md="3">
+                        <MudSelect T="Guid" Placeholder="Select election" @bind-Value="election.Id" Label="Election" Variant="Variant.Outlined" >
+                            <MudSelectItem T="Guid" Value="default">No election selected</MudSelectItem>                              
+                             @foreach (var item in elections)
+                            {
+                                <MudSelectItem T="Guid" Value="@item.Id">
+                                    @item.Name (@item.ElectionDate.ToString("dd MMM yyyy H:mm") - @item.ClosingTime.ToString("dd MMM yyyy H:mm"))
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="3">
+                        <MudSelect Disabled="@(!GetPositions(election.Id).Any())" T="Guid" @bind-Value="candidate.ElectionPositionId" Label="Position" Variant="Variant.Outlined" >
+                           <MudSelectItem T="Guid" Value="default">No position selected</MudSelectItem>                             
+                             @foreach (var item in GetPositions(election.Id))
+                            {
+                                <MudSelectItem T="Guid" Value="@item.Id">
+                                    @item.Position
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.CandidateNumber" Label="Candidate Number" Variant="Variant.Outlined" ></MudTextField></Animate></MudItem>
+                    <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.PersonalDetails.NRC" Label="NRC Number" Variant="Variant.Outlined" ></MudTextField></Animate></MudItem>
+                    <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.PersonalDetails.FirstName" Label="First Name" Variant="Variant.Outlined" ></MudTextField></Animate></MudItem>
+                    <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.PersonalDetails.MiddleName" Label="Middle Name" Variant="Variant.Outlined" ></MudTextField></Animate></MudItem>
+                    <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.PersonalDetails.LastName" Label="Last Name" Variant="Variant.Outlined" ></MudTextField></Animate></MudItem>
+                    <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudDatePicker @bind-Date="candidate.PersonalDetails.DateOfBirth" Label="Date of Birth" Editable="true" Placeholder="Select Date" Variant="Variant.Outlined"/></Animate></MudItem>
+                    <MudItem xs="12" sm="6" md="3">
+                        <MudSelect T="Gender" @bind-Value="candidate.PersonalDetails.Gender" Label="Gender" Variant="Variant.Outlined" >
+                            @foreach (var item in Enum.GetValues<Gender>())
+                            {
+                                <MudSelectItem T="Gender" Value="@item">
+                                    @item.ToString()
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="3"><MudTextField @bind-Value="candidate.PersonalDetails.PhoneNumber" Label="Phone" Variant="Variant.Outlined" ></MudTextField></MudItem>
+                    <MudItem xs="12" sm="6" md="3"><MudTextField @bind-Value="candidate.PersonalDetails.Email" Label="Email Address" Variant="Variant.Outlined" ></MudTextField></MudItem>
+                    <MudItem xs="12" sm="6" md="3">
+                         <MudSelect T="Guid" @bind-Value="candidate.PoliticalPartyId" Label="Political Party" Variant="Variant.Outlined" >
+                           <MudSelectItem T="Guid" Value="default">No party selected</MudSelectItem>                             
+                             @foreach (var item in politicalParties)
+                            {
+                                <MudSelectItem T="Guid" Value="@item.Id">
+                                    @item.Name
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>                  
+                
+                <MudItem xs="12" sm="6" md="3">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Info"
+                                   StartIcon="@Icons.Filled.CloudUpload"
+                                   for="fileInput">
+                            Upload Photo
+                        </MudButton>
+                    </Animate>
+                </MudItem>
+            </MudGrid>
             <MudButton Class="mt-6" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success">Save </MudButton>
-            </EditForm>
+        </EditForm>
     </MudCardContent>
 </MudCard>
 
-<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)" >
-<MudTable Style="color: white" Elevation="25" Items="candidates">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">Loans</MudText>
-        <MudSpacer />
-        <MudTextField @bind-Value="searchString" Placeholder="Search for Candidates..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh>Candidate Number</MudTh>
-        <MudTh>First Name</MudTh>
-        <MudTh>Last Name</MudTh>
-        <MudTh>Actions</MudTh>
-    </HeaderContent>
-    <RowTemplate>      
-        <MudTd DataLabel="">
-            <MudFab @onclick="@(()=>Edit(@context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
-            <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+    <MudTable Style="color: white" Elevation="25" Items="candidates">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Loans</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Search for Candidates..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Candidate Number</MudTh>
+            <MudTh>First Name</MudTh>
+            <MudTh>Last Name</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="">
+                <MudFab @onclick="@(()=>Edit(@context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 </Animate>
 
 <MudScrollToTop>
@@ -99,30 +121,41 @@
 </MudMessageBox>
 
 
-@code{
+@code {
     private string searchString = "";
     private Candidate candidate = new Candidate();
     private List<CandidateResponse> candidates = new List<CandidateResponse>();
+    private List<ElectionResponse> elections = new List<ElectionResponse>();
+    private List<PoliticalPartyResponse> politicalParties = new();
+    ElectionResponse election = new(); 
     protected override async Task OnInitializedAsync()
     {
-        candidate.PersonalDetails = new PersonalDetails();  
+        await Refresh();
     }
 
     bool isEditing;
-    
+    List<ElectionPositionResponse> GetPositions(Guid electionid)
+    {
+        var el = elections.FirstOrDefault(e => e.Id == electionid);
+        if(el==null)
+        {
+            return new();
+        }
+        return el.Positions;
+    }
     private void Edit(CandidateResponse candidate)
     {
-       
+
         snackBar.Add("Candidate Saved.", Severity.Success);
     }
-    
+
     async Task Save()
     {
-        if(!isEditing)
+        if (!isEditing)
         {
             //adding
             var result = await electionService.AddCandidate(candidate);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
@@ -135,7 +168,7 @@
         else
         {
             var result = await electionService.UpdateCandidate(candidate);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
@@ -152,6 +185,9 @@
     async Task Refresh()
     {
         candidate = new();
+        election = new();
+        candidate.PersonalDetails = new PersonalDetails();
+        elections = await electionService.GetElectionList();
         isEditing = false;
         candidates = await electionService.GetCandidateList();
         StateHasChanged();

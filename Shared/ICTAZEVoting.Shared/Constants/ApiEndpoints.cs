@@ -7,6 +7,7 @@ namespace ICTAZEVoting.Shared.Constants
     public static class ApiEndpoints
     {
         public const string GetRoles = "roles";
+        public const string GetPendingElections = "elections/pending";
         public const string AddRole = "roles/add";
         public const string GetUsers = "users";
         public const string GetUserRoles = "users/roles";

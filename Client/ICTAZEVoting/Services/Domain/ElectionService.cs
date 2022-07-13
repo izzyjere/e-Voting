@@ -286,5 +286,17 @@ namespace ICTAZEVoting.Services.Domain
         {
             throw new NotImplementedException();
         }
+
+        public async Task<List<ElectionResponse>> GetPendingElections()
+        {
+            var get = await httpClient.GetAsync(ApiEndpoints.GetPendingElections);
+            var list = new List<ElectionResponse>();
+            if (get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<List<ElectionResponse>>();
+                list = res.Data;
+            }
+            return list;
+        }
     }
 }

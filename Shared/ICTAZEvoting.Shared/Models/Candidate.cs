@@ -15,4 +15,5 @@ namespace ICTAZEVoting.Shared.Models
         public PersonalDetails PersonalDetails { get; set; }
         public PoliticalParty PoliticalParty { get; set; }
     }
+   
 }

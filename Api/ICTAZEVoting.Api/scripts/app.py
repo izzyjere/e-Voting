@@ -1,16 +1,9 @@
 import cv2
 from face_recognition import face_locations, face_encodings, face_distance, compare_faces
-from matplotlib import pyplot as plt
 from PIL import Image, ImageEnhance
 from numpy import asarray
 from math import sqrt
 from flask import Flask, request, jsonify
-# this is just to unconfuse pycharm
-try:
-    from cv2 import cv2
-except ImportError:
-    pass
-
 
 def center_of_face(x1, y1, x2, y2):
     """
@@ -155,12 +148,15 @@ def transform_image(image_bytes, image_dimensions):
     return new_image
 
 app = Flask(__name__)
+@app.get("/greeting")
+def hello():
+    return "Hello world"
 
 @app.post("/verify")
 def verify_face():
     if request.is_json:
         req = request.get_json()
-        image1_path = f'../img/{req["voterId"]}.jpg'
+        image1_path = f'../biometrics/{req["voterId"]}.jpg'
         base_width = 500
         image1 = cv2.imread(image1_path)
 

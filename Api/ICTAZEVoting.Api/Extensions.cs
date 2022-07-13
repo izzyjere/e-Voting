@@ -338,9 +338,9 @@ namespace ICTAZEVoting.Api
                 return match?Result.Success("Face verified."):Result.Fail("Verification failed");
 
             });
-            app.MapPost("/profile-picture", (IWebHostEnvironment env, [FromBody]UploadRequest request) =>
+            app.MapPost("/biometrics", (IWebHostEnvironment env, [FromBody]UploadRequest request) =>
             {
-                var fileName = request.Data.ToImageFile(Path.Combine(env.ContentRootPath,"ImageUploads"));
+                var fileName = request.Data.ToImageFile(Path.Combine(env.ContentRootPath,"biometrics"));
                 return Result.Success(fileName);
             });
             #endregion

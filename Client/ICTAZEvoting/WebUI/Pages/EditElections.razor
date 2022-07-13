@@ -215,6 +215,7 @@
     }
     async Task Save()
     {
+        election.ElectionDate = dateTime.Value.Add(time.Value);
         if (!isEditing)
         {
             //adding

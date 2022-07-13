@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿global using AutoMapper;
 
 using ICTAZEVoting.Core.Models;
 using ICTAZEVoting.Shared.Responses.Identity;

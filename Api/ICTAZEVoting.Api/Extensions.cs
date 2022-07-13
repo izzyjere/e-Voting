@@ -25,6 +25,8 @@ using ICTAZEVoting.Core.Data.Repositories;
 using System.Security.Cryptography;
 using SkiaSharp;
 using ICTAZEVoting.Shared.Security;
+using AutoMapper;
+using ICTAZEVoting.Shared.Responses.Domain;
 
 namespace ICTAZEVoting.Api
 {
@@ -131,10 +133,11 @@ namespace ICTAZEVoting.Api
 
             });
             //Election
-            app.MapGet("/elections", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            app.MapGet("/elections",[Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
-                var result = await unitOfWork.Repository<Election>().Entities().Include(e => e.Voters).Include(e => e.Positions).ThenInclude(p => p.Candidates).ThenInclude(c => c.PoliticalParty).ToListAsync();
-                return Result<IEnumerable<Election>>.Success(result);
+                var elections = await unitOfWork.Repository<Election>().Entities().Include(e => e.Voters).Include(e => e.Positions).ToListAsync();
+                var result = mapper.Map<IEnumerable<ElectionResponse>>(elections);
+                return Result<IEnumerable<ElectionResponse>>.Success(result);
             });
             app.MapGet("/elections/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {

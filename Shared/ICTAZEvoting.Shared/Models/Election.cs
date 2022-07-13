@@ -20,7 +20,7 @@ namespace ICTAZEVoting.Shared.Models
         public ElectionStatus Status { get; set; } 
         public List<ElectionVoter> Voters { get; set; }
         public List<ElectionPosition> Positions { get; set; }
-        public DateTime ClosedTime => ElectionDate.Value.AddHours(Duration);
+        public DateTime ClosingTime => ElectionDate.Value.AddHours(Duration);
         public ElectionType Type { get; set; }
         public Election()
         {

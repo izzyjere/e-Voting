@@ -4,6 +4,8 @@ global using ICTAZEVoting.Shared.Wrapper;
 global using System.Collections.Generic;
 global using System.Threading.Tasks;
 
+using ICTAZEVoting.Shared.Responses.Domain;
+
 namespace ICTAZEVoting.Shared.Interfaces
 {
     public interface IElectionService
@@ -34,7 +36,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> AddElection(Election election);
         Task<IResult> UpdateElection(Election election);
         Task<IResult> DeleteElection(string id);
-        Task<List<Election>> GetElectionList();
+        Task<List<ElectionResponse>> GetElectionList();
         Task<Election> GetElection(string Id);
         Task<IResult> AddConstituency(Constituency election);
         Task<IResult> UpdateConstituency(Constituency election);

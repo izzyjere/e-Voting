@@ -13,7 +13,7 @@ namespace ICTAZEVoting.Shared.Models
         public string Position { get; set; }
         public Guid ElectionId { get; set; }
         public List<Candidate> Candidates { get; set; }
-        [JsonIgnore]
+     
         public virtual Election Election { get; set; }
         public ElectionPosition()
         {

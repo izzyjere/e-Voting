@@ -4,6 +4,7 @@
 @using System.Linq
 @using System
 @using ICTAZEVoting.Shared.Models
+@using ICTAZEVoting.Shared.Responses.Domain
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
 
@@ -120,12 +121,12 @@
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Date">
                 <MudChip Label="true" Color="Color.Success" Icon="@Icons.Material.Filled.Watch">
-                @context.ElectionDate.Value.ToString("dd MMM yyyy H:mm")
+                @context.ElectionDate.ToString("dd MMM yyyy H:mm")
                 </MudChip>
             </MudTd>
              <MudTd DataLabel="Date">
                 <MudChip Label="true" Color="Color.Secondary" Icon="@Icons.Material.Filled.Watch">
-                @context.ClosedTime.ToString("dd MMM yyyy H:mm")
+                @context.ClosingTime.ToString("dd MMM yyyy H:mm")
                 </MudChip>
             </MudTd>
             <MudTd>
@@ -134,8 +135,8 @@
                 </MudChip>
             </MudTd>
             <MudTd DataLabel="">
-                <MudButton @onclick="@(()=>Edit(@context))" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Outlined" />
-                <MudButton @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Outlined" />
+                <MudButton @onclick="@(()=>Edit(@context))" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Outlined">Edit</MudButton>
+                <MudButton @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Outlined">Delete</MudButton>
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -159,7 +160,7 @@
 @code {
     private string searchString = "";
     private Election election = new Election();
-    private List<Election> elections = new List<Election>();
+    private List<ElectionResponse> elections = new List<ElectionResponse>();
     private List<ElectionType> electionTypes = new List<ElectionType>();
     private DateTime? dateTime = DateTime.Now;
     private TimeSpan? time = new TimeSpan(0, 8, 0, 0);
@@ -177,7 +178,7 @@
             ElectionStatus.Closed => Color.Error,
             ElectionStatus.Pending => Color.Default,
             _ => Color.Default,
-    };
+        };
 
     }
     async Task Refresh()
@@ -243,9 +244,15 @@
 
         }
     }
-    private void Edit(Election election)
+    private void Edit(ElectionResponse record)
     {
-        this.election = election;
+        election.Id = record.Id;
+        election.Duration = record.Duration;
+        election.ElectionTypeId = record.ElectionTypeId;
+        election.ElectionDate = record.ElectionDate;
+        election.Name = record.Name;
+        election.Status = record.Status;
+        record.Positions.ForEach(p=> election.Positions.Add(new ElectionPosition{Position = p.Position, ElectionId = p.ElectionId}));
         isEditing = true;
         StateHasChanged();
     }

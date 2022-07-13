@@ -6,6 +6,7 @@ global using System.Net.Http.Json;
 global using ICTAZEVoting.Extensions;
 using ICTAZEVoting.Shared.Contracts;
 using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Responses.Domain;
 
 namespace ICTAZEVoting.Services.Domain
 {
@@ -195,13 +196,13 @@ namespace ICTAZEVoting.Services.Domain
             return Result.Fail("An error occured. Check your internet connection.");
         }
 
-        public async Task<List<Election>> GetElectionList()
+        public async Task<List<ElectionResponse>> GetElectionList()
         {
             var get = await httpClient.GetAsync(ApiEndpoints.GetElections);
-            var list = new List<Election>();
+            var list = new List<ElectionResponse>();
             if (get.IsSuccessStatusCode)
             {
-                var res = await get.ToResult<List<Election>>();
+                var res = await get.ToResult<List<ElectionResponse>>();
                 list = res.Data;
             }
             return list;

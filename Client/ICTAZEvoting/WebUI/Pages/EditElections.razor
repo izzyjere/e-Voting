@@ -15,43 +15,89 @@
     </MudCardHeader>
     <MudCardContent>
         <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@election">
-        <MudGrid>
-            <MudItem xs="12" sm="6" md="3">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudDatePicker @bind-Date="election.ElectionDate" Label="Date of the Eleciton"  Editable="true" Placeholder="Select Date" Variant="Variant.Outlined" Style="width:100%" />
-                </Animate>
-            </MudItem>
+            <DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12" sm="6" md="4">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudTextField For="()=>election.Name" @bind-Value="election.Name" Label="Description" Variant="Variant.Outlined"></MudTextField>
+                    </Animate>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudDatePicker AutoClose="true" @bind-Date="dateTime" Label="Date of the Election" Placeholder="Select Date" Variant="Variant.Outlined" />
+                    </Animate>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudTimePicker AutoClose="true" @bind-Time="time" Label="Starting Time" Placeholder="Choose time" Variant="Variant.Outlined" />
+                    </Animate>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudNumericField T="double" Min="1" @bind-Value="election.Duration" Label="Election Duration(hours)" Variant="Variant.Outlined"></MudNumericField>
+                    </Animate>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudSelect For="()=>election.ElectionTypeId" T="Guid" Variant="Variant.Outlined" Label="Election Type" @bind-Value="election.ElectionTypeId">
+                            <MudSelectItem T="Guid" Value="default">No type selected</MudSelectItem>
+                            @foreach (var type in electionTypes)
+                            {
+                                <MudSelectItem T="Guid" Value="@type.Id">@type.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </Animate>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
 
-            <MudItem xs="12" sm="6" md="3">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField @bind-Value="election.Name" Label="Election Name" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-                </Animate>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="3">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudSelect T="Guid" Variant="Variant.Outlined" Label="Election Type" @bind-Value="electionType.Id">
-                        @foreach (var type in electionTypes)
-                        {
-                            <MudSelectItem T="Guid" Value="@electionType.Id">@electionType.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </Animate>
-            </MudItem>
-
-            <MudItem xs="12" sm="6" md="3">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField @bind-Value="election.Duration" Label="Eleciton Duration" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-                </Animate>
-            </MudItem>
-
-            <MudItem xs="12" sm="6" md="3">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudTextField @bind-Value="election.Status" Label="Election Status" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
-                </Animate>
-            </MudItem>
-
-        </MudGrid>
-        <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Election</MudButton>
+                    </Animate>
+                </MudItem>
+                <MudDivider />
+                <MudItem xs="12">
+                    <center><MudText GutterBottom="true" Color="Color.Primary" Typo="Typo.h5">Election Positions</MudText></center>
+                    <MudItem xs="4">                        
+                       <MudButton OnClick="ToggleAdd" StartIcon="@Icons.Material.Filled.Add" Class="mb-4"Variant="Variant.Outlined" Size="Size.Small" Color="Color.Secondary">Create position</MudButton>
+                    </MudItem>          
+                                                      
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudSimpleTable Dense="true" Bordered="true" Hover="true" FixedHeader="true">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Position</th>
+                                    <th>No. of Candidates</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!election.Positions.Any())
+                                {
+                                    <center><MudAlert Class="m-6" Dense="true" Severity="Severity.Warning">No positions added</MudAlert></center>
+                                }
+                                else
+                                {
+                                    var i = 1;
+                                    foreach (var item in election.Positions)
+                                    {
+                                        <tr>
+                                            <td>@i</td>
+                                            <td>@item.Position</td>
+                                            <td>@item.Candidates?.Count()</td>
+                                            <td>
+                                                <MudButton StartIcon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Warning">Edit</MudButton>
+                                                <MudButton OnClick='()=>Remove(item)' StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error">Remove</MudButton>
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                }
+                            </tbody>
+                        </MudSimpleTable>
+                    </Animate>
+                </MudItem>
+            </MudGrid>
+            <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Election</MudButton>
         </EditForm>
     </MudCardContent>
 </MudCard>
@@ -59,68 +105,120 @@
 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
     <MudTable Style="color: white" Elevation="25" Items="elections">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Loans</MudText>
+            <MudText Typo="Typo.h5">Elections</MudText>
             <MudSpacer />
             <MudTextField @bind-Value="searchString" Placeholder="Search for Elections..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Election Date</MudTh>
-            <MudTh>Election Title</MudTh>
-
-            <MudTh>Election Duration</MudTh>
-            <MudTh>Election Status</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Starting Time</MudTh>
+            <MudTh>Closing Time</MudTh>           
+            <MudTh>Status</MudTh>
+            <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Election Date">@context.ElectionDate</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Date">
+                <MudChip Label="true" Color="Color.Success" Icon="@Icons.Material.Filled.Watch">
+                @context.ElectionDate.Value.ToString("dd MMM yyyy H:mm")
+                </MudChip>
+            </MudTd>
+             <MudTd DataLabel="Date">
+                <MudChip Label="true" Color="Color.Secondary" Icon="@Icons.Material.Filled.Watch">
+                @context.ClosedTime.ToString("dd MMM yyyy H:mm")
+                </MudChip>
+            </MudTd>
+            <MudTd>
+                 <MudChip Color="GetColor(context.Status)">
+                     @context.Status.ToString()
+                </MudChip>
+            </MudTd>
             <MudTd DataLabel="">
-                <MudFab @onclick="@(()=>Edit(@context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
-                <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+                <MudButton @onclick="@(()=>Edit(@context))" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Outlined" />
+                <MudButton @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Outlined" />
             </MudTd>
         </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
     </MudTable>
 </Animate>
 
 <MudScrollToTop>
     <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
 </MudScrollToTop>
-<MudMessageBox @ref="mbox" Title="Warning" CancelText="Cancel">
+<MudMessageBox Style="min-width:400px" @ref="mbox" Title="Warning" CancelText="Cancel">
     <MessageContent>
         Deleting can <b><i>not</i></b> be undone!
     </MessageContent>
     <YesButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Remove</MudButton>
     </YesButton>
 </MudMessageBox>
-
 
 @code {
     private string searchString = "";
     private Election election = new Election();
     private List<Election> elections = new List<Election>();
-    private ElectionType electionType = new ElectionType();
     private List<ElectionType> electionTypes = new List<ElectionType>();
-
+    private DateTime? dateTime = DateTime.Now;
+    private TimeSpan? time = new TimeSpan(0, 8, 0, 0);
+    ElectionPosition position = new();
     bool isEditing;
+    MudMessageBox mbox { get; set; }
     protected override async Task OnInitializedAsync()
     {
         await Refresh();
     }
+    Color GetColor (ElectionStatus status)
+    {   
+        return status switch {
+            ElectionStatus.Open => Color.Success,
+            ElectionStatus.Closed => Color.Error,
+            ElectionStatus.Pending => Color.Default,
+            _ => Color.Default,
+    };
 
+    }
     async Task Refresh()
     {
         election = new();
+        election.Positions = new();
         isEditing = false;
         elections = await electionService.GetElectionList();
+        electionTypes = await electionService.GetElectionTypes();
         StateHasChanged();
     }
-    
+    async void Remove(ElectionPosition record)
+    {   
+        bool? result = await mbox.Show();
+        if(result!=null)
+        {
+            election.Positions.Remove(record);
+            snackBar.Add("Position was removed.", Severity.Success);
+            StateHasChanged();
+        }        
+
+    }
+    async void ToggleAdd()
+    {
+        var dialog =  dialogService.Show<AddElectionPositionDialog>("Add Election Position");
+        var result = await dialog.Result;
+        if(!result.Cancelled)
+        {
+            var data = (ElectionPosition) result.Data;
+            election.Positions.Add(data);
+            snackBar.Add("Position was added.", Severity.Success);
+            StateHasChanged();
+        }
+    }
     async Task Save()
     {
-        if(!isEditing)
+        if (!isEditing)
         {
             //adding
             var result = await electionService.AddElection(election);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
@@ -133,7 +231,7 @@
         else
         {
             var result = await electionService.UpdateElection(election);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
@@ -152,14 +250,13 @@
         StateHasChanged();
     }
 
-    MudMessageBox mbox { get; set; }
     private async Task Delete(Guid id)
     {
         bool? confirmed = await mbox.Show();
         if (confirmed == true)
         {
-            var result =  await electionService.DeleteElection(id.ToString());
-            if(result.Succeeded)
+            var result = await electionService.DeleteElection(id.ToString());
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();

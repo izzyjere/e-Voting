@@ -79,8 +79,8 @@
 
 @code {
     private string searchString = "";
-    private PolingStation polingStation = new PolingStation();
-    private List<PolingStation> polingStations = new List<PolingStation>();
+    private PollingStation polingStation = new PollingStation();
+    private List<PollingStation> polingStations = new List<PollingStation>();
     private Constituency constituency = new Constituency();
     private List<Constituency> constituencies = new List<Constituency>();
     bool isEditing;
@@ -126,7 +126,7 @@
 
         }
     }
-    private async void Edit(PolingStation polingStation)
+    private async void Edit(PollingStation polingStation)
     {
         this.polingStation = polingStation;
         isEditing = true;

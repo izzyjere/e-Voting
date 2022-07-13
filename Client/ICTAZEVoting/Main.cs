@@ -1,6 +1,7 @@
 using ICTAZEVoting.Extensions;
 using ICTAZEVoting.Services.Domain;
 using ICTAZEVoting.Services.Identity;
+using ICTAZEVoting.Services.Utility;
 using ICTAZEVoting.Shared.Interfaces;
 using ICTAZEVoting.WebUI;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -47,6 +48,7 @@ namespace ICTAZEVoting
             services.AddScoped<IElectionService, ElectionService>();
             services.AddScoped<IRoleManager, RoleManager>();
             services.AddScoped<IUserManager, UserManager>();
+            services.AddScoped<IFileService, FileUploadService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddAuthorizationCore()
             .AddScoped<IAuthenticationService, AuthenticationService>();       

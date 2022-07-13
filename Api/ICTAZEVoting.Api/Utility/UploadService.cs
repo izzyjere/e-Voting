@@ -53,7 +53,7 @@ namespace ICTAZEVoting.Api.Utility
                 var ms = new MemoryStream();
                 ms.Write(request.Data, 0, request.Data.Length);
                 await Task.Run(() => ms.WriteTo(fileStream));
-                return Result<string>.Success(path, "Done.");
+                return await Result<string>.SuccessAsync($"_dhhfhffg/{newName}", "Done.");
             }
             catch (Exception ex)
             {

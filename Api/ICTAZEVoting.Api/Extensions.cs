@@ -328,6 +328,16 @@ namespace ICTAZEVoting.Api
                  }
                 
              });
+            app.MapPost("/verify-image", async ([FromBody] VerifyRequest request) =>
+            {
+                HttpClient httpClient = new();
+                httpClient.BaseAddress = new Uri("http:127.0.0.1:5000");
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var req = await httpClient.PostAsJsonAsync("verify", request);
+                var match = JsonConvert.DeserializeObject<bool>(await req.Content.ReadAsStringAsync());
+                return match?Result.Success("Face verified."):Result.Fail("Verification failed");
+
+            });
             app.MapPost("/profile-picture", (IWebHostEnvironment env, [FromBody]UploadRequest request) =>
             {
                 var fileName = request.Data.ToImageFile(Path.Combine(env.ContentRootPath,"ImageUploads"));

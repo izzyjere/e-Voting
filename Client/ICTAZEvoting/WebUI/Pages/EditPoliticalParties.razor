@@ -74,7 +74,7 @@
                                 }
                                 else
                                 {
-                                    <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@context.LogoUrl" />
+                                    <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@(httpClient.BaseAddress.ToString()+context.LogoUrl)" />
                                 }
                             </MudAvatar>
                         </CardHeaderAvatar>
@@ -131,7 +131,7 @@
         isEditing = false;
         politicalParties = await electionService.GetPoliticalPartyList();
         StateHasChanged();
-    }
+    }    
     async Task Save()
     {
         if (!isEditing)
@@ -218,6 +218,7 @@
         {
             politicalParty.LogoUrl = rs.Data;
             snackBar.Add("Upload Successiful.", Severity.Success);
+            return;
         }
         else
         {

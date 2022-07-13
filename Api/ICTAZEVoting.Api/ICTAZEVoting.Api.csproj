@@ -29,4 +29,8 @@
 		<ProjectReference Include="..\..\Core\ICTAZEVoting.Core\ICTAZEVoting.Core.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\_dhhfhffg\" />
+	</ItemGroup>
+
 </Project>

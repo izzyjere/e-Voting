@@ -222,7 +222,8 @@
         }
         else
         {
-             snackBar.Add(rs.Messages.First(), Severity.Error);
+            snackBar.Add("We couldn't upload your image. try again", Severity.Error);
+            return;
         }
 
     }

@@ -57,8 +57,9 @@ namespace ICTAZEVoting.Api.Utility
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + ex.StackTrace);
+                Console.WriteLine(ex.Message + ex.StackTrace);                 
                 return Result<string>.Fail("Could not upload file.");
+                
             }             
         }
 

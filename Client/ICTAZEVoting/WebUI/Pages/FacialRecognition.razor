@@ -1,0 +1,126 @@
+﻿@page "/facialrecognition"
+
+@inject IJSRuntime JsRuntime
+
+<Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
+    <center>
+        <MudCard Style="width:60%" Elevation="25" Outlined="true">
+            <center>
+                <MudCardHeader>
+
+                    <CardHeaderContent>
+                        <MudAvatar Color="Color.Secondary"></MudAvatar>
+                        <MudText Typo="Typo.body1">Clarence Simukanzye</MudText>
+                        @*<MudText Typo="Typo.body2">Peninsula in Europe</MudText>*@
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        @*<MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />*@
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudPaper Elevation="0" Class="p-2" MinWidth="325" MinHeight="245">
+                    @if (!string.IsNullOrEmpty(frameUri))
+                    {
+                        <img width="320" height="240" src="@frameUri" />
+                    }
+                    @if (!hideVideo)
+                    {
+
+                        <video id="videoFeed" width="320" height="240" />
+
+                    }
+                    <center>
+                        <MudButtonGroup>
+                            <MudButton ButtonType="ButtonType.Button" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">REFRESH</MudButton>
+                            <MudButton ButtonType="ButtonType.Button" OnClick="CaptureFrame" Disabled="@hideVideo" Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Camera">VERIFY</MudButton>
+                        </MudButtonGroup>
+                    </center>
+                </MudPaper>
+                <MudCardContent>
+                    <MudText Typo="Typo.body2"></MudText>
+                </MudCardContent>
+            </center>
+        </MudCard>
+    </center>
+
+</Animate>
+<br />
+
+
+@if (showProgress)
+{
+    <Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
+        <center>
+            <MudCard Style="width:60%">
+                <MudCardContent>
+                    <center>
+                        <MudChip Color="Color.Success" Label="true">
+                            <MudText Align="Align.Center">
+                                VERIFYING
+                            </MudText>
+                        </MudChip>
+                    </center>
+
+                    @*<MudText Style="font-family:Cambria; font-size:large; color:blue" Align="Align.Center">VERIFYING</MudText>*@
+                    <MudProgressLinear Color="Color.Success" Size="Size.Large" Indeterminate="true" Class="my-7" />
+                </MudCardContent>
+                @*    <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+                    </MudCardActions>*@
+            </MudCard>
+        </center>
+    </Animate>
+
+}
+
+
+
+@code {
+    private string frameUri;
+    private string searchString = "";
+    bool dis = true;
+    bool hideVideo;
+    private Voter voter = new Voter();
+    private List<Voter> voters = new List<Voter>();
+    List<PollingStation> pollingStations = new();
+    bool showProgress = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+    }
+    async Task Refresh()
+    {
+        voter = new();
+        hideVideo = false;
+        frameUri = null;
+        voter.PersonalDetails = new PersonalDetails();
+        await StartVideFrame();
+        StateHasChanged();
+    }
+    
+    private async Task StartVideFrame()
+    {
+        await JsRuntime.InvokeVoidAsync("startVideo", "videoFeed");
+        dis = false;
+        StateHasChanged();
+    }
+    private async Task CaptureFrame()
+    {
+        showProgress=true;
+        StateHasChanged();
+        await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
+    }
+
+
+    [JSInvokable]
+    public void ProcessImage(string imageString)
+    {
+        frameUri = imageString;
+        hideVideo = true;
+        StateHasChanged();
+        byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
+        //
+
+    }
+
+}

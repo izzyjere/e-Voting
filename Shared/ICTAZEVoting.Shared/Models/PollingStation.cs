@@ -12,5 +12,9 @@ namespace ICTAZEVoting.Shared.Models
         public Guid ConstituencyId { get; set; }
         public List<Voter> Voters { get; set; }
         public Constituency Constituency { get; set; }
+        public PollingStation()
+        {
+            Id = new();
+        }
     }
 }

@@ -8,5 +8,10 @@ namespace ICTAZEVoting.Shared.Models
     {
         public string Name { get; set; }
         public List<PollingStation> PolingStations { get; set; }
+        public Constituency()
+        {
+            Id = new();
+            PolingStations = new();
+        }
     }
 }

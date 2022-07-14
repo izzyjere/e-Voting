@@ -102,7 +102,11 @@ namespace ICTAZEVoting.Core.Services.Identity
             }
             var user = new User()
             {
-
+                FirstName =  request.FirstName,
+                LastName = request.LastName,
+                NRC = request.NRC,
+                MiddleName = request.NRC,
+                PictureUrl = request.PictureUrl,                 
                 Email = request.Email,                  
                 UserName = request.UserName,
                 PhoneNumber = request.PhoneNumber,

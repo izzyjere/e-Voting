@@ -39,9 +39,9 @@ namespace ICTAZEVoting.Shared.Constants
         public const string EditPollingStation = "constituencies/polling-station/update";
         public const string DeletePolingStation = "constituencies/polling-station/delete";
         public const string GetPollingStations = "constituencies/polling-stations";
-        public const string AddCandidate = "candidate/add";
-        public const string EditCandidate = "candidate/update";
-        public const string DeleteCandidate = "candidate/delete";
+        public const string AddCandidate = "candidates/add";
+        public const string EditCandidate = "candidates/update";
+        public const string DeleteCandidate = "candidates/delete";
         public const string GetCandidates = "candidates";
         public const string AddSystemAdmin = "system-admins/add";
         public const string EditSystemAdmin = "system-admins/update";

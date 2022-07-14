@@ -23,7 +23,7 @@ namespace ICTAZEVoting.Shared.Contracts
         DateTime TimeStamp { get; set; }
         string? LastUpdatedBy { get; set; }
         DateTime? LastModifiedOn { get; set; }
-        string RemoteIp { get; set; }
+        string? RemoteIp { get; set; }
     }
     public abstract class AuditableEntity<TKey> : Entity<TKey>, IAuditableEntity<TKey>
     {
@@ -31,6 +31,6 @@ namespace ICTAZEVoting.Shared.Contracts
         public DateTime TimeStamp { get; set; }
         public string? LastUpdatedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
-        public string RemoteIp { get; set; }
+        public string? RemoteIp { get; set; }
     }
 }

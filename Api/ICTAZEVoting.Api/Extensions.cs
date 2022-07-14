@@ -270,13 +270,14 @@ namespace ICTAZEVoting.Api
 
                     };
                     //Generate Key
+                    var aes = Aes.Create();
                     var Secrete = Guid.NewGuid().ToString();
-                    var keyGuid = Guid.NewGuid().ToString();
-                    var IV = Guid.NewGuid().ToString();
-                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, Encoding.ASCII.GetBytes(keyGuid), Encoding.ASCII.GetBytes(IV));
-                    voter.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(Encoding.ASCII.GetBytes(IV)) };
+                    var key = aes.Key;
+                    var IV = aes.IV;
+                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete,key, IV);
+                    voter.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
                     await unitOfWork.Repository<Voter>().Add(voter);
-                    string[] res = new string[2] { keyGuid, userRegister.Password };
+                    string[] res = new string[2] { Convert.ToBase64String(key), userRegister.Password };
                     await unitOfWork.Repository<Candidate>().Add(entity);
                     var result = await unitOfWork.Commit(new CancellationToken()) != 0;
                     return result ? Result<string[]>.Success(data:res,"Candidate was registered.") : Result<string[]>.Fail("An error has occured. Try again.");

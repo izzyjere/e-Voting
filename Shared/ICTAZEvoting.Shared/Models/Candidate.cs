@@ -1,6 +1,7 @@
 ﻿using ICTAZEVoting.Shared.Contracts;
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ICTAZEVoting.Shared.Models
@@ -12,6 +13,7 @@ namespace ICTAZEVoting.Shared.Models
         public Guid ElectionPositionId { get; set; }
         [ForeignKey(nameof(ElectionPositionId))]
         public virtual ElectionPosition Position { get; set; }
+        [ValidateComplexType]
         public PersonalDetails PersonalDetails { get; set; }
         public PoliticalParty PoliticalParty { get; set; }
     }

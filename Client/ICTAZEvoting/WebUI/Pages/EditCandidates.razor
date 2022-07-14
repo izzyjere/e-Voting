@@ -15,9 +15,10 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudTabs Border="true">
+        <MudTabs @ref="tabs" Border="true">
             <MudTabPanel Text="Candidate Details">
-                <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@candidate">
+                <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("please fill in all required.",Severity.Error)' Model="@candidate">
+                    <ObjectGraphDataAnnotationsValidator />
                     <MudGrid>
                         <MudItem xs="12" sm="6" md="3">
                             <MudSelect T="Guid" Disabled="@electionChosen" Placeholder="Select election" @bind-Value="election.Id" Label="Election" Variant="Variant.Outlined">
@@ -41,12 +42,12 @@
                                 }
                             </MudSelect>
                         </MudItem>
-                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.CandidateNumber" Label="Candidate Number" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
-                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.PersonalDetails.NRC" Label="NRC Number" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
-                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.PersonalDetails.FirstName" Label="First Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
-                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.PersonalDetails.MiddleName" Label="Middle Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
-                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField @bind-Value="candidate.PersonalDetails.LastName" Label="Last Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
-                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudDatePicker @bind-Date="candidate.PersonalDetails.DateOfBirth" Label="Date of Birth" Editable="true" Placeholder="Select Date" Variant="Variant.Outlined" /></Animate></MudItem>
+                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>candidate.CandidateNumber" @bind-Value="candidate.CandidateNumber" Label="Candidate Number" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
+                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>candidate.PersonalDetails.NRC" @bind-Value="candidate.PersonalDetails.NRC" Label="NRC Number" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
+                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>candidate.PersonalDetails.FirstName" @bind-Value="candidate.PersonalDetails.FirstName" Label="First Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
+                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>candidate.PersonalDetails.MiddleName" @bind-Value="candidate.PersonalDetails.MiddleName" Label="Middle Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
+                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>candidate.PersonalDetails.FullName" @bind-Value="candidate.PersonalDetails.LastName" Label="Last Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
+                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudDatePicker For="()=>candidate.PersonalDetails.DateOfBirth" @bind-Date="candidate.PersonalDetails.DateOfBirth" Label="Date of Birth" Editable="true" Placeholder="Select Date" Variant="Variant.Outlined" /></Animate></MudItem>
                         <MudItem xs="12" sm="6" md="3">
                             <MudSelect T="Gender" @bind-Value="candidate.PersonalDetails.Gender" Label="Gender" Variant="Variant.Outlined">
                                 @foreach (var item in Enum.GetValues<Gender>())
@@ -57,8 +58,8 @@
                                 }
                             </MudSelect>
                         </MudItem>
-                        <MudItem xs="12" sm="6" md="3"><MudTextField @bind-Value="candidate.PersonalDetails.PhoneNumber" Label="Phone" Variant="Variant.Outlined"></MudTextField></MudItem>
-                        <MudItem xs="12" sm="6" md="3"><MudTextField @bind-Value="candidate.PersonalDetails.Email" Label="Email Address" Variant="Variant.Outlined"></MudTextField></MudItem>
+                        <MudItem xs="12" sm="6" md="3"><MudTextField For="()=>candidate.PersonalDetails.PhoneNumber" @bind-Value="candidate.PersonalDetails.PhoneNumber" Label="Phone" Variant="Variant.Outlined"></MudTextField></MudItem>
+                        <MudItem xs="12" sm="6" md="3"><MudTextField For="()=>candidate.PersonalDetails.Email" @bind-Value="candidate.PersonalDetails.Email" Label="Email Address" Variant="Variant.Outlined"></MudTextField></MudItem>
                         <MudItem xs="12" sm="6" md="3">
                             <MudSelect T="Guid" @bind-Value="candidate.PoliticalPartyId" Label="Political Party" Variant="Variant.Outlined">
                                 <MudSelectItem T="Guid" Value="default">No party selected</MudSelectItem>
@@ -69,25 +70,35 @@
                                     </MudSelectItem>
                                 }
                             </MudSelect>
-                        </MudItem>                        
+                        </MudItem>
                     </MudGrid>
                     <MudButton Class="mt-6" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success">Next</MudButton>
                 </EditForm>
             </MudTabPanel>
-            <MudTabPanel Text="Picture Upload">
+            <MudTabPanel Disabled="true" Text="Picture Upload">
                 <MudGrid>
-                    <MudItem xs="12" sm="6" md="3">
-                            <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                                <InputFile OnChange="UploadFiles" accept=".jpg, .jpeg,.png" hidden id="fileInput1" />
-                                <MudButton HtmlTag="label"
-                                           Variant="Variant.Outlined"
-                                           Color="Color.Info"
-                                           StartIcon="@Icons.Filled.CloudUpload"
-                                           for="fileInput1">
-                                    Upload Photo
-                                </MudButton>
-                            </Animate>
-                        </MudItem>
+                    <MudItem xs="12">
+                        <center>
+                            <MudPaper Class="p-2" Elevation="25" MinWidth="325" MinHeight="245">
+                                @if (!string.IsNullOrEmpty(frameUri))
+                                {
+                                    <img width="320" height="240" src="@frameUri" />
+                                }
+                                @if (!hideVideo)
+                                {
+
+                                    <video id="videoFeed" width="320" height="240" />
+
+                                }
+                                <center>
+                                    <MudButtonGroup>
+                                        <MudButton ButtonType="ButtonType.Button" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">Refresh</MudButton>
+                                        <MudButton ButtonType="ButtonType.Button" OnClick="CaptureFrame" Disabled="@hideVideo" Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Camera">Capture</MudButton>
+                                    </MudButtonGroup>
+                                </center>
+                            </MudPaper>
+                        </center>
+                    </MudItem>
                 </MudGrid>
             </MudTabPanel>
         </MudTabs>
@@ -189,11 +200,13 @@
     private List<PoliticalPartyResponse> politicalParties = new();
     ElectionResponse election = new();
     bool electionChosen;
+    bool hideVideo;
+    string frameUri;
     protected override async Task OnInitializedAsync()
     {
         await Refresh();
     }
-    void AddCandidate(ElectionResponse election)
+    async void AddCandidate(ElectionResponse election)
     {
         this.election = election;
         electionChosen = true;
@@ -260,7 +273,7 @@
             if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
-                await Refresh();
+                tabs.ActivatePanel(1, true);
             }
             else
             {
@@ -268,6 +281,7 @@
             }
 
         }
+
     }
 
 
@@ -279,6 +293,7 @@
         elections = await electionService.GetPendingElections();
         isEditing = false;
         candidates = await electionService.GetCandidateList();
+        await StartVideFrame();
         StateHasChanged();
     }
 
@@ -293,7 +308,29 @@
             snackBar.Add("Loan Deleted.", Severity.Success);
         }
     }
+    private async Task StartVideFrame()
+    {
+        await JsRuntime.InvokeVoidAsync("startVideo", "videoFeed");
+        StateHasChanged();
+    }
+    private async Task CaptureFrame()
+    {
+        await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
+    }
+    MudTabs tabs;
+    MudTabPanel panel01;
+    MudTabPanel panel02;
 
+    [JSInvokable]
+    public void ProcessImage(string imageString)
+    {
+        frameUri = imageString;
+        hideVideo = true;
+        StateHasChanged();
+        byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
+        //
+
+    }
 
     private async void UploadFiles(InputFileChangeEventArgs e)
     {

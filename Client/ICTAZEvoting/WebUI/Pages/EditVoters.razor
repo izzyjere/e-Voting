@@ -9,7 +9,7 @@
 @using System.Net.Http
 @using System.IO
 <EditForm OnValidSubmit="Submit" Model="@voter" OnInvalidSubmit='()=>snackBar.Add("fill in all required fields",Severity.Error)'>
-    <DataAnnotationsValidator />
+    <ObjectGraphDataAnnotationsValidator />
     <MudCard Elevation="25">
         <MudCardHeader Class="mud-theme-secondary">
             <CardHeaderContent>

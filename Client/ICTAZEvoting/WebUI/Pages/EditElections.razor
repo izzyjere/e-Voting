@@ -16,7 +16,7 @@
     </MudCardHeader>
     <MudCardContent>
         <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@election">
-            <DataAnnotationsValidator />
+            <ObjectGraphDataAnnotationsValidator />
             <MudGrid>
                 <MudItem xs="12" sm="6" md="4">
                     <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">

@@ -10,7 +10,7 @@ namespace ICTAZEVoting.Shared.Interfaces
 {
     public interface IVoterService
     {
-        Task<IResult<string>> Register(Voter entity);
+        Task<IResult<string[]>> Register(Voter entity);
         Task<IResult> Update(Voter entity);
         Task<List<Voter>> GetAll();
         Task<Voter>GetByUserId(string id);

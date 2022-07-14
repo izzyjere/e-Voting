@@ -37,9 +37,16 @@
                         Upload Party Logo
                     </MudButton>
                 </MudItem>
-                <MudItem xs="12">
+                <MudItem xs="12" md="8">
                     <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
                         <MudTextField Lines="4" For="()=>politicalParty.Manifesto" @bind-Value="politicalParty.Manifesto" Label="Manifesto" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    </Animate>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudPaper Elevation="25" Square="true" MinHeight="100" MinWidth="100">
+                            <MudImage ObjectFit="ObjectFit.Contain" Src="@(httpClient.BaseAddress.ToString()+politicalParty.LogoUrl)"/>
+                        </MudPaper>
                     </Animate>
                 </MudItem>
             </MudGrid>
@@ -217,7 +224,8 @@
         if(rs.Succeeded)
         {
             politicalParty.LogoUrl = rs.Data;
-            snackBar.Add("Upload Successiful.", Severity.Success);
+            StateHasChanged();
+            snackBar.Add("Upload Succeeded.", Severity.Success);
             return;
         }
         else

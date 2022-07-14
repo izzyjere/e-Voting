@@ -269,14 +269,37 @@
         }
     }
 
-
-    IList<IBrowserFile> files = new List<IBrowserFile>();
-    private void UploadFiles(InputFileChangeEventArgs e)
+   
+    private async void UploadFiles(InputFileChangeEventArgs e)
     {
-        foreach (var file in e.GetMultipleFiles())
+        if (e.File.Size > 5000000)
         {
-            files.Add(file);
+            snackBar.Add("Allowed file size is 5mbs", Severity.Error);
+            return;
         }
         //TODO upload the files to the server
+        var ms = new MemoryStream();
+        var stream = e.File.OpenReadStream(5000000);
+        await stream.CopyToAsync(ms);
+        var request = new UploadRequest
+            {
+                Data = ms.GetBuffer(),
+                FileName = e.File.Name,
+                Type = UploadType.ProfilePicture
+            };
+        var rs = await fileService.UploadFile(request);
+        if(rs.Succeeded)
+        {
+            candidate.PersonalDetails.PictureUrl = rs.Data;
+            StateHasChanged();
+            snackBar.Add("Upload Succeeded.", Severity.Success);
+            return;
+        }
+        else
+        {
+            snackBar.Add("We couldn't upload your image. try again", Severity.Error);
+            return;
+        }
+
     }
 }

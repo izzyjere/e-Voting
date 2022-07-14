@@ -235,7 +235,19 @@ namespace ICTAZEVoting.Services.Domain
             }
             return Result.Fail("An error occured. Check your internet connection.");
         }
-
+        /*
+         public async Task<List<ElectionType>> GetElectionTypes()
+        {
+            var get = await httpClient.GetAsync(ApiEndpoints.GetElectionTypes);
+            var list = new List<ElectionType>();
+            if (get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<List<ElectionType>>();
+                list = res.Data;
+            }
+            return list;
+        }
+         */
         public async Task<List<Constituency>> GetConstituencyList()
         {
             var get = await httpClient.GetAsync(ApiEndpoints.GetConstituencies);

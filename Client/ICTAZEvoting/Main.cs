@@ -31,6 +31,7 @@ namespace ICTAZEVoting
                 configuration.SnackbarConfiguration.NewestOnTop = true;
                 configuration.SnackbarConfiguration.MaximumOpacity = 100;
                 configuration.SnackbarConfiguration.ShowCloseIcon = true;
+                configuration.SnackbarConfiguration.ClearAfterNavigation = true;
             });
             services.AddTransient<AuthenticationHeaderHandler>()
                  .AddScoped(sp => sp

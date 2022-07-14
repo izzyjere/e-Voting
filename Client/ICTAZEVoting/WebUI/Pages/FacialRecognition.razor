@@ -7,15 +7,12 @@
         <MudCard Style="width:60%" Elevation="25" Outlined="true">
             <center>
                 <MudCardHeader>
-
                     <CardHeaderContent>
-                        <MudAvatar Color="Color.Secondary"></MudAvatar>
-                        <MudText Typo="Typo.body1">Clarence Simukanzye</MudText>
-                        @*<MudText Typo="Typo.body2">Peninsula in Europe</MudText>*@
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        @*<MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />*@
-                    </CardHeaderActions>
+                        <MudAvatar Size="Size.Large" Color="Color.Secondary">
+                            <MudImage Width="60" Height="60" Src="@Profile.ProfilePicture" ObjectFit="ObjectFit.Contain"/>
+                        </MudAvatar>
+                        <MudText Typo="Typo.body1">@Profile.FullName</MudText>                      
+                    </CardHeaderContent>                   
                 </MudCardHeader>
                 <MudPaper Elevation="0" Class="p-2" MinWidth="325" MinHeight="245">
                     @if (!string.IsNullOrEmpty(frameUri))
@@ -31,7 +28,7 @@
                     }
                     <center>
                         <MudButtonGroup>
-                            <MudButton ButtonType="ButtonType.Button" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">REFRESH</MudButton>
+                            <MudButton ButtonType="ButtonType.Button" OnClick="Refresh" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">REFRESH</MudButton>
                             <MudButton ButtonType="ButtonType.Button" OnClick="CaptureFrame" Disabled="@hideVideo" Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Camera">VERIFY</MudButton>
                         </MudButtonGroup>
                     </center>
@@ -81,20 +78,31 @@
     bool dis = true;
     bool hideVideo;
     private Voter voter = new Voter();
-    private List<Voter> voters = new List<Voter>();
-    List<PollingStation> pollingStations = new();
+    [CascadingParameter] Task<AuthenticationState> authenticationState { get; set; }
+    ClaimsPrincipal claimsPrincipal = new();
     bool showProgress = false;
-
+    UserProfileResponse Profile = new();
     protected override async Task OnInitializedAsync()
     {
+        claimsPrincipal = (await authenticationState).User;
+        if (claimsPrincipal.Identity.IsAuthenticated)
+        {  
+            var req = new UserProfileRequest {Id = claimsPrincipal.GetUserId()};
+            var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);            
+            var r = await request.ToResult<UserProfileResponse>();
+            if(r.Succeeded)
+            {
+                Profile = r.Data;
+            }
+
+        }
         await Refresh();
     }
     async Task Refresh()
     {
         voter = new();
         hideVideo = false;
-        frameUri = null;
-        voter.PersonalDetails = new PersonalDetails();
+        frameUri = null;        
         await StartVideFrame();
         StateHasChanged();
     }

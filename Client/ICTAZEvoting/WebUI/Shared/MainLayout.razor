@@ -21,7 +21,7 @@
                 <PersonCard Profile="@Profile" Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text);" />
                 <MudDivider Class="mb-2" />
                 <MudListItem Text="Account" Icon="@Icons.Material.Outlined.Person" Href="/personal/account" />
-                <MudListItem Text="Logout" Icon="@Icons.Material.Outlined.Login" Href="/pages/authentication/login" />
+                <MudListItem Text="Logout" Icon="@Icons.Material.Outlined.Login" OnClick="Logout" />
             </ChildContent>
         </MudMenu>
     </MudAppBar>
@@ -57,7 +57,7 @@
 
     ClaimsPrincipal claimsPrincipal = new();
     [CascadingParameter] Task<AuthenticationState> authenticationState { get; set; }
- 
+
     protected override async Task OnInitializedAsync()
     {
         claimsPrincipal = (await authenticationState).User;
@@ -73,9 +73,9 @@
 
         }
     }
-    //private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    //{
-    //    new BreadcrumbItem("Personal", href: "#"),
-    //    new BreadcrumbItem("Dashboard", href: "#"),
-    //};
+    async void Logout()
+    {
+        await authenticationService.SignOut();
+        Navigation.NavigateTo("/");
+    }
 }

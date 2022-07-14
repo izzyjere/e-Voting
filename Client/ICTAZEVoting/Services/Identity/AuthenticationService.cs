@@ -62,6 +62,7 @@ namespace ICTAZEVoting.Services.Identity
 
         public async Task<IResult> SignOut()
         {
+            await Client.GetAsync("/logout");
             await SessionStorage.RemoveItemAsync("UserToken");
             ((CustomAuthenticationStateProvider)authenticationStateProvider).MarkUserAsLoggedOut();
             Client.DefaultRequestHeaders.Authorization = null;

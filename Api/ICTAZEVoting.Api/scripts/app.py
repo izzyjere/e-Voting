@@ -156,7 +156,7 @@ def hello():
 def verify_face():
     if request.is_json:
         req = request.get_json()
-        image1_path = f'../biometrics/{req["voterId"]}.jpg'
+        image1_path = f'../biometrics/{req["fileName"]}.jpg'
         base_width = 500
         image1 = cv2.imread(image1_path)
 

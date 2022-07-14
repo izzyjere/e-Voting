@@ -6,7 +6,7 @@ namespace ICTAZEVoting.Shared.Requests
 {
     public class VerifyRequest
     {
-        public string VoterId { get; set; }
+        public string FileName { get; set; }
         public byte[] Data { get; set; }
         public List<int> Dimensions { get; set; }
     }

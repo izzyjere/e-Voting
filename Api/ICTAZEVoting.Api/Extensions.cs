@@ -249,14 +249,40 @@ namespace ICTAZEVoting.Api
                 if (register.Succeeded)
                 {
                     entity.PersonalDetails.UserId = register.Data;
+                    var voter = new Voter
+                    {
+                        PolingStationId = entity.PollingStationId,
+                        PersonalDetails = new PersonalDetails
+                        {
+                            FirstName = entity.PersonalDetails.FirstName,
+                            MiddleName = entity.PersonalDetails.MiddleName,
+                            LastName = entity.PersonalDetails.LastName,
+                            Gender = entity.PersonalDetails.Gender,
+                            DateOfBirth = entity.PersonalDetails.DateOfBirth,
+                            Address = entity.PersonalDetails.Address,
+                            NRC = entity.PersonalDetails.NRC,
+                            PhoneNumber = entity.PersonalDetails.PhoneNumber,
+                            Email = entity.PersonalDetails.Email,
+                            PictureUrl = entity.PersonalDetails.PictureUrl,
+                            UserId = register.Data
+                        }
 
-                    var result = await unitOfWork.Repository<Candidate>().Add(entity);
-                    result = await unitOfWork.Commit(new CancellationToken()) != 0;
-                    return result ? Result.Success("Candidate was registered.") : Result.Fail("An error has occured. Try again.");
+                    };
+                    //Generate Key
+                    var Secrete = Guid.NewGuid().ToString();
+                    var keyGuid = Guid.NewGuid().ToString();
+                    var IV = Guid.NewGuid().ToString();
+                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, Encoding.ASCII.GetBytes(keyGuid), Encoding.ASCII.GetBytes(IV));
+                    voter.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(Encoding.ASCII.GetBytes(IV)) };
+                    await unitOfWork.Repository<Voter>().Add(voter);
+                    string[] res = new string[2] { keyGuid, userRegister.Password };
+                    await unitOfWork.Repository<Candidate>().Add(entity);
+                    var result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                    return result ? Result<string[]>.Success(data:res,"Candidate was registered.") : Result<string[]>.Fail("An error has occured. Try again.");
                 }
                 else
                 {
-                    return Result.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
+                    return Result<string[]>.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
                 }
 
             });

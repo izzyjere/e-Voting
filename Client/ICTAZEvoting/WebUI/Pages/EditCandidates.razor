@@ -275,7 +275,7 @@
             //adding
             var result = await electionService.AddCandidate(candidate);
             if (result.Succeeded)
-            {
+            {   
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
             }
@@ -290,7 +290,7 @@
             if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
-                tabs.ActivatePanel(1, true);
+               
             }
             else
             {

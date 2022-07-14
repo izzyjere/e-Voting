@@ -16,7 +16,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<ElectionType> GetElectionType(string id);
         Task<Candidate> GetCandidate(string id);
         Task<IResult> DeleteCandidate(string id);
-        Task<IResult> AddCandidate(Candidate candidate);
+        Task<IResult<string[]>> AddCandidate(Candidate candidate);
         Task<List<CandidateResponse>> GetCandidateList();
         Task<IResult> DisqualifyCandidate(string id);
         Task<IResult> UpdateCandidate(Candidate candidate);

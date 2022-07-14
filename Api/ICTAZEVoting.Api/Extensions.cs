@@ -90,17 +90,46 @@ namespace ICTAZEVoting.Api
                 return Result<Voter>.Fail("Not found.");
 
             });
-            app.MapPost("/voters/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity) =>
+            
+            app.MapPost("/voters/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IUserService userService, [FromBody] Voter entity) =>
             {
-                //Generate Key
-                var Secrete = Guid.NewGuid().ToString();
-                var keyGuid = Guid.NewGuid().ToString();
-                var IV = Guid.NewGuid().ToString();
-                var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, Encoding.ASCII.GetBytes(keyGuid), Encoding.ASCII.GetBytes(IV));
-                entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(Encoding.ASCII.GetBytes(IV)) };
-                var result = await unitOfWork.Repository<Voter>().Add(entity);
-                result = await unitOfWork.Commit(new CancellationToken()) != 0;
-                return result ? Result<string>.Success(keyGuid, "Voter was registered.") : Result<string>.Fail("An error has occured. Try again.");
+                var userRegister = new RegisterRequest
+                {
+                    FirstName = entity.PersonalDetails.FirstName,
+                    LastName = entity.PersonalDetails.LastName,
+                    AutoConfirmEmail = true,
+                    ActivateUser = true,
+                    Password = Path.GetRandomFileName(),
+                    PictureUrl = entity.PersonalDetails.PictureUrl,
+                    UserName = entity.PersonalDetails.NRC.Replace("/", String.Empty),
+                    Email = entity.PersonalDetails.Email,
+                    Role = RoleConstants.BasicRole,
+                    PhoneNumber = entity.PersonalDetails.PhoneNumber,
+                    NRC = entity.PersonalDetails.NRC
+                };
+                var register = await userService.RegisterAsync(userRegister);
+                if (register.Succeeded)
+                {
+                    entity.PersonalDetails.UserId = register.Data;
+                     //Generate Key
+                    var Secrete = Guid.NewGuid().ToString();
+                    var keyGuid = Guid.NewGuid().ToString();
+                    var IV = Guid.NewGuid().ToString();
+                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, Encoding.ASCII.GetBytes(keyGuid), Encoding.ASCII.GetBytes(IV));
+                    entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(Encoding.ASCII.GetBytes(IV)) };
+                    var result = await unitOfWork.Repository<Voter>().Add(entity);
+                    result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                    string[] res= new string[2] { keyGuid,userRegister.Password };  //returns the random generated pass and secrete key.
+                    //in the future this key has to be stored in a card.
+                    return result ? Result<string[]>.Success(res, "Voter was registered.") : Result<string[]>.Fail("An error has occured. Try again.");
+
+                }
+                else
+                {
+                    return Result.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
+                }
+                
+                
             });
             app.MapPut("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity) =>
             {
@@ -136,7 +165,7 @@ namespace ICTAZEVoting.Api
                     LastName = entity.PersonalDetails.LastName,
                     AutoConfirmEmail = true,
                     ActivateUser = true,
-                    Password = "test1234",
+                    Password = "test1234", //should be changed to a random password generator.
                     PictureUrl = entity.PersonalDetails.PictureUrl,
                     UserName = entity.PersonalDetails.NRC.Replace("/", String.Empty),
                     Email = entity.PersonalDetails.Email,
@@ -149,6 +178,7 @@ namespace ICTAZEVoting.Api
                 {
                     entity.PersonalDetails.UserId = register.Data;
                     var result = await unitOfWork.Repository<Candidate>().Add(entity);
+                    result = await unitOfWork.Commit(new CancellationToken()) != 0;
                     return result? Result.Success("Candidate was registered.") : Result.Fail("An error has occured. Try again.");
                 }
                 else

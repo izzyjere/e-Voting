@@ -38,7 +38,20 @@
                         </MudSelect>
                     </Animate>
                 </MudItem>
-                <MudItem xs="12" sm="6" md="5"></MudItem>
+                <MudItem xs="12" sm="6" md="3">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudSelect T="Guid" @bind-Value="voter.PolingStationId" Label="Polling Station" Variant="Variant.Outlined">
+                            <MudSelectItem T="Guid" Value="default">No station selected</MudSelectItem>
+                            @foreach (var item in pollingStations)
+                            {
+                                <MudSelectItem T="Guid" Value="@item.Id">
+                                    @item.Name
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </Animate>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="2"></MudItem>
                 <MudItem xs="12" sm="6" md="4">
                     <MudPaper Class="p-2" Elevation="25" MinWidth="325" MinHeight="245">
                         @if (!string.IsNullOrEmpty(frameUri))
@@ -107,6 +120,7 @@
     bool hideVideo;
     private Voter voter = new Voter();
     private List<Voter> voters = new List<Voter>();
+    List<PollingStation> pollingStations = new();
     protected override async Task OnInitializedAsync()
     {
         await Refresh();

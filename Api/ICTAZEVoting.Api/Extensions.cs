@@ -95,8 +95,8 @@ namespace ICTAZEVoting.Api
                 return Result<Voter>.Fail("Not found.");
 
             });
-            
-            app.MapPost("/voters/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IUserService userService, [FromBody] Voter entity) =>
+
+            app.MapPost("/voters/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IUserService userService, [FromBody] Voter entity) =>
             {
                 var userRegister = new RegisterRequest
                 {
@@ -116,7 +116,7 @@ namespace ICTAZEVoting.Api
                 if (register.Succeeded)
                 {
                     entity.PersonalDetails.UserId = register.Data;
-                     //Generate Key
+                    //Generate Key
                     var Secrete = Guid.NewGuid().ToString();
                     var keyGuid = Guid.NewGuid().ToString();
                     var IV = Guid.NewGuid().ToString();
@@ -124,7 +124,7 @@ namespace ICTAZEVoting.Api
                     entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(Encoding.ASCII.GetBytes(IV)) };
                     var result = await unitOfWork.Repository<Voter>().Add(entity);
                     result = await unitOfWork.Commit(new CancellationToken()) != 0;
-                    string[] res= new string[2] { keyGuid,userRegister.Password };  //returns the random generated pass and secrete key.
+                    string[] res = new string[2] { keyGuid, userRegister.Password };  //returns the random generated pass and secrete key.
                     //in the future this key has to be stored in a card.
                     return result ? Result<string[]>.Success(res, "Voter was registered.") : Result<string[]>.Fail("An error has occured. Try again.");
 
@@ -133,8 +133,8 @@ namespace ICTAZEVoting.Api
                 {
                     return Result.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
                 }
-                
-                
+
+
             });
             app.MapPut("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity) =>
             {
@@ -162,7 +162,7 @@ namespace ICTAZEVoting.Api
                 return Result<Candidate>.Fail("Not found.");
 
             });
-            app.MapPost("/candidates/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IUserService userService, [FromBody] Candidate entity) =>
+            app.MapPost("/candidates/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IUserService userService, [FromBody] Candidate entity) =>
             {
                 var userRegister = new RegisterRequest
                 {
@@ -179,18 +179,18 @@ namespace ICTAZEVoting.Api
                     NRC = entity.PersonalDetails.NRC
                 };
                 var register = await userService.RegisterAsync(userRegister);
-                if(register.Succeeded)
+                if (register.Succeeded)
                 {
                     entity.PersonalDetails.UserId = register.Data;
                     var result = await unitOfWork.Repository<Candidate>().Add(entity);
                     result = await unitOfWork.Commit(new CancellationToken()) != 0;
-                    return result? Result.Success("Candidate was registered.") : Result.Fail("An error has occured. Try again.");
+                    return result ? Result.Success("Candidate was registered.") : Result.Fail("An error has occured. Try again.");
                 }
                 else
                 {
-                   return Result.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
-                }             
-                
+                    return Result.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
+                }
+
             });
             app.MapPut("/candidates/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Candidate entity) =>
             {
@@ -401,12 +401,117 @@ namespace ICTAZEVoting.Api
                 return match ? Result.Success("Face verified.") : Result.Fail("Verification failed");
 
             });
+            app.MapGet("/constituencies", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            {
+                var result = await unitOfWork.Repository<Constituency>().Entities().Include(c => c.PolingStations).ToListAsync();
+                return Result<IEnumerable<Constituency>>.Success(result);
+            });
+            app.MapGet("/constituencies/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var constituency = await unitOfWork.Repository<Constituency>().Entities().Include(c=>c.PolingStations).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (constituency == null)
+                    {
+                        return Result<Constituency>.Fail("Not found.");
+                    }
+                    return Result<Constituency>.Success(constituency);
+                }
+                return Result<Constituency>.Fail("Not found.");
+            });
+            app.MapPost("/constituencies/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Constituency entity) =>
+            {
+                var result = await unitOfWork.Repository<Constituency>().Add(entity);
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                return result ? Result.Success("Constituencytype was created.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapPost("/constituencies/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Constituency entity) =>
+            {
+                var result = await unitOfWork.Repository<Constituency>().Update(entity);
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                return result ? Result.Success("Constituencywas updated.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapDelete("/constituencies/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var entity = await unitOfWork.Repository<Constituency>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (entity == null)
+                    {
+                        return Result.Fail("Not found.");
+                    }
+                    else
+                    {
+                        var result = await unitOfWork.Repository<Constituency>().Delete(entity);
+                        result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                        return result ? Result.Success($"{entity.Name} was deleted.") : Result.Fail("An error occured, try again.");
+                    }
+
+                }
+                return Result.Fail("Not found.");
+
+            });
+            app.MapGet("/constituencies", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            {
+                var result = await unitOfWork.Repository<PollingStation>().Entities().ToListAsync();
+                return Result<IEnumerable<PollingStation>>.Success(result);
+            });
+            app.MapGet("/constituencies/polling-station/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var pollingStation = await unitOfWork.Repository<PollingStation>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (pollingStation == null)
+                    {
+                        return Result<PollingStation>.Fail("Not found.");
+                    }
+                    return Result<PollingStation>.Success(pollingStation);
+                }
+                return Result<PollingStation>.Fail("Not found.");
+            });
+            app.MapPost("/constituencies/polling-station/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] PollingStation entity) =>
+            {
+                var result = await unitOfWork.Repository<PollingStation>().Add(entity);
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                return result ? Result.Success("PollingStation  was created.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapPost("/constituencies/polling-station/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] PollingStation entity) =>
+            {
+                var result = await unitOfWork.Repository<PollingStation>().Update(entity);
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                return result ? Result.Success("PollingStation was updated.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapDelete("/constituencies/polling-station/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var entity = await unitOfWork.Repository<PollingStation>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (entity == null)
+                    {
+                        return Result.Fail("Not found.");
+                    }
+                    else
+                    {
+                        var result = await unitOfWork.Repository<PollingStation>().Delete(entity);
+                        result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                        return result ? Result.Success($"{entity.Name} was deleted.") : Result.Fail("An error occured, try again.");
+                    }
+
+                }
+                return Result.Fail("Not found.");
+
+            });
+            #endregion
+            #region Uploads
             app.MapPost("/biometrics", (IWebHostEnvironment env, [FromBody] UploadRequest request) =>
             {
                 var fileName = request.Data.ToImageFile(Path.Combine(env.ContentRootPath, "biometrics"));
                 return Result.Success(fileName);
             });
-            #endregion
             app.MapPost("/upload", [Authorize] async (IUploadService service, [FromBody] UploadRequest request, HttpContext context) =>
             {
                 var res = await service.UploadFileAsync(request);
@@ -420,6 +525,7 @@ namespace ICTAZEVoting.Api
                 }
 
             });
+            #endregion
             return app;
         }
 

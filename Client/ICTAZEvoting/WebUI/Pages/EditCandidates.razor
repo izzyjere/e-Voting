@@ -9,7 +9,7 @@
 @inject IJSRuntime JsRuntime
 
 <MudCard Elevation="25">
-    <MudCardHeader Class="mud-theme-secondary">
+    <MudCardHeader Class="mud-theme-info">
         <CardHeaderContent>
             <MudText Typo="Typo.h6">Add / Edit Candidates</MudText>
         </CardHeaderContent>
@@ -17,7 +17,7 @@
     <MudCardContent>
         <MudTabs @ref="tabs" Border="true">
             <MudTabPanel Text="Candidate Details">
-                <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("please fill in all required.",Severity.Error)' Model="@candidate">
+                <EditForm OnValidSubmit="NextTab" OnInvalidSubmit='()=>snackBar.Add("please fill in all required.",Severity.Error)' Model="@candidate">
                     <ObjectGraphDataAnnotationsValidator />
                     <MudGrid Class="mt-4">
                         <MudItem xs="12" sm="6" md="3">
@@ -42,7 +42,19 @@
                                 }
                             </MudSelect>
                         </MudItem>
-                        <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>candidate.CandidateNumber" @bind-Value="candidate.CandidateNumber" Label="Candidate Number" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
+                        <MudItem xs="12" sm="6" md="3"> 
+                            <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                                <MudSelect T="Guid" @bind-Value="candidate.PollingStationId" Label="Polling Station" Variant="Variant.Outlined">
+                                    <MudSelectItem T="Guid" Value="default">No station selected</MudSelectItem>
+                                    @foreach (var item in pollingStations)
+                                    {
+                                        <MudSelectItem T="Guid" Value="@item.Id">
+                                            @item.Name
+                                        </MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </Animate>
+                        </MudItem>
                         <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>candidate.PersonalDetails.NRC" @bind-Value="candidate.PersonalDetails.NRC" Label="NRC Number" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
                         <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>candidate.PersonalDetails.FirstName" @bind-Value="candidate.PersonalDetails.FirstName" Label="First Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
                         <MudItem xs="12" sm="6" md="3"> <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>candidate.PersonalDetails.MiddleName" @bind-Value="candidate.PersonalDetails.MiddleName" Label="Middle Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
@@ -195,6 +207,7 @@
 @code {
     private string searchString = "";
     private Candidate candidate = new Candidate();
+    List<PollingStation> pollingStations = new();
     private List<CandidateResponse> candidates = new List<CandidateResponse>();
     private List<ElectionResponse> elections = new List<ElectionResponse>();
     private List<PoliticalPartyResponse> politicalParties = new();
@@ -251,6 +264,10 @@
         StateHasChanged();
     }
 
+    void NextTab()
+    {
+        tabs.ActivatePanel(1, true);
+    }
     async Task Save()
     {
         if (!isEditing)
@@ -283,7 +300,6 @@
         }
 
     }
-
 
     async Task Refresh()
     {

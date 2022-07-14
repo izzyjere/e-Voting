@@ -249,6 +249,7 @@ namespace ICTAZEVoting.Api
                 if (register.Succeeded)
                 {
                     entity.PersonalDetails.UserId = register.Data;
+
                     var result = await unitOfWork.Repository<Candidate>().Add(entity);
                     result = await unitOfWork.Commit(new CancellationToken()) != 0;
                     return result ? Result.Success("Candidate was registered.") : Result.Fail("An error has occured. Try again.");

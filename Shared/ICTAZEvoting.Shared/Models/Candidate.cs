@@ -8,7 +8,8 @@ namespace ICTAZEVoting.Shared.Models
 {
     public class Candidate : AuditableEntity<Guid>
     {
-        public string CandidateNumber { get; set; }  
+        [NotMapped]
+        public Guid PollingStationId { get; set; }  
         public Guid PoliticalPartyId { get; set; }
         public Guid ElectionPositionId { get; set; }
         [ForeignKey(nameof(ElectionPositionId))]

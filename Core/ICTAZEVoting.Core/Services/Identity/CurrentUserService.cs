@@ -23,7 +23,7 @@ namespace ICTAZEVoting.Core.Services.Identity
             var id = Guid.Empty;
             if (context != null)
             {
-                //id = context.User.GetId();
+                id = context.User.GetId();
             }
             return Task.FromResult(id);
         }

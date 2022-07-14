@@ -19,6 +19,8 @@ namespace ICTAZEVoting.Core.Factories
 
             var identity = await base.GenerateClaimsAsync(user);           
             identity.AddClaim(new Claim("UserId", user.Id.ToString()));
+            identity.AddClaim(new Claim("FullName", user.FirstName+" "+ user.FirstName));
+            identity.AddClaim(new Claim("Picture", user.PictureUrl));
             return identity;
         }
     }

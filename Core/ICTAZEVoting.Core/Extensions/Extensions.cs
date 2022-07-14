@@ -12,8 +12,8 @@ namespace ICTAZEVoting.Core.Extensions
 {
     public static class HelperExtensions
     {
-        public static int GetId(this ClaimsPrincipal claimsPrincipal)
-             => Convert.ToInt32(claimsPrincipal.FindFirstValue("UserId"));
+        public static Guid GetId(this ClaimsPrincipal claimsPrincipal)
+            => Guid.Parse(claimsPrincipal.FindFirstValue("UserId"));
         public static string GetFullName(this ClaimsPrincipal claimsPrincipal)
             => claimsPrincipal.FindFirstValue("FullName");
         public static string GetRole(this ClaimsPrincipal claimsPrincipal)

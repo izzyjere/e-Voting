@@ -18,9 +18,11 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<SystemAdmin> GetSystemAdminAsync(string userId)
+        public async Task<SystemAdmin> GetSystemAdminAsync(string userId)
         {
-            throw new NotImplementedException();
+            var response = await httpClient.GetAsync(ApiEndpoints.GetSystemAdminByUserId + $"/{userId}");
+            var result = await response.ToResult<SystemAdmin>();
+            return result.Data;            
         }
 
         public Task<List<SystemAdmin>> GetSystemAdmins()

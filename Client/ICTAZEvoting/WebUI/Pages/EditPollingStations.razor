@@ -92,7 +92,7 @@
     {
         polingStation = new();
         isEditing = false;
-        polingStations = await electionService.GetPolingStationList();
+        polingStations = await electionService.GetPollingStationList();
         StateHasChanged();
     }
     async Task Save()

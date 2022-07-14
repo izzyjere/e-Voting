@@ -250,13 +250,13 @@ namespace ICTAZEVoting.Services.Domain
 
         public async Task<IResult> AddPolingStation(PollingStation polingStation)
         {
-            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddPolingStation, polingStation);
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddPollingStation, polingStation);
             return await add.ToResult();
         }
 
         public async Task<IResult> UpdatePolingStation(PollingStation polingStation)
         {
-            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.EditPolingStation, polingStation);
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.EditPollingStation, polingStation);
             return await add.ToResult();
         }
 
@@ -270,9 +270,9 @@ namespace ICTAZEVoting.Services.Domain
             return Result.Fail("An error occured. Check your internet connection.");
         }
 
-        public async Task<List<PollingStation>> GetPolingStationList()
+        public async Task<List<PollingStation>> GetPollingStationList()
         {
-            var get = await httpClient.GetAsync(ApiEndpoints.GetPolingStations);
+            var get = await httpClient.GetAsync(ApiEndpoints.GetPollingStations);
             var list = new List<PollingStation>();
             if (get.IsSuccessStatusCode)
             {
@@ -282,7 +282,7 @@ namespace ICTAZEVoting.Services.Domain
             return list;
         }
 
-        public Task<PollingStation> GetPolingStation(string Id)
+        public Task<PollingStation> GetPollingStation(string Id)
         {
             throw new NotImplementedException();
         }

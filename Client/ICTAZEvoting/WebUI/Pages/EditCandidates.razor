@@ -19,7 +19,7 @@
             <MudTabPanel Text="Candidate Details">
                 <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("please fill in all required.",Severity.Error)' Model="@candidate">
                     <ObjectGraphDataAnnotationsValidator />
-                    <MudGrid>
+                    <MudGrid Class="mt-4">
                         <MudItem xs="12" sm="6" md="3">
                             <MudSelect T="Guid" Disabled="@electionChosen" Placeholder="Select election" @bind-Value="election.Id" Label="Election" Variant="Variant.Outlined">
                                 <MudSelectItem T="Guid" Value="default">No election selected</MudSelectItem>
@@ -76,7 +76,7 @@
                 </EditForm>
             </MudTabPanel>
             <MudTabPanel Disabled="true" Text="Picture Upload">
-                <MudGrid>
+                <MudGrid Class="mt-4">
                     <MudItem xs="12">
                         <center>
                             <MudPaper Class="p-2" Elevation="25" MinWidth="325" MinHeight="245">
@@ -318,8 +318,6 @@
         await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
     }
     MudTabs tabs;
-    MudTabPanel panel01;
-    MudTabPanel panel02;
 
     [JSInvokable]
     public void ProcessImage(string imageString)

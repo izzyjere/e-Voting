@@ -39,7 +39,7 @@ namespace ICTAZEVoting.Services.Identity
         public async Task<IResult> SignIn(TokenRequest request)
         {
             var response = await Client.PostAsJsonAsync(ApiEndpoints.Login, request);
-            if (response.IsSuccessStatusCode || response.StatusCode==System.Net.HttpStatusCode.Found)
+            if (response.IsSuccessStatusCode)
             {
                 var result = await response.ToResult<TokenResponse>();
                 if (result.Succeeded)

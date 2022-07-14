@@ -29,7 +29,7 @@
         var result = await authenticationService.SignIn(Model);
         if(result.Succeeded)
         {
-            Navigation.NavigateTo("authenticate");
+            Navigation.NavigateTo("verify-face");
             snackBar.Add(result.Messages.First(), Severity.Success);
         }
         else

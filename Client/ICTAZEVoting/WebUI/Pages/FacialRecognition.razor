@@ -1,5 +1,5 @@
-﻿@page "/facialrecognition"
-
+﻿@page "/verify-face"
+@layout AuthLayout
 @inject IJSRuntime JsRuntime
 
 <Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
@@ -26,6 +26,7 @@
                     {
 
                         <video id="videoFeed" width="320" height="240" />
+                        <canvas id="currentFrame" class="d-none" width="320" height="240" />
 
                     }
                     <center>
@@ -97,7 +98,7 @@
         await StartVideFrame();
         StateHasChanged();
     }
-    
+
     private async Task StartVideFrame()
     {
         await JsRuntime.InvokeVoidAsync("startVideo", "videoFeed");
@@ -108,7 +109,8 @@
     {
         showProgress=true;
         StateHasChanged();
-        await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
+        Navigation.NavigateTo("authenticate");
+        // await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
     }
 
 

@@ -1,4 +1,4 @@
-﻿@page "/polingstations"
+﻿@page "/pollingstations"
 
 @using ICTAZEVoting.Shared
 @using System.Linq
@@ -8,62 +8,51 @@
 @inject IJSRuntime JsRuntime
 
 <MudCard Elevation="25">
-    <MudCardHeader>
+    <MudCardHeader Class="mud-theme-secondary">
         <CardHeaderContent>
             <MudText Typo="Typo.h6">Add / Edit Polling Stations</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@polingStation">
-            <DataAnnotationsValidator/>
-        <MudGrid>
-            <MudItem xs="12" sm="6" md="3">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                   <MudTextField For="()=>polingStation.Name" @bind-Value="polingStation.Name" Label="Constituency Name" Variant="Variant.Outlined"></MudTextField>
-                </Animate>
-            </MudItem>
-
-            <MudItem xs="12" sm="6" md="3">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudSelect T="Guid" Variant="Variant.Outlined" Label="Constituency" @bind-Value="polingStation.ConstituencyId">
-                        <MudSelectItem T="Guid" Value="default">No Constituency Selected</MudSelectItem>
-                        @foreach (var constituency in constituencies)
-                        {
-                            <MudSelectItem T="Guid" Value="@constituency.Id">@constituency.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </Animate>
-            </MudItem>
-        </MudGrid>
-        <MudButton Class="mt-6" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success">Save </MudButton>
+        <EditForm OnValidSubmit="Save" OnInvalidSubmit='()=>snackBar.Add("Provide a name",Severity.Warning)' Model="@pollingStation">
+            <DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12" sm="6" md="3">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudTextField For="()=>pollingStation.Name" @bind-Value="pollingStation.Name" Label="Election Type" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                    </Animate>
+                </MudItem>
+            </MudGrid>
+            <MudButton Class="mt-6" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success">Save </MudButton>
         </EditForm>
-        
+
     </MudCardContent>
 </MudCard>
 <br/>
-@*<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">*@
-    <MudTable Bordered="true"  Hover="true" Style="color: white; padding:2em" Elevation="25" Items="@polingStations">
+
+<Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+    <MudTable Bordered="true" Hover="true" Style="color: white; padding:2em" Elevation="25" Items="pollingStations">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Election Types</MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="searchString" Placeholder="Search for Polling Stations..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="searchString" Placeholder="Search for Election Type..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Polling Station</MudTh>
+            <MudTh>Polling Stations</MudTh>
             <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Polling Station"><MudChip Icon="@Icons.Material.Filled.Bookmark" Color="Color.Info" Label="true">@context.Name</MudChip></MudTd>
+            <MudTd DataLabel="Plling Stations"><MudChip Icon="@Icons.Material.Filled.Bookmark" Color="Color.Info" Label="true">@context.Name</MudChip></MudTd>
             <MudTd DataLabel="Actions">
                 <MudFab @onclick="@(()=>Edit(context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
                 <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
             </MudTd>
         </RowTemplate>
-     <PagerContent>
-        <MudTablePager />
-    </PagerContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
     </MudTable>
-@*</Animate>*@
+</Animate>
 
 <MudScrollToTop>
     <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
@@ -80,31 +69,28 @@
 
 @code {
     private string searchString = "";
-    private PollingStation polingStation = new PollingStation();
-    private List<PollingStation> polingStations = new List<PollingStation>();
-    private Constituency constituency = new Constituency();
+    private PollingStation pollingStation = new PollingStation();
+    private List<PollingStation> pollingStations = new List<PollingStation>();
     private List<Constituency> constituencies = new List<Constituency>();
     bool isEditing;
     protected override async Task OnInitializedAsync()
     {
-
         await Refresh();
     }
     async Task Refresh()
     {
-        polingStation = new();
+        pollingStation = new();
         isEditing = false;
-        polingStations = await electionService.GetPollingStationList();
-        constituencies = await electionService.GetConstituencyList();
+        pollingStations = await electionService.GetPollingStationList();
         StateHasChanged();
     }
     async Task Save()
     {
-        if(!isEditing)
+        if (!isEditing)
         {
             //adding
-            var result = await electionService.AddPolingStation(polingStation);
-            if(result.Succeeded)
+            var result = await electionService.AddElectionType(pollingStation.Name);
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
@@ -116,8 +102,8 @@
         }
         else
         {
-            var result = await electionService.UpdatePolingStation(polingStation);
-            if(result.Succeeded)
+            var result = await electionService.UpdatePolingStation(pollingStation);
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
@@ -129,9 +115,9 @@
 
         }
     }
-    private async void Edit(PollingStation polingStation)
+    private async void Edit(PollingStation pollingStation)
     {
-        this.polingStation = polingStation;
+        this.pollingStation = pollingStation;
         isEditing = true;
         StateHasChanged();
     }
@@ -143,8 +129,8 @@
         bool? confirmed = await mbox.Show();
         if (confirmed == true)
         {
-            var result =  await electionService.DeletePolingStation(id.ToString());
-            if(result.Succeeded)
+            var result = await electionService.DeleteElectionType(id.ToString());
+            if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();

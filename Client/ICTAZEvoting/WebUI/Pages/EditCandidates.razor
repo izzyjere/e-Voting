@@ -275,7 +275,8 @@
             //adding
             var result = await electionService.AddCandidate(candidate);
             if (result.Succeeded)
-            {   
+            {
+                await javaScript.InvokeAsync<object>("downloadPasswordFile",result.Data[1],result[0]); //preferably sent to voter's email.
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
             }

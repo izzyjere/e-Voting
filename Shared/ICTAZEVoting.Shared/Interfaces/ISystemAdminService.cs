@@ -11,5 +11,6 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<List<SystemAdmin>> GetSystemAdmins(string constituencyId);
         Task<List<IResult>> DeleteAdmin(string id);
         Task<List<IResult>> UpdateAdmin(SystemAdmin entity);
+        Task<List<PollingStation>> GetPollingStations(string userId);
     }
 }

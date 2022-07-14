@@ -18,6 +18,13 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
+        public async Task<List<PollingStation>> GetPollingStations(string userId)
+        {
+            var response = await httpClient.GetAsync(ApiEndpoints.GetPollingStationsByUserId + $"/{userId}");
+            var result = await response.ToResult<List<PollingStation>>();
+            return result.Data ?? new();
+        }
+
         public async Task<SystemAdmin> GetSystemAdminAsync(string userId)
         {
             var response = await httpClient.GetAsync(ApiEndpoints.GetSystemAdminByUserId + $"/{userId}");

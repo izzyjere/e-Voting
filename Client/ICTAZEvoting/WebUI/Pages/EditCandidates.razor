@@ -212,11 +212,13 @@
     private List<ElectionResponse> elections = new List<ElectionResponse>();
     private List<PoliticalPartyResponse> politicalParties = new();
     ElectionResponse election = new();
+    ClaimsPrincipal claimsPrincipal = new();
     bool electionChosen;
     bool hideVideo;
     string frameUri;
     protected override async Task OnInitializedAsync()
     {
+        claimsPrincipal = await authenticationService.CurrentUser();
         await Refresh();
     }
     async void AddCandidate(ElectionResponse election)
@@ -276,7 +278,7 @@
             var result = await electionService.AddCandidate(candidate);
             if (result.Succeeded)
             {
-                await javaScript.InvokeAsync<object>("downloadPasswordFile",result.Data[1],result[0]); //preferably sent to voter's email.
+                await javaScript.InvokeAsync<object>("downloadPasswordFile",result.Data[1],result.Data[0]); //preferably sent to voter's email.
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
             }
@@ -291,7 +293,7 @@
             if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
-               
+
             }
             else
             {
@@ -307,6 +309,7 @@
         candidate = new();
         election = new();
         candidate.PersonalDetails = new PersonalDetails();
+        pollingStations = await systemAdminService.GetPollingStations(claimsPrincipal.GetUserId().ToString());
         elections = await electionService.GetPendingElections();
         isEditing = false;
         candidates = await electionService.GetCandidateList();

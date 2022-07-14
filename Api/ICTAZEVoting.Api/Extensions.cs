@@ -578,6 +578,26 @@ namespace ICTAZEVoting.Api
                 result = await unitOfWork.Commit(new CancellationToken()) != 0;
                 return result ? Result.Success("PollingStation was updated.") : Result.Fail("An error has occured. Try again.");
             });
+            app.MapGet("/polling-stations/getbyuserid/{id}",[Authorize(Roles=RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,[FromRoute] string id) => {
+
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var systemAdmin = await unitOfWork.Repository<SystemAdmin>().Entities().Include(c => c.Constituency).ThenInclude(c=>c.PolingStations).FirstOrDefaultAsync(v => v.PersonalDetails.UserId == myGuid);
+                    if (systemAdmin == null)
+                    {
+                        return Result<List<PollingStation>>.Fail("Not found.");
+                    }
+                    var lis = new List<PollingStation>();
+                    foreach (var item in systemAdmin.Constituency.PolingStations)
+                    {
+                         lis.Add(new PollingStation { Id= item.Id, ConstituencyId=item.ConstituencyId,Name=item.Name });
+                    }
+                    return Result<List<PollingStation>>.Success(lis);
+                }
+                return Result<List<PollingStation>>.Fail("Not found.");
+
+            });
             app.MapDelete("/constituencies/polling-station/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {
                 var myGuid = Guid.Empty;

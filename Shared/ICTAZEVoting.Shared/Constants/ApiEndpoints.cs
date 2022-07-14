@@ -48,8 +48,6 @@ namespace ICTAZEVoting.Shared.Constants
         public const string DeleteSystemAdmin = "system-admins/delete";
         public const string GetSystemAdmins = "system-admins";   
         public const string GetSystemAdminByUserId = "system-admins/getbyuserid";
-
-
-
+        public const string GetPollingStationsByUserId = "polling-stations/getbyuserid";
     }
 }

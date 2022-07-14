@@ -237,7 +237,7 @@ namespace ICTAZEVoting.Api
                     LastName = entity.PersonalDetails.LastName,
                     AutoConfirmEmail = true,
                     ActivateUser = true,
-                    Password = "test1234", //should be changed to a random password generator.
+                    Password = Path.GetRandomFileName(), //should be changed to a random password generator.
                     PictureUrl = entity.PersonalDetails.PictureUrl,
                     UserName = entity.PersonalDetails.NRC.Replace("/", String.Empty),
                     Email = entity.PersonalDetails.Email,

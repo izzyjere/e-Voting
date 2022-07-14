@@ -18,11 +18,17 @@ namespace ICTAZEVoting.Services.Utility
         public async Task<IResult<string>> UploadFile(UploadRequest uploadRequest)
         {   
             var response = await httpClient.PostAsJsonAsync(ApiEndpoints.FileUpload, uploadRequest);
-            if(!response.IsSuccessStatusCode)
+            if(response.IsSuccessStatusCode)
             {
+                var res = await response.ToResult<string>();
+                return res;
+            }
+            else
+            {
+            
                 return Result<string>.Fail("An error occured. Try again.");
             }
-            return await response.ToResult<string>();
+           
         }
     }
 }

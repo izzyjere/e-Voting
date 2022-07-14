@@ -346,7 +346,16 @@ namespace ICTAZEVoting.Api
             #endregion
             app.MapPost("/upload", [Authorize]async (IUploadService service,[FromBody]UploadRequest request, HttpContext context) =>
             {  
-                return await service.UploadFileAsync(request);
+                var res= await service.UploadFileAsync(request);
+                if(res.Succeeded)
+                {
+                    return res;
+                }
+                else
+                {
+                    return Result.Fail("An error occured");
+                }
+
             });
             return app;
         }

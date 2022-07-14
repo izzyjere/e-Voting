@@ -39,7 +39,7 @@ namespace ICTAZEVoting.Services.Identity
         public async Task<IResult> SignIn(TokenRequest request)
         {
             var response = await Client.PostAsJsonAsync(ApiEndpoints.Login, request);
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode || response.StatusCode==System.Net.HttpStatusCode.Found)
             {
                 var result = await response.ToResult<TokenResponse>();
                 if (result.Succeeded)
@@ -47,8 +47,8 @@ namespace ICTAZEVoting.Services.Identity
                     await SessionStorage.SaveItemEncryptedAsync("UserToken", result.Data);
 
                     await ((CustomAuthenticationStateProvider)authenticationStateProvider).StateChangedAsync();
-
                     Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", result.Data.Token);
+                    await Client.GetAsync($"login/?key={result.Data.TokenKey}");
                     return await Result.SuccessAsync($"Welcome!");
                 }
                 return await Result.FailAsync("Invalid Username or Password");

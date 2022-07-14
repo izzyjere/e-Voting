@@ -50,8 +50,7 @@ namespace ICTAZEVoting.Core.Middleware
                 if (result.Succeeded)
                 {
                     Logins.Remove(key);
-                    logger.LogInformation("User logged in successifully..");
-                    context.Response.Redirect(tokenRequest.ReturnUrl);
+                    logger.LogInformation("User logged in successifully.."); 
                     return;
                 }
                 else if (result.RequiresTwoFactor)

@@ -1,5 +1,7 @@
 using ICTAZEVoting.Api;
 using ICTAZEVoting.Core.Extensions;
+using ICTAZEVoting.Core.Middleware;
+using ICTAZEVoting.Core.Models;
 
 using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
@@ -28,6 +30,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseAuthentication()
    .UseAuthorization();
+app.UseMiddleware<SignInMiddleware<User>>();
 app.UseHttpsRedirection();
 app.MapEndpointRoutes();
 app.Initialize();

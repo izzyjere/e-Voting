@@ -22,7 +22,7 @@ namespace ICTAZEVoting.Core.Services.Identity
         {
             var context = httpContextAccessor.HttpContext;
             var id = Guid.Empty;
-            if (context != null && context.User!=null)
+            if (context != null && context.User!=null && !string.IsNullOrEmpty(context.User.Identity.Name))
             {
                 id = context.User.GetId();
             }

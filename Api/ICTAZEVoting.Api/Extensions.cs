@@ -42,7 +42,6 @@ namespace ICTAZEVoting.Api
                 var res = await tokenService.LoginAsync(request);
                 if (res.Succeeded)
                 {
-                    context.Response.Redirect($"login/?key={res.Data.TokenKey}");
                     return new Result<TokenResponse>() { Succeeded = true, Messages = res.Messages, Data = res.Data };
                 }
                 else

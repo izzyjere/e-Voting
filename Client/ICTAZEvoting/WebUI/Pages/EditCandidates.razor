@@ -269,7 +269,7 @@
         }
     }
 
-   
+
     private async void UploadFiles(InputFileChangeEventArgs e)
     {
         if (e.File.Size > 5000000)
@@ -288,12 +288,12 @@
                 Type = UploadType.ProfilePicture
             };
         var rs = await fileService.UploadFile(request);
-        if(rs.Succeeded)
+        if (rs.Succeeded)
         {
             candidate.PersonalDetails.PictureUrl = rs.Data;
             StateHasChanged();
             snackBar.Add("Upload Succeeded.", Severity.Success);
-            return;
+
         }
         else
         {

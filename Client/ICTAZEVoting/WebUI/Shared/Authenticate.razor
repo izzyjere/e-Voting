@@ -1,10 +1,12 @@
-﻿@layout AuthLayout
+﻿@layout LoginLayout
 @attribute [AllowAnonymous]
 @page "/authenticate"
 @page "/authenticate/{redirectUrl?}"
 @if (IsLoading)
 {
-   
+
+    <MudText Typo="Typo.h6" Color="Color.Secondary">Please wait ....</MudText>
+    <MudProgressLinear Color="Color.Success" Size="Size.Large" Indeterminate="true" Striped="true" />
     Task.Run(async () => await Continue());
 }
 
@@ -12,53 +14,53 @@
 
     bool IsLoading { get; set; } = true;
     [Parameter] public string? RedirectUrl { get; set; }
-    #nullable disable
+#nullable disable
     [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; }
     ClaimsPrincipal CurrentUser { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        CurrentUser = (await AuthenticationStateTask).User;       
+        CurrentUser = (await AuthenticationStateTask).User;
 
     }
     async Task Continue()
-    {   
+    {
         await Task.Delay(1000);
         if (!string.IsNullOrEmpty(RedirectUrl))
         {
 
             if (CurrentUser.Identity.IsAuthenticated)
-            {    
-                Navigation.NavigateTo($"{RedirectUrl}", true);             
+            {
+                Navigation.NavigateTo($"{RedirectUrl}", true);
             }
             else
-            {                  
-                Navigation.NavigateTo($"login/?returnUrl={RedirectUrl}", true);               
+            {
+                Navigation.NavigateTo($"login/?returnUrl={RedirectUrl}", true);
             }
         }
         else
-        {   
+        {
             if (CurrentUser.Identity.IsAuthenticated)
-            {  
-                if(CurrentUser.IsInRole("Administrator"))
+            {
+                if (CurrentUser.IsInRole("Administrator"))
                 {
-                    Navigation.NavigateTo("dashboardMain", true);  
+                    Navigation.NavigateTo("dashboardMain", true);
                 }
-                else if(CurrentUser.IsInRole("Voter"))
+                else if (CurrentUser.IsInRole("Voter"))
                 {
-                    Navigation.NavigateTo("dashboardVoter", true);  
+                    Navigation.NavigateTo("dashboardVoter", true);
                 }
                 else
                 {
-                   Navigation.NavigateTo("login", true); 
+                    Navigation.NavigateTo("login", true);
                 }
 
             }
             else
             {
-              Navigation.NavigateTo("login", true);  
+                Navigation.NavigateTo("login", true);
             }
-           
+
         }
-        IsLoading = false;         
+        IsLoading = false;
     }
 }

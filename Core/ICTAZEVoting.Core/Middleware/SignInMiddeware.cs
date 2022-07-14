@@ -100,7 +100,8 @@ namespace ICTAZEVoting.Core.Middleware
             }
             else if (context.Request.Path.StartsWithSegments("/logout"))
             {
-                await signInManager.SignOutAsync();               
+                await signInManager.SignOutAsync();
+                logger.LogInformation("User logged out");
                 return;
             }
             //We get here? then something went wrong

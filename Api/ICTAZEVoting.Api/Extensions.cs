@@ -37,7 +37,7 @@ namespace ICTAZEVoting.Api
         public static IEndpointRouteBuilder MapEndpointRoutes(this IEndpointRouteBuilder app)
         {
             #region Identity             
-            app.MapPost("/token", async (ITokenService tokenService, [FromBody] TokenRequest request, HttpContext context) =>
+            app.MapPost("/token", async (ITokenService tokenService, [FromBody] TokenRequest request) =>
             {
                 var res = await tokenService.LoginAsync(request);
                 if (res.Succeeded)

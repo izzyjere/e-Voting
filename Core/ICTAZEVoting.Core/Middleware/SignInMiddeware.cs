@@ -42,7 +42,7 @@ namespace ICTAZEVoting.Core.Middleware
         public async Task Invoke(HttpContext context, SignInManager<TUser> signInManager)
         {
             logger.LogInformation("Started Listening..");
-            if (context.Request.Path == "/token/" && context.Request.Query.ContainsKey("key"))
+            if (context.Request.Path == "/login/" && context.Request.Query.ContainsKey("key"))
             {
                 var key = Guid.Parse(context.Request.Query["key"]);
                 var tokenRequest = Logins[key];

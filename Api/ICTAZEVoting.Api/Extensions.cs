@@ -37,13 +37,18 @@ namespace ICTAZEVoting.Api
         public static IEndpointRouteBuilder MapEndpointRoutes(this IEndpointRouteBuilder app)
         {
             #region Identity             
-            app.MapPost("/token", async (ITokenService tokenService, [FromBody] TokenRequest request) =>
+            app.MapPost("/token", async (ITokenService tokenService, [FromBody] TokenRequest request, HttpContext context) =>
             {
                 var res = await tokenService.LoginAsync(request);
                 if (res.Succeeded)
+                {
+                    context.Response.Redirect($"login/?key={res.Data.TokenKey}");
                     return new Result<TokenResponse>() { Succeeded = true, Messages = res.Messages, Data = res.Data };
+                }
                 else
+                {
                     return new Result<TokenResponse>() { Succeeded = false, Messages = new List<string> { "Incorect credentials" }, Data = new TokenResponse() };
+                }
             });
             app.MapGet("/roles", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IRoleService roleService) =>
             {

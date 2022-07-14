@@ -7,7 +7,7 @@ namespace ICTAZEVoting.Shared.Models
 {
     public class Voter : AuditableEntity<Guid>
     {
-        public string VoterNumber { get; set; }
+       
         [ValidateComplexType]
         public PersonalDetails PersonalDetails { get; set; }
         public SecreteKey SecreteKey {get; set; } 

@@ -20,8 +20,7 @@
         <MudCardContent>
             <MudTabs @ref="tabs" Border="true">
                 <MudTabPanel Text="Voter Details">
-                    <MudGrid Class="mt-2">
-                        <MudItem xs="12" sm="6" md="3"><Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>voter.VoterNumber" @bind-Value="voter.VoterNumber" Label="Voter Number" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
+                    <MudGrid Class="mt-2">                       
                         <MudItem xs="12" sm="6" md="3"><Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>voter.PersonalDetails.NRC" @bind-Value="voter.PersonalDetails.NRC" Label="NRC Number" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
                         <MudItem xs="12" sm="6" md="3"><Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>voter.PersonalDetails.FirstName" @bind-Value="voter.PersonalDetails.FirstName" Label="First Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
                         <MudItem xs="12" sm="6" md="3"><Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>voter.PersonalDetails.MiddleName" @bind-Value="voter.PersonalDetails.MiddleName" Label="Middle Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
@@ -103,7 +102,7 @@
         <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="voter Number">@context.VoterNumber</MudTd>
+       
 
         <MudTd DataLabel="">
             <MudButton OnClick='()=>Edit(context)' StartIcon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Warning">Edit</MudButton>

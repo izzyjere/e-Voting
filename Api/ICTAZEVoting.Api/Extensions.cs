@@ -470,7 +470,7 @@ namespace ICTAZEVoting.Api
             });
             app.MapGet("/constituencies", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
             {
-                var result = await unitOfWork.Repository<Constituency>().Entities().Include(c => c.PolingStations).ToListAsync();
+                var result = await unitOfWork.Repository<Constituency>().Entities(false).ToListAsync();
                 return Result<IEnumerable<Constituency>>.Success(result);
             });
             app.MapGet("/constituencies/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>

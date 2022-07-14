@@ -210,7 +210,7 @@
     List<PollingStation> pollingStations = new();
     private List<CandidateResponse> candidates = new List<CandidateResponse>();
     private List<ElectionResponse> elections = new List<ElectionResponse>();
-    private List<PoliticalPartyResponse> politicalParties = new();
+    private List<PoliticalParty> politicalParties = new();
     ElectionResponse election = new();
     ClaimsPrincipal claimsPrincipal = new();
     bool electionChosen;
@@ -311,6 +311,7 @@
         candidate.PersonalDetails = new PersonalDetails();
         pollingStations = await systemAdminService.GetPollingStations(claimsPrincipal.GetUserId().ToString());
         elections = await electionService.GetPendingElections();
+        politicalParties = await electionService.GetPoliticalPartyList();
         isEditing = false;
         candidates = await electionService.GetCandidateList();
         await StartVideFrame();

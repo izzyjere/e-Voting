@@ -11,7 +11,7 @@
 <EditForm OnValidSubmit="Submit" Model="@voter" OnInvalidSubmit='()=>snackBar.Add("fill in all required fields",Severity.Error)'>
     <DataAnnotationsValidator />
     <MudCard Elevation="25">
-        <MudCardHeader>
+        <MudCardHeader Class="mud-theme-secondary">
             <CardHeaderContent>
                 <MudText Typo="Typo.h6">Add / Edit voters</MudText>
             </CardHeaderContent>

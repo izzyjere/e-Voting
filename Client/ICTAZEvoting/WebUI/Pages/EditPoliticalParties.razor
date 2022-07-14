@@ -223,7 +223,7 @@
         var rs = await fileService.UploadFile(request);
         if(rs.Succeeded)
         {
-            politicalParty.LogoUrl = rs.Data;
+            politicalParty.LogoUrl = rs.Data.Path;
             StateHasChanged();
             snackBar.Add("Upload Succeeded.", Severity.Success);
             return;

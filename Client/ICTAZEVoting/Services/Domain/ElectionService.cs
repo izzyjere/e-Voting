@@ -29,7 +29,7 @@ namespace ICTAZEVoting.Services.Domain
         }
         public async Task<IResult<string[]>> AddCandidate(Candidate candidate)
         {
-            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddElectionType, candidate);
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddCandidate, candidate);
             return await add.ToResult<string[]>();
         }
         public async Task<List<CandidateResponse>> GetCandidateList()

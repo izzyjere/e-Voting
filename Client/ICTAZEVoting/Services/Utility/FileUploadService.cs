@@ -1,4 +1,5 @@
 ﻿using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Responses;
 
 using System;
 using System.Collections.Generic;
@@ -15,18 +16,18 @@ namespace ICTAZEVoting.Services.Utility
         {
             this.httpClient = httpClient;
         }
-        public async Task<IResult<string>> UploadFile(UploadRequest uploadRequest)
+        public async Task<IResult<UploadResponse>> UploadFile(UploadRequest uploadRequest)
         {   
             var response = await httpClient.PostAsJsonAsync(ApiEndpoints.FileUpload, uploadRequest);
             if(response.IsSuccessStatusCode)
             {
-                var res = await response.ToResult<string>();
+                var res = await response.ToResult<UploadResponse>();
                 return res;
             }
             else
             {
             
-                return Result<string>.Fail("An error occured. Try again.");
+                return Result<UploadResponse>.Fail("An error occured. Try again.");
             }
            
         }

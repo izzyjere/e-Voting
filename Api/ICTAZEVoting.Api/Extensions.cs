@@ -29,6 +29,7 @@ using AutoMapper;
 using ICTAZEVoting.Shared.Responses.Domain;
 using ICTAZEVoting.Api.Utility;
 using System.Net.Http.Headers;
+using ICTAZEVoting.Shared.Responses;
 
 namespace ICTAZEVoting.Api
 {
@@ -628,14 +629,14 @@ namespace ICTAZEVoting.Api
             });
             app.MapPost("/upload", [Authorize] async (IUploadService service, [FromBody] UploadRequest request, HttpContext context) =>
             {
-                var res = await service.UploadFileAsync(request);
-                if (res.Succeeded)
+                var result = await service.UploadFileAsync(request);
+                if(result.Succeeded)
                 {
-                    return res;
+                    return Result<UploadResponse>.Success(new UploadResponse { Path = result.Data.Path });
                 }
                 else
                 {
-                    return Result.Fail("An error occured");
+                    return Result<UploadResponse>.Fail("An error occured");
                 }
 
             });

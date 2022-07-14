@@ -1,6 +1,7 @@
 ﻿using ICTAZEVoting.Shared.Enums;
 using ICTAZEVoting.Shared.Interfaces;
 using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Responses;
 using ICTAZEVoting.Shared.Wrapper;
 
 using IResult = ICTAZEVoting.Shared.Wrapper.IResult;
@@ -41,27 +42,41 @@ namespace ICTAZEVoting.Api.Utility
         }
 
 
-        public async Task<IResult<string>> UploadFileAsync(UploadRequest request)
+        public async Task<IResult<UploadResponse>> UploadFileAsync(UploadRequest request)
         {
             var newName = Path.GetRandomFileName().Replace(".", "_") + Path.GetExtension(request.FileName);
 
-            var path = Path.Combine(GetWebRootPath(), "_dhhfhffg", newName);
+            var path = Path.Combine(GetPath(request.Type), newName);
             try
             {
 
-                using FileStream fileStream = new(path, FileMode.CreateNew, FileAccess.Write);
+                using FileStream fileStream = new(path, FileMode.Create, FileAccess.Write);
                 var ms = new MemoryStream();
                 ms.Write(request.Data, 0, request.Data.Length);
                 await Task.Run(() => ms.WriteTo(fileStream));
-                return await Result<string>.SuccessAsync($"_dhhfhffg/{newName}", "Done.");
+                return await Result<UploadResponse>.SuccessAsync(new UploadResponse { Path = getFileName(request.Type, newName) }, "Done.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message + ex.StackTrace);                 
-                return Result<string>.Fail("Could not upload file.");
+                return Result<UploadResponse>.Fail("Could not upload file.");
                 
             }             
         }
+        string GetPath(UploadType uploadType) => uploadType switch
+        {
+            UploadType.Biometric => Path.Combine(webHostEnvironment.ContentRootPath,"biometrics"),
+            UploadType.ProfilePicture => Path.Combine(GetWebRootPath(), "_dhhfhffg"),
+            UploadType.Other=> Path.Combine(GetWebRootPath(), "fileUploads"),
+            _=> string.Empty
+        };
+        string getFileName(UploadType uploadType,string fn) => uploadType switch
+        {
+            UploadType.Biometric => $"biometrics/{fn}",
+            UploadType.ProfilePicture => $"_dhhfhffg/{fn}",
+            UploadType.Other => $"fileUploads/{fn}",
+            _ => string.Empty
+        };
 
         private string GetWebRootPath() => webHostEnvironment.WebRootPath;
 

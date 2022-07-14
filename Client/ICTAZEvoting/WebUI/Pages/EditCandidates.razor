@@ -42,7 +42,7 @@
                                 }
                             </MudSelect>
                         </MudItem>
-                        <MudItem xs="12" sm="6" md="3"> 
+                        <MudItem xs="12" sm="6" md="3">
                             <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
                                 <MudSelect T="Guid" @bind-Value="candidate.PollingStationId" Label="Polling Station" Variant="Variant.Outlined">
                                     <MudSelectItem T="Guid" Value="default">No station selected</MudSelectItem>
@@ -72,6 +72,7 @@
                         </MudItem>
                         <MudItem xs="12" sm="6" md="3"><MudTextField For="()=>candidate.PersonalDetails.PhoneNumber" @bind-Value="candidate.PersonalDetails.PhoneNumber" Label="Phone" Variant="Variant.Outlined"></MudTextField></MudItem>
                         <MudItem xs="12" sm="6" md="3"><MudTextField For="()=>candidate.PersonalDetails.Email" @bind-Value="candidate.PersonalDetails.Email" Label="Email Address" Variant="Variant.Outlined"></MudTextField></MudItem>
+                        <MudItem xs="12" sm="6" md="3"><MudTextField For="()=>candidate.PersonalDetails.Address" @bind-Value="candidate.PersonalDetails.Address" Label="Physical Address" Variant="Variant.Outlined"></MudTextField></MudItem>
                         <MudItem xs="12" sm="6" md="3">
                             <MudSelect T="Guid" @bind-Value="candidate.PoliticalPartyId" Label="Political Party" Variant="Variant.Outlined">
                                 <MudSelectItem T="Guid" Value="default">No party selected</MudSelectItem>
@@ -100,11 +101,12 @@
                                 {
 
                                     <video id="videoFeed" width="320" height="240" />
+                                    <canvas id="currentFrame" class="d-none" width="320" height="240" />
 
                                 }
                                 <center>
                                     <MudButtonGroup>
-                                        <MudButton ButtonType="ButtonType.Button" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">Refresh</MudButton>
+                                        <MudButton OnClick="StartVideFrame" ButtonType="ButtonType.Button" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">Refresh</MudButton>
                                         <MudButton ButtonType="ButtonType.Button" OnClick="CaptureFrame" Disabled="@hideVideo" Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Camera">Capture</MudButton>
                                     </MudButtonGroup>
                                 </center>
@@ -112,6 +114,7 @@
                         </center>
                     </MudItem>
                 </MudGrid>
+                <MudButton Class="mt-6" OnClick="()=>Save()" Disabled="@(!enable)" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Success">Save</MudButton>
             </MudTabPanel>
         </MudTabs>
     </MudCardContent>
@@ -272,13 +275,14 @@
     }
     async Task Save()
     {
+        
         if (!isEditing)
         {
             //adding
             var result = await electionService.AddCandidate(candidate);
             if (result.Succeeded)
             {
-                await javaScript.InvokeAsync<object>("downloadPasswordFile",result.Data[1],result.Data[0]); //preferably sent to voter's email.
+                await javaScript.InvokeAsync<object>("downloadPasswordFile", result.Data[1], result.Data[0]); //preferably sent to voter's email.
                 snackBar.Add(result.Messages.First(), Severity.Success);
                 await Refresh();
             }
@@ -330,7 +334,10 @@
         }
     }
     private async Task StartVideFrame()
-    {
+    {   
+        frameUri = null;
+        enable = false;
+        hideVideo = false;
         await JsRuntime.InvokeVoidAsync("startVideo", "videoFeed");
         StateHasChanged();
     }
@@ -339,15 +346,34 @@
         await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
     }
     MudTabs tabs;
-
+    bool enable;
     [JSInvokable]
-    public void ProcessImage(string imageString)
+    public async void ProcessImage(string imageString)
     {
         frameUri = imageString;
         hideVideo = true;
         StateHasChanged();
         byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
-        //
+        var request = new UploadRequest
+            {
+                Data = imageData,
+                FileName = "image.jpeg",
+                Type = UploadType.Biometric
+            };
+        var rs = await fileService.UploadFile(request);
+        if (rs.Succeeded)
+        {
+            candidate.PersonalDetails.PictureUrl = rs.Data.Path;
+            enable = true;
+            StateHasChanged();
+            snackBar.Add("Upload Succeeded.", Severity.Success);
+            return;
+        }
+        else
+        {
+            snackBar.Add("We couldn't upload your image. try again", Severity.Error);
+            return;
+        }
 
     }
 
@@ -371,7 +397,7 @@
         var rs = await fileService.UploadFile(request);
         if (rs.Succeeded)
         {
-            candidate.PersonalDetails.PictureUrl = rs.Data;
+            candidate.PersonalDetails.PictureUrl = rs.Data.Path;
             StateHasChanged();
             snackBar.Add("Upload Succeeded.", Severity.Success);
 

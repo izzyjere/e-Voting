@@ -207,10 +207,26 @@
         }
         return el.Positions;
     }
-    private void Edit(CandidateResponse candidate)
-    {
-
+    private void Edit(CandidateResponse record)    {
+        candidate = new();
+        candidate.PersonalDetails = new();
+        candidate.Id = record.Id;
+        candidate.ElectionPositionId = record.ElectionPositionId;
+        candidate.PoliticalPartyId = record.PoliticalPartyId;
+        candidate.PersonalDetails.FirstName = record.PersonalDetails.FirstName;
+        candidate.PersonalDetails.MiddleName = record.PersonalDetails.MiddleName;
+        candidate.PersonalDetails.LastName = record.PersonalDetails.LastName;
+        candidate.PersonalDetails.Gender = record.PersonalDetails.Gender;
+        candidate.PersonalDetails.DateOfBirth = record.PersonalDetails.DateOfBirth;
+        candidate.PersonalDetails.Address = record.PersonalDetails.Address;
+        candidate.PersonalDetails.NRC = record.PersonalDetails.NRC;
+        candidate.PersonalDetails.PhoneNumber = record.PersonalDetails.PhoneNumber;
+        candidate.PersonalDetails.Email = record.PersonalDetails.Email;
+        candidate.PersonalDetails.PictureUrl = record.PersonalDetails.PictureUrl;
+        candidate.PersonalDetails.UserId = record.PersonalDetails.UserId;
+        isEditing = true;              
         snackBar.Add("Candidate Saved.", Severity.Success);
+        StateHasChanged();
     }
 
     async Task Save()

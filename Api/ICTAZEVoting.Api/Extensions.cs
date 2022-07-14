@@ -75,6 +75,74 @@ namespace ICTAZEVoting.Api
             });
             #endregion
             #region Domain
+            app.MapGet("/system-admins", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            {
+                var result = await unitOfWork.Repository<SystemAdmin>().Include(c => c.Constituency).Entities().ToListAsync();
+                return Result<IEnumerable<SystemAdmin>>.Success(result);
+            });
+            app.MapGet("/system-admins/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var systemAdmin = await unitOfWork.Repository<SystemAdmin>().Entities().Include(c=>c.Constituency).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (systemAdmin == null)
+                    {
+                        return Result<SystemAdmin>.Fail("Not found.");
+                    }
+                    return Result<SystemAdmin>.Success(systemAdmin);
+                }
+                return Result<SystemAdmin>.Fail("Not found.");
+            });
+            app.MapGet("/system-admins/getbyuserid/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var systemAdmin = await unitOfWork.Repository<SystemAdmin>().Entities().Include(c => c.Constituency).FirstOrDefaultAsync(v => v.PersonalDetails.UserId == myGuid);
+                    if (systemAdmin == null)
+                    {
+                        return Result<SystemAdmin>.Fail("Not found.");
+                    }
+                    return Result<SystemAdmin>.Success(systemAdmin);
+                }
+                return Result<SystemAdmin>.Fail("Not found.");
+            });
+            app.MapPost("/system-admins/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] SystemAdmin entity) =>
+            {
+                var result = await unitOfWork.Repository<SystemAdmin>().Add(entity);
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                return result ? Result.Success("SystemAdmin  was created.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapPost("/system-admins/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] SystemAdmin entity) =>
+            {
+                var result = await unitOfWork.Repository<SystemAdmin>().Update(entity);
+                result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                return result ? Result.Success("SystemAdmin was updated.") : Result.Fail("An error has occured. Try again.");
+            });
+            app.MapDelete("/system-admins/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var entity = await unitOfWork.Repository<SystemAdmin>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (entity == null)
+                    {
+                        return await Result.FailAsync("Not found.");
+                    }
+                    else
+                    {
+                        var result = await unitOfWork.Repository<SystemAdmin>().Delete(entity);
+                        result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                        return result ? Result.Success($"{entity.PersonalDetails.FullName} was deleted.") : Result.Fail("An error occured, try again.");
+                    }
+
+                }
+                return Result.Fail("Not found.");
+
+            });
+
+
             app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
             {
                 var result = await unitOfWork.Repository<Voter>().Entities().ToListAsync();
@@ -411,7 +479,7 @@ namespace ICTAZEVoting.Api
                 var myGuid = Guid.Empty;
                 if (Guid.TryParse(id, out myGuid))
                 {
-                    var constituency = await unitOfWork.Repository<Constituency>().Entities().Include(c=>c.PolingStations).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    var constituency = await unitOfWork.Repository<Constituency>().Entities().Include(c => c.PolingStations).FirstOrDefaultAsync(v => v.Id == myGuid);
                     if (constituency == null)
                     {
                         return Result<Constituency>.Fail("Not found.");
@@ -453,7 +521,7 @@ namespace ICTAZEVoting.Api
                 return Result.Fail("Not found.");
 
             });
-            app.MapGet("/constituencies", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            app.MapGet("/constituencies/polling-station", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
             {
                 var result = await unitOfWork.Repository<PollingStation>().Entities().ToListAsync();
                 return Result<IEnumerable<PollingStation>>.Success(result);

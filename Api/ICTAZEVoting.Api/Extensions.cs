@@ -77,7 +77,7 @@ namespace ICTAZEVoting.Api
             #region Domain
             app.MapGet("/system-admins", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
             {
-                var result = await unitOfWork.Repository<SystemAdmin>().Include(c => c.Constituency).Entities().ToListAsync();
+                var result = await unitOfWork.Repository<SystemAdmin>().Entities().Include(c => c.Constituency).ToListAsync();
                 return Result<IEnumerable<SystemAdmin>>.Success(result);
             });
             app.MapGet("/system-admins/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>

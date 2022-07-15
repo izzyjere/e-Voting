@@ -18,9 +18,14 @@ namespace ICTAZEVoting.Services.Domain
         {
             this.httpClient = httpClient;                                                                                                                                                     
         }
-        public Task<IResult> Delete(string id)
+        public async Task<IResult> Delete(string id)
         {
-            throw new NotImplementedException();
+            var delete = await httpClient.DeleteAsync($"{ApiEndpoints.DeleteVoter}/{id}");
+            if (delete.IsSuccessStatusCode)
+            {
+                return await delete.ToResult();
+            }
+            return Result.Fail("An error occured. Check your internet connection.");
         }
 
         public async Task<List<VoterResponse>> GetAll()

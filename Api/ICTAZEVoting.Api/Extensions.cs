@@ -252,6 +252,29 @@ namespace ICTAZEVoting.Api
                     PhoneNumber = entity.PersonalDetails.PhoneNumber,
                     NRC = entity.PersonalDetails.NRC
                 };
+
+                app.MapDelete("/voters/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+                {
+                    var myGuid = Guid.Empty;
+                    if (Guid.TryParse(id, out myGuid))
+                    {
+                        var entity = await unitOfWork.Repository<Voter>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                        if (entity == null)
+                        {
+                            return await Result.FailAsync("Not found.");
+                        }
+                        else
+                        {
+                            var result = await unitOfWork.Repository<Voter>().Delete(entity);
+                            result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                            return result ? Result.Success($"{entity.PersonalDetails.FullName} was deleted.") : Result.Fail("An error occured, try again.");
+                        }
+
+                    }
+                    return Result.Fail("Not found.");
+
+                });
+
                 var register = await userService.RegisterAsync(userRegister);
                 if (register.Succeeded)
                 {
@@ -307,6 +330,27 @@ namespace ICTAZEVoting.Api
 
             });
             //Election
+            app.MapDelete("/elections/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var entity = await unitOfWork.Repository<Election>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (entity == null)
+                    {
+                        return await Result.FailAsync("Not found.");
+                    }
+                    else
+                    {
+                        var result = await unitOfWork.Repository<Election>().Delete(entity);
+                        result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                        return result ? Result.Success($"{entity.Name} was deleted.") : Result.Fail("An error occured, try again.");
+                    }
+
+                }
+                return Result.Fail("Not found.");
+
+            });
             app.MapGet("/elections", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
              {
                  var elections = await unitOfWork.Repository<Election>().Entities().Include(e => e.Voters).Include(e => e.Positions).ToListAsync();
@@ -453,6 +497,27 @@ namespace ICTAZEVoting.Api
                         var result = await unitOfWork.Repository<PoliticalParty>().Delete(entity);
                         result = await unitOfWork.Commit(new CancellationToken()) != 0;
                         return result ? Result.Success($"{entity.Name} was deleted.") : Result.Fail("An error occured, try again.");
+                    }
+
+                }
+                return Result.Fail("Not found.");
+
+            });
+            app.MapDelete("candidates/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var entity = await unitOfWork.Repository<Candidate>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (entity == null)
+                    {
+                        return Result.Fail("Not found.");
+                    }
+                    else
+                    {
+                        var result = await unitOfWork.Repository<Candidate>().Delete(entity);
+                        result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                        return result ? Result.Success($"{entity.PersonalDetails.FullName} was deleted.") : Result.Fail("An error occured, try again.");
                     }
 
                 }
@@ -614,7 +679,7 @@ namespace ICTAZEVoting.Api
                 return Result<List<PollingStation>>.Fail("Not found.");
 
             });
-            app.MapDelete("/constituencies/polling-station/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            app.MapDelete("constituencies/polling-station/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {
                 var myGuid = Guid.Empty;
                 if (Guid.TryParse(id, out myGuid))

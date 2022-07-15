@@ -50,9 +50,14 @@ namespace ICTAZEVoting.Services.Domain
             return await add.ToResult();
         }
 
-        public Task<IResult> DeleteCandidate(string id)
+        public async Task<IResult> DeleteCandidate(string id)
         {
-            throw new NotImplementedException();
+            var delete = await httpClient.DeleteAsync($"{ApiEndpoints.DeleteCandidate}/{id}");
+            if (delete.IsSuccessStatusCode)
+            {
+                return await delete.ToResult();
+            }
+            return Result.Fail("An error occured. Check your internet connection.");
         }
 
         public Task<IResult> DeleteElectionPosition(string id)
@@ -261,9 +266,9 @@ namespace ICTAZEVoting.Services.Domain
             return list;
         }
 
-        public async Task<IResult> AddPolingStation(PollingStation polingStation)
+        public async Task<IResult> AddPollingStation(PollingStation pollingStation)
         {
-            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddPollingStation, polingStation);
+            var add = await httpClient.PostAsJsonAsync(ApiEndpoints.AddPollingStation, pollingStation);
             return await add.ToResult();
         }
 

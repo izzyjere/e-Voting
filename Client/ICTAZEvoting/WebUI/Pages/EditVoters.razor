@@ -53,6 +53,7 @@
                                 </MudSelect>
                             </Animate>
                         </MudItem>
+                        <MudItem xs="12" sm="6" md="3"><MudTextField For="()=>voter.PersonalDetails.Address" @bind-Value="voter.PersonalDetails.Address" Label="Physical Address" Variant="Variant.Outlined"></MudTextField></MudItem>
                     </MudGrid>
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Info">Next</MudButton>
                 </MudTabPanel>
@@ -60,27 +61,29 @@
                     <MudGrid Class="mt-2">
                         <MudItem xs="12">
                             <center>
-                                <MudPaper Class="p-2" Elevation="25" MinWidth="325" MinHeight="245">
-                                    @if (!string.IsNullOrEmpty(frameUri))
-                                    {
-                                        <img width="320" height="240" src="@frameUri" />
-                                    }
-                                    @if (!hideVideo)
-                                    {
+                            <MudPaper Class="p-2" Elevation="0" MinWidth="325" MinHeight="245">
+                                @if (!string.IsNullOrEmpty(frameUri))
+                                {
+                                    <img width="320" height="240" src="@frameUri" />
+                                }
+                                @if (!hideVideo)
+                                {
 
-                                        <video id="videoFeed" width="320" height="240" />
+                                    <video id="videoFeed" width="320" height="240" />
+                                    <canvas id="currentFrame" class="d-none" width="320" height="240" />
 
-                                    }
-                                    <center>
-                                        <MudButtonGroup>
-                                            <MudButton ButtonType="ButtonType.Button" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">Refresh</MudButton>
-                                            <MudButton ButtonType="ButtonType.Button" OnClick="CaptureFrame" Disabled="@hideVideo" Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Camera">Capture</MudButton>
-                                        </MudButtonGroup>
-                                    </center>
-                                </MudPaper>
-                            </center>
+                                }
+                                <center>
+                                    <MudButtonGroup>
+                                        <MudButton OnClick="StartVideFrame" ButtonType="ButtonType.Button" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">Refresh</MudButton>
+                                        <MudButton ButtonType="ButtonType.Button" OnClick="CaptureFrame" Disabled="@hideVideo" Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Camera">Capture</MudButton>
+                                    </MudButtonGroup>
+                                </center>
+                            </MudPaper>
+                        </center>
                         </MudItem>
                     </MudGrid>
+                    <MudButton Class="mt-6" OnClick="()=>Save()" Disabled="@(!enable)" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Success">Save</MudButton>
                 </MudTabPanel>
             </MudTabs>            
         </MudCardContent>
@@ -154,6 +157,10 @@
     {
         tabs.ActivatePanel(1, true);
     }
+    async Task Save()
+    {
+        
+    }
     private void Edit(Voter record)
     {
         isEditing = true;
@@ -180,15 +187,35 @@
     {
         await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
     }
-
+    bool enable;
 
     [JSInvokable]
-    public void ProcessImage(string imageString)
+    public async void ProcessImage(string imageString)
     {
         frameUri = imageString;
         hideVideo = true;
         StateHasChanged();
         byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
+        var request = new UploadRequest
+            {
+                Data = imageData,
+                FileName = "image.jpeg",
+                Type = UploadType.Biometric
+            };
+        var rs = await fileService.UploadFile(request);
+        if (rs.Succeeded)
+        {
+            voter.PersonalDetails.PictureUrl = rs.Data.Path;
+            enable = true;
+            StateHasChanged();
+            snackBar.Add("Upload Succeeded.", Severity.Success);
+            return;
+        }
+        else
+        {
+            snackBar.Add("We couldn't upload your image. try again", Severity.Error);
+            return;
+        }
         //
 
     }

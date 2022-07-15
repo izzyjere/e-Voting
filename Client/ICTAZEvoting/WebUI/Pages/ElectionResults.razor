@@ -9,7 +9,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.EmojiPeople" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
                 <div>
                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Candidates</MudText>
-                    <MudText Typo="Typo.h5">10</MudText>
+                    <MudText Typo="Typo.h5">@NumberOfCandidates</MudText>
                 </div>
             </MudPaper>
         </Animate>
@@ -23,7 +23,7 @@
             <MudIcon Icon="@Icons.Material.Filled.WhereToVote" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
             <div>
                 <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Voters</MudText>
-                <MudText Typo="Typo.h5">7,187,422</MudText>
+                <MudText Typo="Typo.h5">@NumberOfVoters</MudText>
             </div>
         </MudPaper>
     </Animate>
@@ -31,13 +31,13 @@
 </MudItem>
 
 <MudItem xs="12" sm="6" md="3">
-    <a Href="candidates">
+    <a Href="electionstats">
     <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
         <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
             <MudIcon Icon="@Icons.Material.Filled.HowToVote" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
             <div>
                 <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Votes Casted</MudText>
-                <MudText Typo="Typo.h5">4,000</MudText>
+                <MudText Typo="Typo.h5">@NumberOfVotes</MudText>
             </div>
         </MudPaper>
     </Animate>
@@ -50,7 +50,7 @@
             <MudIcon Icon="@Icons.Material.Filled.Ballot" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
             <div>
                 <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Polling Booths</MudText>
-                <MudText Typo="Typo.h5">50</MudText>
+                <MudText Typo="Typo.h5">@NumberOfPollingBooths</MudText>
             </div>
         </MudPaper>
     </Animate>
@@ -205,12 +205,20 @@
 </MudScrollToTop>
 
 @code {
-
+    private int NumberOfVotes = 0;
+    private int NumberOfPollingBooths = 0;
+    private int NumberOfCandidates = 0;
+    private int NumberOfVoters = 0;
+    private string electionId;
     private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
     int dataSize = 4;
     double[] data = { 77, 25, 20, 5 };
     string[] President = { "Clarence Simukanzye", "Wisdom Jere", "Ndanji Bupe Soko", "Bulaya Mwanaute" };
 
+    protected override async Task OnInitializedAsync()
+    {
+        //NumberOfCandidates = await electionService.GetNumberOfCandidates(electionId);
+    }
 
     Random random = new Random();
 

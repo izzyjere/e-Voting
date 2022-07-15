@@ -142,7 +142,6 @@ namespace ICTAZEVoting.Api
 
             });
 
-
             app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
             {
                 var result = await unitOfWork.Repository<Voter>().Entities().ToListAsync();
@@ -292,6 +291,12 @@ namespace ICTAZEVoting.Api
             {
                 var result = await unitOfWork.Repository<Candidate>().Update(entity);
                 return result ? Result.Success("Candidate details were updated.") : Result.Fail("An error has occured. Try again.");
+
+            });
+            app.MapGet("elections/candidates/count/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,[FromRoute]string id) =>
+            {
+                var result = await unitOfWork.Repository<Candidate>().Entities().Include(e => e.Position).Where(e => e.Position.ElectionId.ToString() == id).CountAsync();
+                return result;
 
             });
             //Election

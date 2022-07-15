@@ -161,7 +161,7 @@
                                                     }
                                                     else
                                                     {
-                                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@context.PersonalDetails.PictureUrl" />
+                                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src='@($"{httpClient.BaseAddress}/{context.PersonalDetails.PictureUrl}")' />
                                                     }
                                         </MudAvatar>
                                     </CardHeaderAvatar>
@@ -237,7 +237,7 @@
     }
     List<CandidateResponse> GetCandidates(string electionId)
     {
-        return new List<CandidateResponse>();
+        return candidates.Where(c => c.Position.ElectionId.ToString() == electionId).ToList();
     }
     bool isEditing;
     List<ElectionPositionResponse> GetPositions(Guid electionid)

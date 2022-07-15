@@ -34,10 +34,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="biometrics\file.txt">
+	  <None Include="wwwroot\biometrics\file.txt">
 	    <Generator>TextTemplatingFileGenerator</Generator>
 	    <LastGenOutput>file.cs</LastGenOutput>
 	  </None>
+	  <None Include="wwwroot\biometrics\urj1sn12_esx.jpeg" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -65,7 +65,7 @@ namespace ICTAZEVoting.Api.Utility
         }
         string GetPath(UploadType uploadType) => uploadType switch
         {
-            UploadType.Biometric => Path.Combine(webHostEnvironment.ContentRootPath,"biometrics"),
+            UploadType.Biometric => Path.Combine(GetWebRootPath(),"biometrics"),
             UploadType.ProfilePicture => Path.Combine(GetWebRootPath(), "_dhhfhffg"),
             UploadType.Other=> Path.Combine(GetWebRootPath(), "fileUploads"),
             _=> string.Empty

@@ -24,6 +24,13 @@ namespace ICTAZEVoting.Core.Mappings
         }
 
     }
+    public class PoliticalPartyProfile : Profile
+    {
+        public PoliticalPartyProfile()
+        {
+            CreateMap<PoliticalPartyResponse, PoliticalParty>().ReverseMap();
+        }
+    }
     public class ElectionPositionProfile : Profile
     {
         public ElectionPositionProfile()
@@ -44,6 +51,13 @@ namespace ICTAZEVoting.Core.Mappings
         public AuditProfile()
         {
             CreateMap<AuditResponse, Audit>().ReverseMap();
+        }
+    }
+    public class PersonalDetailsProfile : Profile
+    {
+        public PersonalDetailsProfile()
+        {
+            CreateMap<PersonalDetailsResponse, PersonalDetails>().ReverseMap();
         }
     }
     public class CandidateProfile : Profile

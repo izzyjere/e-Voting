@@ -4,11 +4,12 @@
 @using System.Linq
 @using System
 @using ICTAZEVoting.Shared.Models
+@using ICTAZEVoting.Shared.Responses.Domain
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
 
 <MudCard Elevation="25">
-    <MudCardHeader Class="mud-theme-secondary">
+    <MudCardHeader Class="mud-theme-info">
         <CardHeaderContent>
             <MudText Typo="Typo.h6">Add / Edit Polling Stations</MudText>
         </CardHeaderContent>
@@ -33,16 +34,18 @@
 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
     <MudTable Bordered="true" Hover="true" Style="color: white; padding:2em" Elevation="25" Items="pollingStations">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Election Types</MudText>
+            <MudText Typo="Typo.h6">Polling Stations</MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="searchString" Placeholder="Search for Election Type..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="searchString" Placeholder="Search for Polling Station..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Polling Stations</MudTh>
+            <MudTh>Constituency</MudTh>
             <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Plling Stations"><MudChip Icon="@Icons.Material.Filled.Bookmark" Color="Color.Info" Label="true">@context.Name</MudChip></MudTd>
+            <MudTd DataLabel="Name"><MudChip Icon="@Icons.Material.Filled.WhereToVote" Color="Color.Info" Label="true">@context.Name</MudChip></MudTd>
+            <MudTd>@context.Constituency.Name</MudTd>
             <MudTd DataLabel="Actions">
                 <MudFab @onclick="@(()=>Edit(context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
                 <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
@@ -70,7 +73,7 @@
 @code {
     private string searchString = "";
     private PollingStation pollingStation = new PollingStation();
-    private List<PollingStation> pollingStations = new List<PollingStation>();
+    private List<PollingStationResponse> pollingStations = new List<PollingStationResponse>();
     private List<Constituency> constituencies = new List<Constituency>();
     bool isEditing;
     protected override async Task OnInitializedAsync()
@@ -115,9 +118,12 @@
 
         }
     }
-    private async void Edit(PollingStation pollingStation)
+    private void Edit(PollingStationResponse record)
     {
-        this.pollingStation = pollingStation;
+        pollingStation = new();
+        pollingStation.ConstituencyId = record.ConstituencyId;
+        pollingStation.Id = record.Id;
+        pollingStation.Name = record.Name;
         isEditing = true;
         StateHasChanged();
     }

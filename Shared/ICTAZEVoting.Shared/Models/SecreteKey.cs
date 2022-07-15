@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ICTAZEVoting.Shared.Models
@@ -15,7 +16,6 @@ namespace ICTAZEVoting.Shared.Models
         public Guid VoterId { get; set; }
         public string EncryptedKey { get; set; }
         public string IV { get; set; }
-        [ForeignKey(nameof(VoterId))]
-        public virtual Voter Voter { get; set; }
+        
     }
 }

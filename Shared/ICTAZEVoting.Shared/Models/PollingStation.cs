@@ -9,8 +9,7 @@ namespace ICTAZEVoting.Shared.Models
     public class PollingStation : Entity<Guid>
     {
         public string Name { get; set; }
-        public Guid ConstituencyId { get; set; }
-        public List<Voter> Voters { get; set; }
+        public Guid ConstituencyId { get; set; }       
         public Constituency Constituency { get; set; }
         public PollingStation()
         {

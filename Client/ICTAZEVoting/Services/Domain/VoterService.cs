@@ -1,5 +1,6 @@
 ﻿using ICTAZEVoting.Shared.Interfaces;
 using ICTAZEVoting.Shared.Models;
+using ICTAZEVoting.Shared.Responses.Domain;
 using ICTAZEVoting.Shared.Wrapper;
 
 using System;
@@ -22,9 +23,15 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<List<Voter>> GetAll()
+        public async Task<List<VoterResponse>> GetAll()
         {
-            throw new NotImplementedException();
+            var get = await httpClient.GetAsync(ApiEndpoints.GetVoters);
+            if(get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<List<VoterResponse>>();
+                return res.Data;
+            }
+            return new();
         }
 
         public Task<Voter> GetById(string id)
@@ -37,19 +44,32 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public async Task<IResult<string[]>> Register(Voter entity)
+        public async Task<IResult<List<string>>> Register(Voter entity)
         {
             var result = await httpClient.PostAsJsonAsync(ApiEndpoints.AddVoter,entity);
             if(result.IsSuccessStatusCode)
             {
-                return await result.ToResult<string[]>();
+                return await result.ToResult<List<string>>();               
             }
-            return Result<string[]>.Fail("An error occured.");
+            else
+            {
+                  return Result<List<string>>.Fail("An error occured. Try again");
+            }
+           
         }
 
-        public Task<IResult> Update(Voter entity)
+        public async Task<IResult> Update(Voter entity)
         {
-            throw new NotImplementedException();
+            var result = await httpClient.PostAsJsonAsync(ApiEndpoints.UpdateVoter, entity);
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.ToResult();
+            }
+            else
+            {
+                return Result.Fail("An error occured.");
+            }
+            
         }
 
         public Task<IResult> VerifyVoter(byte[] facialData)

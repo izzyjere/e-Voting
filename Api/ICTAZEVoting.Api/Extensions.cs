@@ -30,6 +30,7 @@ using ICTAZEVoting.Shared.Responses.Domain;
 using ICTAZEVoting.Api.Utility;
 using System.Net.Http.Headers;
 using ICTAZEVoting.Shared.Responses;
+using System.Collections.Generic;
 
 namespace ICTAZEVoting.Api
 {
@@ -142,10 +143,12 @@ namespace ICTAZEVoting.Api
 
             });
 
-            app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+
+            app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IMapper mapper) =>
             {
-                var result = await unitOfWork.Repository<Voter>().Entities().ToListAsync();
-                return Result<IEnumerable<Voter>>.Success(result);
+                var voters = await unitOfWork.Repository<Voter>().Entities(false).Include(v=>v.PolingStation).ToListAsync();
+                var result = mapper.Map<List<VoterResponse>>(voters);
+                return Result<IEnumerable<VoterResponse>>.Success(result);
             });
             app.MapGet("/voters/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {
@@ -184,28 +187,32 @@ namespace ICTAZEVoting.Api
                 {
                     entity.PersonalDetails.UserId = register.Data;
                     //Generate Key
+                    var aes = Aes.Create();
                     var Secrete = Guid.NewGuid().ToString();
-                    var keyGuid = Guid.NewGuid().ToString();
-                    var IV = Guid.NewGuid().ToString();
-                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, Encoding.ASCII.GetBytes(keyGuid), Encoding.ASCII.GetBytes(IV));
-                    entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(Encoding.ASCII.GetBytes(IV)) };
+                    var key = aes.Key;
+                    var IV = aes.IV;
+                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
+                    entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
+                    await unitOfWork.Repository<Voter>().Add(entity);
+                    List<string> res = new () { Convert.ToBase64String(key), userRegister.Password };
                     var result = await unitOfWork.Repository<Voter>().Add(entity);
                     result = await unitOfWork.Commit(new CancellationToken()) != 0;
-                    string[] res = new string[2] { keyGuid, userRegister.Password };  //returns the random generated pass and secrete key.
+                    //returns the random generated pass and secrete key.
                     //in the future this key has to be stored in a card.
-                    return result ? Result<string[]>.Success(res, "Voter was registered.") : Result<string[]>.Fail("An error has occured. Try again.");
+                    return result ? Result<List<string>>.Success(data:res,"Voter registered successifully.") : Result<List<string>>.Fail("An error has occured. Try again.");
 
                 }
                 else
                 {
-                    return Result.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
+                    return Result<List<string>>.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
                 }
 
 
             });
-            app.MapPut("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity) =>
+            app.MapPost("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity, IWebHostEnvironment env) =>
             {
-                var result = await unitOfWork.Repository<Voter>().Update(entity);
+                await unitOfWork.Repository<Voter>().Update(entity);
+                var result = await unitOfWork.Commit(new CancellationToken()) != 0;
                 return result ? Result.Success("Voter details were updated.") : Result.Fail("An error has occured. Try again.");
             });
             app.MapGet("/candidates", [Authorize(Roles = $"{RoleConstants.AdministratorRole},{RoleConstants.BasicRole}")] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
@@ -555,10 +562,11 @@ namespace ICTAZEVoting.Api
                 return Result.Fail("Not found.");
 
             });
-            app.MapGet("/constituencies/polling-station", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            app.MapGet("/constituencies/polling-stations", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IMapper mapper) =>
             {
-                var result = await unitOfWork.Repository<PollingStation>().Entities().ToListAsync();
-                return Result<IEnumerable<PollingStation>>.Success(result);
+                var data = await unitOfWork.Repository<PollingStation>().Entities().Include(c=>c.Constituency).ToListAsync();
+                var res = mapper.Map<List<PollingStationResponse>>(data);
+                return Result<List<PollingStationResponse>>.Success(res);
             });
             app.MapGet("/constituencies/polling-station/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {

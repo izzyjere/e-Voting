@@ -283,13 +283,13 @@ namespace ICTAZEVoting.Services.Domain
             return Result.Fail("An error occured. Check your internet connection.");
         }
 
-        public async Task<List<PollingStation>> GetPollingStationList()
+        public async Task<List<PollingStationResponse>> GetPollingStationList()
         {
             var get = await httpClient.GetAsync(ApiEndpoints.GetPollingStations);
-            var list = new List<PollingStation>();
+            var list = new List<PollingStationResponse>();
             if (get.IsSuccessStatusCode)
             {
-                var res = await get.ToResult<List<PollingStation>>();
+                var res = await get.ToResult<List<PollingStationResponse>>();
                 list = res.Data;
             }
             return list;

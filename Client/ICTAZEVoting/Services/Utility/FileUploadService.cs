@@ -19,7 +19,8 @@ namespace ICTAZEVoting.Services.Utility
 
         public string GetFileUrl(string filePath)
         {
-            return httpClient.BaseAddress.ToString() + $"files/{filePath}";
+            var apiDomain = httpClient?.BaseAddress?.ToString();
+            return string.IsNullOrEmpty(apiDomain)?string.Empty: $"{apiDomain}files/{filePath}";
         }
 
         public async Task<IResult<UploadResponse>> UploadFile(UploadRequest uploadRequest)

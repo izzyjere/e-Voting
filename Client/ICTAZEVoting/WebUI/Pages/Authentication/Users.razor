@@ -46,7 +46,7 @@ else
                                 }
                                 else
                                 {
-                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@context.PictureUrl" />
+                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@(@httpClient.BaseAddress.ToString()+context.PictureUrl)" />
                                 }
                         </MudAvatar>
                     </CardHeaderAvatar>

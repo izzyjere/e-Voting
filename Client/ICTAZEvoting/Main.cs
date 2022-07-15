@@ -55,6 +55,7 @@ namespace ICTAZEVoting
             services.AddAuthorizationCore()
             .AddScoped<IAuthenticationService, AuthenticationService>();       
             services.AddWindowsFormsBlazorWebView();
+            services.AddBlazorWebViewDeveloperTools();
             blazorWebView1.HostPage = "wwwroot\\index.html";
             blazorWebView1.Services = services.BuildServiceProvider();
             blazorWebView1.RootComponents.Add<App>("#app");
@@ -62,7 +63,7 @@ namespace ICTAZEVoting
 
         private void blazorWebView1_Click(object sender, EventArgs e)
         {
-
+           
         }
 
         private void Main_Load(object sender, EventArgs e)

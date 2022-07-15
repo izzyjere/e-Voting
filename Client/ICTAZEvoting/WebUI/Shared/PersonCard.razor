@@ -5,7 +5,7 @@
             <MudCard Elevation="0" Square="true" Class="@Class" Style="@Style">
                 <MudCardHeader>
                     <CardHeaderAvatar>
-                        <MudAvatar Image="@Profile.ProfilePicture" />
+                        <MudAvatar Image="@(httpClient.BaseAddress.ToString()+Profile.ProfilePicture)" />
                     </CardHeaderAvatar>
                     <CardHeaderContent>
                         <MudText Typo="Typo.body2">@Profile.FullName</MudText>

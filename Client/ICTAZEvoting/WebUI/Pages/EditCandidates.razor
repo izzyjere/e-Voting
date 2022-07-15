@@ -278,7 +278,7 @@
     }
     async Task Save()
     {
-        
+
         if (!isEditing)
         {
             //adding
@@ -300,7 +300,7 @@
             if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
-
+                await Refresh();
             }
             else
             {

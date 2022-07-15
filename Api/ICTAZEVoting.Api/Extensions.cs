@@ -145,7 +145,7 @@ namespace ICTAZEVoting.Api
 
             app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IMapper mapper) =>
             {
-                var voters = await unitOfWork.Repository<Voter>().Entities().Include(v=>v.PolingStation).ToListAsync();
+                var voters = await unitOfWork.Repository<Voter>().Entities(false).Include(v=>v.PolingStation).ToListAsync();
                 var result = mapper.Map<List<VoterResponse>>(voters);
                 return Result<IEnumerable<VoterResponse>>.Success(result);
             });
@@ -193,24 +193,25 @@ namespace ICTAZEVoting.Api
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
                     entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
                     await unitOfWork.Repository<Voter>().Add(entity);
-                    string[] res = new string[2] { Convert.ToBase64String(key), userRegister.Password };
+                    List<string> res = new () { Convert.ToBase64String(key), userRegister.Password };
                     var result = await unitOfWork.Repository<Voter>().Add(entity);
                     result = await unitOfWork.Commit(new CancellationToken()) != 0;
                     //returns the random generated pass and secrete key.
                     //in the future this key has to be stored in a card.
-                    return result ? Result<string[]>.Success(res, "Voter was registered.") : Result<string[]>.Fail("An error has occured. Try again.");
+                    return result ? Result<List<string>>.Success(data:res,"Voter registered successifully.") : Result<List<string>>.Fail("An error has occured. Try again.");
 
                 }
                 else
                 {
-                    return Result.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
+                    return Result<List<string>>.Fail($"An error has occured message:{register.Messages.First()}. Try again.");
                 }
 
 
             });
-            app.MapPut("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity) =>
+            app.MapPost("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity, IWebHostEnvironment env) =>
             {
-                var result = await unitOfWork.Repository<Voter>().Update(entity);
+                await unitOfWork.Repository<Voter>().Update(entity);
+                var result = await unitOfWork.Commit(new CancellationToken()) != 0;
                 return result ? Result.Success("Voter details were updated.") : Result.Fail("An error has occured. Try again.");
             });
             app.MapGet("/candidates", [Authorize(Roles = $"{RoleConstants.AdministratorRole},{RoleConstants.BasicRole}")] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>

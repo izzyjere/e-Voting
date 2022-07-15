@@ -13,7 +13,7 @@
 <EditForm OnValidSubmit="NextTab" Model="@voter" OnInvalidSubmit='()=>snackBar.Add("fill in all required fields",Severity.Error)'>
     <ObjectGraphDataAnnotationsValidator />
     <MudCard Elevation="25">
-        <MudCardHeader Class="mud-theme-secondary">
+        <MudCardHeader Class="mud-theme-info">
             <CardHeaderContent>
                 <MudText Typo="Typo.h6">Add / Edit voters</MudText>
             </CardHeaderContent>
@@ -21,7 +21,7 @@
         <MudCardContent>
             <MudTabs @ref="tabs" Border="true">
                 <MudTabPanel Text="Voter Details">
-                    <MudGrid Class="mt-2 mb-3">                       
+                    <MudGrid Class="mt-2 mb-3">
                         <MudItem xs="12" sm="6" md="3"><Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>voter.PersonalDetails.NRC" @bind-Value="voter.PersonalDetails.NRC" Label="NRC Number" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
                         <MudItem xs="12" sm="6" md="3"><Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>voter.PersonalDetails.FirstName" @bind-Value="voter.PersonalDetails.FirstName" Label="First Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
                         <MudItem xs="12" sm="6" md="3"><Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)"><MudTextField For="()=>voter.PersonalDetails.MiddleName" @bind-Value="voter.PersonalDetails.MiddleName" Label="Middle Name" Variant="Variant.Outlined"></MudTextField></Animate></MudItem>
@@ -62,31 +62,31 @@
                     <MudGrid Class="mt-2">
                         <MudItem xs="12">
                             <center>
-                            <MudPaper Class="p-2" Elevation="0" MinWidth="325" MinHeight="245">
-                                @if (!string.IsNullOrEmpty(frameUri))
-                                {
-                                    <img width="320" height="240" src="@frameUri" />
-                                }
-                                @if (!hideVideo)
-                                {
+                                <MudPaper Class="p-2" Elevation="0" MinWidth="325" MinHeight="245">
+                                    @if (!string.IsNullOrEmpty(frameUri))
+                                    {
+                                        <img width="320" height="240" src="@frameUri" />
+                                    }
+                                    @if (!hideVideo && !isEditing)
+                                    {
 
-                                    <video id="videoFeed" width="320" height="240" />
-                                    <canvas id="currentFrame" class="d-none" width="320" height="240" />
+                                        <video id="videoFeed" width="320" height="240" />
+                                        <canvas id="currentFrame" class="d-none" width="320" height="240" />
 
-                                }
-                                <center>
-                                    <MudButtonGroup>
-                                        <MudButton OnClick="StartVideFrame" ButtonType="ButtonType.Button" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">Refresh</MudButton>
-                                        <MudButton ButtonType="ButtonType.Button" OnClick="CaptureFrame" Disabled="@hideVideo" Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Camera">Capture</MudButton>
-                                    </MudButtonGroup>
-                                </center>
-                            </MudPaper>
-                        </center>
+                                    }
+                                    <center>
+                                        <MudButtonGroup>
+                                            <MudButton Disabled="@isEditing" OnClick="StartVideFrame" ButtonType="ButtonType.Button" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">Refresh</MudButton>
+                                            <MudButton ButtonType="ButtonType.Button" OnClick="CaptureFrame" Disabled="@hideVideo" Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Camera">Capture</MudButton>
+                                        </MudButtonGroup>
+                                    </center>
+                                </MudPaper>
+                            </center>
                         </MudItem>
                     </MudGrid>
                     <MudButton Class="mt-6" OnClick="()=>Save()" Disabled="@(!enable)" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Success">Save</MudButton>
                 </MudTabPanel>
-            </MudTabs>            
+            </MudTabs>
         </MudCardContent>
     </MudCard>
 </EditForm>
@@ -96,18 +96,49 @@
     <ToolBarContent>
         <MudText Typo="Typo.h4">Voters</MudText>
         <MudSpacer />
-        <MudTextField @bind-Value="searchString" Placeholder="Search for Categories..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField @bind-Value="searchString" Placeholder="Search for voters..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Voter</MudTh>
         <MudTh>NRC No.</MudTh>
         <MudTh>Gender</MudTh>
+        <MudTh>Age</MudTh>
         <MudTh>Poling Station</MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
-       
-
+        <MudTd>
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Square="true" Class="mud-elevation-25">
+                            @if (string.IsNullOrEmpty(context.PersonalDetails.PictureUrl))
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" />
+                            }
+                            else
+                            {
+                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@(fileService.GetFileUrl(context.PersonalDetails.PictureUrl))" />
+                            }
+                        </MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1"><b>@context.PersonalDetails.FirstName @context.PersonalDetails.LastName</b></MudText>
+                        <MudText Typo="Typo.body2">@context.PersonalDetails.Email</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            </MudCard>
+        </MudTd>
+        <MudTd>
+            @context.PersonalDetails.NRC
+        </MudTd>
+        <MudTd>
+            @context.PersonalDetails.Gender.ToString()
+        </MudTd>
+        <MudTd>@(DateTime.Now.Year-context.PersonalDetails.DateOfBirth.Year) years</MudTd>
+        <MudTd>
+            @context.PolingStation.Name
+        </MudTd>
         <MudTd DataLabel="">
             <MudButton OnClick='()=>Edit(context)' StartIcon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Warning">Edit</MudButton>
             <MudButton OnClick='()=>Delete(context.Id)' StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error">Remove</MudButton>
@@ -138,7 +169,7 @@
     List<PollingStation> pollingStations = new();
     ClaimsPrincipal claimsPrincipal = new();
     protected override async Task OnInitializedAsync()
-    {    
+    {
         claimsPrincipal = await authenticationService.CurrentUser();
         await Refresh();
     }
@@ -147,9 +178,11 @@
         voter = new();
         hideVideo = false;
         isEditing = false;
+        enable = false;
         frameUri = null;
         voter.PersonalDetails = new PersonalDetails();
         pollingStations = await systemAdminService.GetPollingStations(claimsPrincipal.GetUserId().ToString());
+        voters = await voterSevice.GetAll();
         await StartVideFrame();
         StateHasChanged();
     }
@@ -192,7 +225,7 @@
 
     }
     private void Edit(VoterResponse record)
-    {   
+    {
         voter = new();
         voter.PersonalDetails = new();
         voter.Id = record.Id;
@@ -209,6 +242,7 @@
         voter.PersonalDetails.PictureUrl = record.PersonalDetails.PictureUrl;
         voter.PersonalDetails.UserId = record.PersonalDetails.UserId;
         isEditing = true;
+        enable = true;
         StateHasChanged();
     }
 

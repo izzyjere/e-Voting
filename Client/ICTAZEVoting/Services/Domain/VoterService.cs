@@ -44,14 +44,18 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public async Task<IResult<string[]>> Register(Voter entity)
+        public async Task<IResult<List<string>>> Register(Voter entity)
         {
             var result = await httpClient.PostAsJsonAsync(ApiEndpoints.AddVoter,entity);
             if(result.IsSuccessStatusCode)
             {
-                return await result.ToResult<string[]>();
+                return await result.ToResult<List<string>>();               
             }
-            return Result<string[]>.Fail("An error occured.");
+            else
+            {
+                  return Result<List<string>>.Fail("An error occured. Try again");
+            }
+           
         }
 
         public async Task<IResult> Update(Voter entity)
@@ -61,7 +65,11 @@ namespace ICTAZEVoting.Services.Domain
             {
                 return await result.ToResult();
             }
-            return Result.Fail("An error occured.");
+            else
+            {
+                return Result.Fail("An error occured.");
+            }
+            
         }
 
         public Task<IResult> VerifyVoter(byte[] facialData)

@@ -141,7 +141,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
                 {
                     s.ToTable("SecreteKeys");
                     s.Property(s => s.VoterId);
-                    s.WithOwner(s => s.Voter);
+                    
                 });
                 e.OwnsOne(v => v.PersonalDetails, p =>
                 {

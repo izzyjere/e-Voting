@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ICTAZEVoting.Shared.Models
 {
-    internal class Ballot 
+    public class Ballot 
     {
         public Guid ElectionId { get; set; }
         public List<Vote> Votes { get; set; }

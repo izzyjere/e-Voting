@@ -68,6 +68,7 @@ namespace ICTAZEVoting.Api.Utility
             UploadType.Biometric => Path.Combine(GetWebRootPath(),"biometrics"),
             UploadType.ProfilePicture => Path.Combine(GetWebRootPath(), "_dhhfhffg"),
             UploadType.Other=> Path.Combine(GetWebRootPath(), "fileUploads"),
+            UploadType.Temporary=> Path.Combine(GetWebRootPath(), "temp"),
             _=> string.Empty
         };
         string getFileName(UploadType uploadType,string fn) => uploadType switch
@@ -75,6 +76,7 @@ namespace ICTAZEVoting.Api.Utility
             UploadType.Biometric => $"biometrics/{fn}",
             UploadType.ProfilePicture => $"_dhhfhffg/{fn}",
             UploadType.Other => $"fileUploads/{fn}",
+            UploadType.Temporary => $"temp/{fn}",
             _ => string.Empty
         };
 

@@ -1,6 +1,7 @@
 ﻿@page "/verify-face"
 @layout AuthLayout
 @inject IJSRuntime JsRuntime
+@inject IFacialRecognitionService facialRecognitionService
 
 <Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
     <center>
@@ -9,10 +10,10 @@
                 <MudCardHeader>
                     <CardHeaderContent>
                         <MudAvatar Size="Size.Large" Color="Color.Secondary">
-                            <MudImage Width="60" Height="60" Src="@(fileService.GetFileUrl(Profile.ProfilePicture))" ObjectFit="ObjectFit.Contain"/>
+                            <MudImage Width="60" Height="60" Src="@(fileService.GetFileUrl(Profile.ProfilePicture))" ObjectFit="ObjectFit.Contain" />
                         </MudAvatar>
-                        <MudText Typo="Typo.body1">@Profile.FullName</MudText>                      
-                    </CardHeaderContent>                   
+                        <MudText Typo="Typo.body1">@Profile.FullName</MudText>
+                    </CardHeaderContent>
                 </MudCardHeader>
                 <MudPaper Elevation="0" Class="p-2" MinWidth="325" MinHeight="245">
                     @if (!string.IsNullOrEmpty(frameUri))
@@ -51,15 +52,15 @@
             <MudCard Style="width:60%">
                 <MudCardContent>
                     <center>
-                        <MudChip Color="Color.Success" Label="true">
+                        <MudChip Color="Color.Warning" Label="true">
                             <MudText Align="Align.Center">
-                                VERIFYING
+                                Verifying face please wait..
                             </MudText>
                         </MudChip>
                     </center>
 
                     @*<MudText Style="font-family:Cambria; font-size:large; color:blue" Align="Align.Center">VERIFYING</MudText>*@
-                    <MudProgressLinear Color="Color.Success" Size="Size.Large" Indeterminate="true" Class="my-7" />
+                    <MudProgressLinear Striped="true" Color="Color.Success" Size="Size.Large" Indeterminate="true" Class="my-7" />
                 </MudCardContent>
                 @*    <MudCardActions>
                     <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
@@ -86,11 +87,11 @@
     {
         claimsPrincipal = (await authenticationState).User;
         if (claimsPrincipal.Identity.IsAuthenticated)
-        {  
-            var req = new UserProfileRequest {Id = claimsPrincipal.GetUserId()};
-            var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);            
+        {
+            var req = new UserProfileRequest { Id = claimsPrincipal.GetUserId() };
+            var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);
             var r = await request.ToResult<UserProfileResponse>();
-            if(r.Succeeded)
+            if (r.Succeeded)
             {
                 Profile = r.Data;
             }
@@ -102,7 +103,7 @@
     {
         voter = new();
         hideVideo = false;
-        frameUri = null;        
+        frameUri = null;
         await StartVideFrame();
         StateHasChanged();
     }
@@ -115,21 +116,36 @@
     }
     private async Task CaptureFrame()
     {
-        showProgress=true;
-        StateHasChanged();
-        Navigation.NavigateTo("authenticate");
-        // await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
+        showProgress = true;
+        StateHasChanged();       
+        await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
     }
 
 
     [JSInvokable]
-    public void ProcessImage(string imageString)
+    public async void ProcessImage(string imageString)
     {
         frameUri = imageString;
         hideVideo = true;
         StateHasChanged();
         byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
-        //
+        var request = new VerifyRequest
+         {
+                Data = imageData,
+                FileName = Profile.ProfilePicture,
+                Dimensions = new List<int> { 240, 320 }
+        };
+        var result = await facialRecognitionService.VerifyAsync(request);
+        if(result.Succeeded)
+        {
+            snackBar.Add(result.Messages.First(), Severity.Success);
+        }
+        else
+        {
+            snackBar.Add(result.Messages.First(), Severity.Error);
+            showProgress = false;
+            StateHasChanged();
+        }
 
     }
 

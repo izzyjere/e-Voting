@@ -13,7 +13,7 @@ namespace ICTAZEVoting.Services.Identity
     public interface IAuthenticationService
     {
         Task<IResult> SignIn(TokenRequest request);
-        Task<IResult> SignOut();
+        Task<IResult> SignOut();         
         Task<AuthenticationState> GetAuthenticationState();
         Task<ClaimsPrincipal> CurrentUser();
     }

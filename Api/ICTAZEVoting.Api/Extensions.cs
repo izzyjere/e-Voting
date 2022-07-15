@@ -35,6 +35,15 @@ using System.Diagnostics;
 
 namespace ICTAZEVoting.Api
 {
+    class ToVerify
+    {
+        public string FileName1 { get; set; }
+        public string FileName2 { get; set; }
+    }
+    class VerificationResult
+    {
+       public bool Match { get; set; }
+    }
     public static class Extensions
     {
         public static IEndpointRouteBuilder MapEndpointRoutes(this IEndpointRouteBuilder app)
@@ -501,13 +510,35 @@ namespace ICTAZEVoting.Api
                  }
 
              });
-            app.MapPost("/verify-image",[Authorize] async ([FromBody] VerifyRequest request) =>
+       
+            app.MapPost("/verify-face",[Authorize] async ([FromBody] VerifyRequest request,IUploadService uploadService, IWebHostEnvironment env) =>
             {
+                var upload = await uploadService.UploadFileAsync(new UploadRequest { Type = Shared.Enums.UploadType.Temporary, Data = request.Data, FileName = "image.png" });
+                if(!upload.Succeeded)
+                {
+                   return Result.Fail("Verification failed. Try again");
+                }
+                var toVer = new ToVerify { FileName1 = request.FileName, FileName2 = upload.Data.Path };
                 HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri("http:127.0.0.1:5000");
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var req = await httpClient.PostAsJsonAsync("verify", request);
-                var match = JsonConvert.DeserializeObject<bool>(await req.Content.ReadAsStringAsync());
+                httpClient.BaseAddress = new Uri("http://127.0.0.1:5000");                
+                var req = await httpClient.PostAsJsonAsync("verify", toVer);
+                var match = false;
+                if (req.IsSuccessStatusCode)
+                {
+                    var re = await req.Content.ReadAsStringAsync();
+                    var ress = JsonConvert.DeserializeObject<VerificationResult>(re);
+                    match = ress.Match;
+                   
+                }
+
+                var path = Path.Combine(env.ContentRootPath, "Files", upload.Data.Path);
+                await Task.Run(() =>
+                {
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                });
                 return match ? Result.Success("Face verified.") : Result.Fail("Verification failed");
 
             });

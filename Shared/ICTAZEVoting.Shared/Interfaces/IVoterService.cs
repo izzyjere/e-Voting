@@ -1,4 +1,5 @@
 ﻿using ICTAZEVoting.Shared.Models;
+using ICTAZEVoting.Shared.Responses.Domain;
 using ICTAZEVoting.Shared.Wrapper;
 
 using System;
@@ -12,7 +13,7 @@ namespace ICTAZEVoting.Shared.Interfaces
     {
         Task<IResult<string[]>> Register(Voter entity);
         Task<IResult> Update(Voter entity);
-        Task<List<Voter>> GetAll();
+        Task<List<VoterResponse>> GetAll();
         Task<Voter>GetByUserId(string id);
         Task<Voter> GetById(string id);
         Task<IResult> Delete(string id);

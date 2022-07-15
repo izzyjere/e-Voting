@@ -143,10 +143,11 @@ namespace ICTAZEVoting.Api
             });
 
 
-            app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IMapper mapper) =>
             {
-                var result = await unitOfWork.Repository<Voter>().Entities().ToListAsync();
-                return Result<IEnumerable<Voter>>.Success(result);
+                var voters = await unitOfWork.Repository<Voter>().Entities().Include(v=>v.PolingStation).ToListAsync();
+                var result = mapper.Map<List<VoterResponse>>(voters);
+                return Result<IEnumerable<VoterResponse>>.Success(result);
             });
             app.MapGet("/voters/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {

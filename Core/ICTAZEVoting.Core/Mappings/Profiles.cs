@@ -16,6 +16,13 @@ namespace ICTAZEVoting.Core.Mappings
         }       
 
     }
+    public class VoterProfile : Profile
+    {
+        public VoterProfile()
+        {
+            CreateMap<VoterResponse, Voter>().ReverseMap();
+        }
+    }
     public class ElectionProfile : Profile
     {
         public ElectionProfile()

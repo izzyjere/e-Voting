@@ -5,6 +5,7 @@
 @using ICTAZEVoting.Shared.Models
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
+@using ICTAZEVoting.Shared.Responses.Domain
 @using ICTAZEVoting.WebUI.WebCam
 @using System.Net.Http
 @using System.IO
@@ -133,7 +134,7 @@
     bool hideVideo;
     MudTabs tabs;
     private Voter voter = new Voter();
-    private List<Voter> voters = new List<Voter>();
+    private List<VoterResponse> voters = new List<VoterResponse>();
     List<PollingStation> pollingStations = new();
     ClaimsPrincipal claimsPrincipal = new();
     protected override async Task OnInitializedAsync()
@@ -159,11 +160,56 @@
     }
     async Task Save()
     {
-        
+        if (!isEditing)
+        {
+            //adding
+            var result = await voterSevice.Register(voter);
+            if (result.Succeeded)
+            {
+                await javaScript.InvokeAsync<object>("downloadPasswordFile", result.Data[1], result.Data[0]); //preferably sent to voter's email.
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+        }
+        else
+        {
+            var result = await voterSevice.Update(voter);
+            if (result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+
+        }
+
     }
-    private void Edit(Voter record)
-    {
+    private void Edit(VoterResponse record)
+    {   
+        voter = new();
+        voter.PersonalDetails = new();
+        voter.Id = record.Id;
+        voter.PolingStationId = record.PolingStationId;
+        voter.PersonalDetails.FirstName = record.PersonalDetails.FirstName;
+        voter.PersonalDetails.MiddleName = record.PersonalDetails.MiddleName;
+        voter.PersonalDetails.LastName = record.PersonalDetails.LastName;
+        voter.PersonalDetails.Gender = record.PersonalDetails.Gender;
+        voter.PersonalDetails.DateOfBirth = record.PersonalDetails.DateOfBirth;
+        voter.PersonalDetails.Address = record.PersonalDetails.Address;
+        voter.PersonalDetails.NRC = record.PersonalDetails.NRC;
+        voter.PersonalDetails.PhoneNumber = record.PersonalDetails.PhoneNumber;
+        voter.PersonalDetails.Email = record.PersonalDetails.Email;
+        voter.PersonalDetails.PictureUrl = record.PersonalDetails.PictureUrl;
+        voter.PersonalDetails.UserId = record.PersonalDetails.UserId;
         isEditing = true;
+        StateHasChanged();
     }
 
     MudMessageBox mbox { get; set; }

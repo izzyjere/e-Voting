@@ -49,5 +49,7 @@ namespace ICTAZEVoting.Shared.Constants
         public const string GetSystemAdmins = "system-admins";   
         public const string GetSystemAdminByUserId = "system-admins/getbyuserid";
         public const string GetPollingStationsByUserId = "polling-stations/getbyuserid";
+        public const string CountCandidates = "elections/candidates/count";
+        public const string CountVoters = "elections/voters/count";
     }
 }

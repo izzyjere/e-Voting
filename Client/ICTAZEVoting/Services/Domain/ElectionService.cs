@@ -7,6 +7,7 @@ global using ICTAZEVoting.Extensions;
 using ICTAZEVoting.Shared.Contracts;
 using ICTAZEVoting.Shared.Requests;
 using ICTAZEVoting.Shared.Responses.Domain;
+using Newtonsoft.Json;
 
 namespace ICTAZEVoting.Services.Domain
 {
@@ -309,6 +310,34 @@ namespace ICTAZEVoting.Services.Domain
                 list = res.Data;
             }
             return list;
+        }
+
+        public async Task<int> GetNumberOfCandidates(string electionId)
+        {
+            var get = await httpClient.GetAsync(ApiEndpoints.CountCandidates+$"/{electionId}");
+            return JsonConvert.DeserializeObject<int>(await get.Content.ReadAsStringAsync());
+
+        }
+
+        public async Task<int> GetNumberOfVoters(string electionId)
+        {
+            var get = await httpClient.GetAsync(ApiEndpoints.CountVoters + $"/{electionId}");
+            return JsonConvert.DeserializeObject<int>(await get.Content.ReadAsStringAsync());
+        }
+
+        public Task<int> GetnumberOfPollingbooths(string elecitonId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetNumberOfconstituencies(string electionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetNumberOfConstituencies(string elecitonId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

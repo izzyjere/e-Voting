@@ -1,11 +1,9 @@
 import cv2
 import json
-import base64
-from face_recognition import face_locations, face_encodings, face_distance, compare_faces
+from face_recognition import face_locations, face_encodings, compare_faces
 from PIL import Image, ImageEnhance
 from numpy import asarray
-from math import sqrt
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
 
 def resize_image(image, base_width_):

@@ -325,7 +325,7 @@ namespace ICTAZEVoting.Api
              });
             app.MapGet("/elections/current", [Authorize] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
-                var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).ThenInclude(p=>p.Candidates).ThenInclude(c=>c.PoliticalParty).FirstOrDefaultAsync(e=>e.IsCurrent);
+                var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).FirstOrDefaultAsync(e=> e.ElectionDate.Value.AddHours(e.Duration) >= DateTime.Now && e.ElectionDate <= DateTime.Now);
                 var result = mapper.Map<ElectionResponse>(election);
                 return Result<ElectionResponse>.Success(result);
             });

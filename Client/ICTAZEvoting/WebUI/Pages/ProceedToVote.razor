@@ -9,69 +9,65 @@
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
 
-@if (currentElection == null)
+@if (!isloading)
 {
-    
-   <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Error">No election has been setup.</MudAlert> 
-     
-}
-else if (currentElection.Status == ElectionStatus.Open)
-{
-    <MudContainer Class="d-flex justify-center align-center">
-        <MudContainer Class="d-flex flex-column justify-center" style="width: 200px; height: 100px">
-            <MudImage Src="images/logo.png" ObjectPosition="ObjectPosition.Center" />
+    @if (currentElection == null)
+    {
+
+        <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Error">No election has been setup.</MudAlert>
+
+    }
+    else if (currentElection.Status == ElectionStatus.Open)
+    {
+        <MudContainer Class="d-flex justify-center align-center">
+            <MudContainer Class="d-flex flex-column justify-center" style="width: 200px; height: 100px">
+                <MudImage Src="images/logo.png" ObjectPosition="ObjectPosition.Center" />
+            </MudContainer>
         </MudContainer>
-    </MudContainer>
 
-    <MudContainer Class="d-flex flex-column justify-center">
-        <MudText Style="font-family: fantasy" Typo="Typo.h4" Align="Align.Center"><b>YOU ARE PARTICIPATING IN THE </b></MudText>
-        <MudText Style="font-family: fantasy" Typo="Typo.h5" Align="Align.Center"><b>@currentElection.Name.ToUpper()</b></MudText>
-    </MudContainer>
+        <MudContainer Class="d-flex flex-column justify-center">
+            <MudText Style="font-family: fantasy" Typo="Typo.h4" Align="Align.Center"><b>YOU ARE PARTICIPATING IN THE </b></MudText>
+            <MudText Style="font-family: fantasy" Typo="Typo.h5" Align="Align.Center"><b>@currentElection.Name.ToUpper()</b></MudText>
+        </MudContainer>
 
-    <MudContainer Class="d-flex flex-column justify-center">
-        <MudText Style="font-family: 'Arial Rounded MT'" Typo="Typo.h6" Align="Align.Center"><b>HERE'S HOW TO VOTE:</b></MudText>
-    </MudContainer>
+        <MudContainer Class="d-flex flex-column justify-center">
+            <MudText Style="font-family: 'Arial Rounded MT'" Typo="Typo.h6" Align="Align.Center"><b>HERE'S HOW TO VOTE:</b></MudText>
+        </MudContainer>
+        <MudContainer Class="d-flex justify-center align-center">
+            <video autoplay width="640" height="240" controls>
+                <source src="Videos/howtovote.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </MudContainer>
+        <div class="mt-4 mb-4 ml-4 mr-4">
+            <MudButton Link="voting" Variant="Variant.Filled" Color="Color.Info" FullWidth="true">Proceed To Vote</MudButton>
+        </div>
+    }
+    else if (currentElection.Status == ElectionStatus.Pending)
+    {
 
-    <MudContainer Class="d-flex justify-center align-center">
-        <video autoplay width="640" height="240" controls>
-            <source src="Videos/howtovote.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </MudContainer>
+        <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Info">The election hasn't started.</MudAlert>
 
-    <br />
-    <br />
+    }
+    else if (currentElection.Status == ElectionStatus.Closed)
+    {
 
-    <MudContainer Class="d-flex justify-center align-center">
-        <a href="voting">
-            <MudButton EndIcon="@Icons.Material.Filled.ScheduleSend" Variant="Variant.Filled" Color="Color.Info" Style="width: 200px; height: 60px;" FullWidth="false">Proceed To Vote</MudButton>
-        </a>
-    </MudContainer>
+        <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Error">The election has been closed.</MudAlert>
+
+    }
+
 }
-else if (currentElection.Status == ElectionStatus.Pending)
-{
-   
-            <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true"    Severity="Severity.Info">The election hasn't started.</MudAlert>
-    
-}
-else if (currentElection.Status == ElectionStatus.Closed)
-{
-   
-   <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true"  Severity="Severity.Error">The election has been closed.</MudAlert>
-       
-}
-
-
 
 
 @code {
     ElectionResponse currentElection = null;
+    bool isloading = true;
     protected override async Task OnInitializedAsync()
     {
         currentElection = await electionService.GetCurrentElection();
+        isloading = false;
         StateHasChanged();
     }
-
 
 }
 

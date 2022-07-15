@@ -267,7 +267,8 @@
         candidate.PersonalDetails.Email = record.PersonalDetails.Email;
         candidate.PersonalDetails.PictureUrl = record.PersonalDetails.PictureUrl;
         candidate.PersonalDetails.UserId = record.PersonalDetails.UserId;
-        isEditing = true;       
+        isEditing = true;
+        enable = true;
         StateHasChanged();
     }
 
@@ -367,7 +368,7 @@
         var request = new UploadRequest
             {
                 Data = imageData,
-                FileName = "image.jpeg",
+                FileName = "image.png",
                 Type = UploadType.Biometric
             };
         var rs = await fileService.UploadFile(request);

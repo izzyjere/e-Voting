@@ -1,13 +1,14 @@
 ﻿using ICTAZEVoting.Core.Data.Contexts;
-using ICTAZEVoting.Core.Mappings;
-using ICTAZEVoting.Core.Models;
 using ICTAZEVoting.Shared.Constants;
 using ICTAZEVoting.Shared.Interfaces;
 using ICTAZEVoting.Shared.Models;
+using ICTAZEVoting.Shared.Security;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
+using System.Security.Cryptography;
 
 namespace ICTAZEVoting.Core
 {
@@ -31,11 +32,25 @@ namespace ICTAZEVoting.Core
 
         }
 
-        public void Seed()
+        public async void Seed()
         {
             AddConstituency();
             AddAdministrator();
+            await MakeAllUsersVoters();
             _db.SaveChanges();
+        }
+        async Task MakeAllUsersVoters()
+        {
+
+            var users = await _userManager.Users.ToListAsync();
+            foreach (var u in users)
+            {
+                if (!await _userManager.IsInRoleAsync(u, RoleConstants.BasicRole))
+                {
+                    await _userManager.AddToRoleAsync(u, RoleConstants.BasicRole);
+                }
+            }
+
         }
         private async void AddConstituency()
         {
@@ -67,12 +82,24 @@ namespace ICTAZEVoting.Core
                     Description = "Administrator role with full permissions"
 
                 };
+                var voterr = new Role
+                {
+                    Name = RoleConstants.BasicRole,
+                    Description = "Voter role"
+
+                };
                 var adminRoleInDb = await _roleManager.FindByNameAsync(RoleConstants.AdministratorRole);
+                var adminRoleInDb2 = await _roleManager.FindByNameAsync(RoleConstants.BasicRole);
                 if (adminRoleInDb == null)
                 {
                     await _roleManager.CreateAsync(adminRole);
                     adminRoleInDb = await _roleManager.FindByNameAsync(RoleConstants.AdministratorRole);
                     _logger.LogInformation("Seeded Administrator Role.");
+                }
+                if (adminRoleInDb2 == null)
+                {
+                    await _roleManager.CreateAsync(voterr);                    
+                    _logger.LogInformation("Seeded Basic Role.");
                 }
                 //Check if User Exists
                 var superUser = new User
@@ -86,7 +113,7 @@ namespace ICTAZEVoting.Core
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
                     IsActive = true,
-                    PictureUrl = "images/clarence.png"
+                    PictureUrl = "biometrics/4ib2b0o5_bna.jpeg"
                 };
                 var superUserInDb = await _userManager.FindByEmailAsync(superUser.Email);
                 if (superUserInDb == null)
@@ -103,17 +130,45 @@ namespace ICTAZEVoting.Core
                             Email = superUser.Email,
                             PhoneNumber = "+260974855669",
                             Gender = Shared.Enums.Gender.Male,
-                            PictureUrl = "images/clarence.png",
+                            PictureUrl = "biometrics/4ib2b0o5_bna.jpeg",
                             UserId = Guid.Parse(userGuid),
                             DateOfBirth = DateTime.Now,
                             Address = "Riverside, Kitwe"
                         },
-                        ConstituencyId = await _db.Set<Constituency>().Select(c=>c.Id).FirstOrDefaultAsync()                        ,
+                        ConstituencyId = await _db.Set<Constituency>().Select(c => c.Id).FirstOrDefaultAsync(),
                         CreatedBy = "SYSTEM",
                         TimeStamp = DateTime.Now,
                         RemoteIp = "127.0.0.1"
                     };
-
+                    var voter = new Voter
+                    {
+                        PersonalDetails = new()
+                        {
+                            FirstName = "Wisdom",
+                            LastName = "Jere",
+                            NRC = "150279/34/1",
+                            Email = superUser.Email,
+                            PhoneNumber = "+260974855669",
+                            Gender = Shared.Enums.Gender.Male,
+                            PictureUrl = "biometrics/4ib2b0o5_bna.jpeg",
+                            UserId = Guid.Parse(userGuid),
+                            DateOfBirth = DateTime.Now,
+                            Address = "Riverside, Kitwe"
+                        },
+                        PolingStationId = await _db.Set<PollingStation>().Select(c => c.Id).FirstOrDefaultAsync(),
+                        CreatedBy = "SYSTEM",
+                        TimeStamp = DateTime.Now,
+                        RemoteIp = "127.0.0.1"
+                    };
+                    //Generate Key
+                    var aes = Aes.Create();
+                    var Secrete = Guid.NewGuid().ToString();
+                    var key = aes.Key;
+                    var IV = aes.IV;
+                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
+                    voter.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
+                    Console.WriteLine("Key: " + Convert.ToBase64String(key));
+                    _db.Set<Voter>().Add(voter);
                     _db.Set<SystemAdmin>().Add(syadmin);
                     await _db.SaveChangesAsync();
                     var result = await _userManager.AddToRoleAsync(superUser, RoleConstants.AdministratorRole);

@@ -7,24 +7,67 @@
 
     <MudText Typo="Typo.h6" Color="Color.Secondary">Please wait ....</MudText>
     <MudProgressLinear Color="Color.Success" Size="Size.Large" Indeterminate="true" Striped="true" />
-    Task.Run(async () => await Continue());
+    
+}
+@if (isAdmin && !IsLoading)
+{
+    <MudForm>
+        <MudRadioGroup Required="true" RequiredError="Select one" @bind-SelectedOption="@model">
+            <MudGrid Spacing="2">
+                <MudItem xs="12">
+                    <MudRadio Option="@(RoleConstants.AdministratorRole)" Color="Color.Secondary">
+                        <MudItem>
+                            <MudChip Icon="@Icons.Material.Filled.LockOpen" IconColor="Color.Secondary" Label="true" Color="Color.Surface">Login as an admin</MudChip>
+                        </MudItem>
+                    </MudRadio>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudRadio Option="@(RoleConstants.BasicRole)" Color="Color.Secondary">
+                        <MudItem>
+                            <MudChip Icon="@Icons.Material.Filled.LockOpen" IconColor="Color.Secondary" Label="true" Color="Color.Surface">Login as a voter</MudChip>
+                        </MudItem>
+                    </MudRadio>
+                </MudItem>
+            </MudGrid>
+        </MudRadioGroup>
+        <center><MudButton OnClick="Ok" Class="mt-4" Color="Color.Success" Variant="Variant.Filled">Continue</MudButton></center>
+    </MudForm>
 }
 
 @code {
-
     bool IsLoading { get; set; } = true;
+    bool isAdmin;
+    string model;
     [Parameter] public string? RedirectUrl { get; set; }
-#nullable disable
-    [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; }
-    ClaimsPrincipal CurrentUser { get; set; }
+    ClaimsPrincipal CurrentUser = new();
     protected override async Task OnInitializedAsync()
     {
-        CurrentUser = (await AuthenticationStateTask).User;
+        CurrentUser = await authenticationService.CurrentUser();
+        await Continue();
+    }
+    async  void Ok()
+    {
+        if (!string.IsNullOrEmpty(model))
+        {
 
+            if (model == RoleConstants.AdministratorRole)
+            {
+                Navigation.NavigateTo("dashboardMain", true);
+            }
+            if (model == RoleConstants.BasicRole)
+            {
+                Navigation.NavigateTo("dashboard-voter", true);
+            }
+
+        }
+        else
+        {
+            return;
+        }
     }
     async Task Continue()
     {
-        await Task.Delay(1000);
+         
         if (!string.IsNullOrEmpty(RedirectUrl))
         {
 
@@ -41,26 +84,30 @@
         {
             if (CurrentUser.Identity.IsAuthenticated)
             {
-                if (CurrentUser.IsInRole("Administrator"))
+                if (CurrentUser.IsInRole(RoleConstants.AdministratorRole))
                 {
-                    Navigation.NavigateTo("dashboardMain", true);
+                    isAdmin = true;
+                    IsLoading = false;
+                    StateHasChanged();
                 }
-                else if (CurrentUser.IsInRole("Voter"))
+                else if (CurrentUser.IsInRole(RoleConstants.BasicRole))
                 {
-                    Navigation.NavigateTo("dashboardVoter", true);
+                    Navigation.NavigateTo("dashboard-voter", true);
                 }
                 else
                 {
+                    await authenticationService.SignOut();
                     Navigation.NavigateTo("login", true);
                 }
 
             }
             else
             {
+                await authenticationService.SignOut();
                 Navigation.NavigateTo("login", true);
             }
 
         }
-        IsLoading = false;
+
     }
 }

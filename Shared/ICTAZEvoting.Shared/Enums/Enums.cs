@@ -10,7 +10,8 @@
     {
         Other,
         ProfilePicture,
-        Biometric
+        Biometric,
+        Temporary
     }
     public enum AuditType
     {

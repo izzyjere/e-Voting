@@ -12,6 +12,7 @@ namespace ICTAZEVoting.Shared.Constants
         public const string GetUsers = "users";
         public const string GetUserRoles = "users/roles";
         public const string Login = "token";
+        public const string VerifyFace = "verify-face";
         public const string FileUpload = "upload";
         public const string PictureUpload = "profile-picture";
         public const string UserProfile = "userprofile";
@@ -31,6 +32,7 @@ namespace ICTAZEVoting.Shared.Constants
         public const string EditElection = "elections/update";
         public const string DeleteElection = "elections/delete";
         public const string GetElections = "elections";
+        public const string GetCurrentElection = "elections/current";
         public const string AddConstituency = "constituencies/add";
         public const string EditConstituency = "constituencies/update";
         public const string DeleteConstituency = "constituencies/delete";

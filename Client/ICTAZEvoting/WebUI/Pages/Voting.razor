@@ -44,48 +44,6 @@
                             </a>
                         </Animate>
                     </MudItem>
-
-                    <MudItem xs="12" sm="6" md="4" lg="3">
-                        <a href="https://www.w3schools.com">
-                            <Animate Animation="Animations.FadeDown" Duration="TimeSpan.FromSeconds(1)">
-                                <MudCard Elevation="25" Outlined="true">
-                                    <MudCardHeader>
-                                        <CardHeaderAvatar>
-                                            <MudAvatar Color="Color.Secondary">BM</MudAvatar>
-                                        </CardHeaderAvatar>
-                                        <CardHeaderContent>
-                                            <MudText Typo="Typo.body1">Bulaya Mwanaute</MudText>
-                                        </CardHeaderContent>
-                                    </MudCardHeader>
-                                    <MudCardMedia Image="images/bulaya.png" Height="300" />
-                                    <MudCardContent>
-                                        <MudText Typo="Typo.body2">Economic growth through Artificial Intelligence.</MudText>
-                                    </MudCardContent>
-                                </MudCard>
-                            </Animate>
-                        </a>
-                    </MudItem>
-
-                    <MudItem xs="12" sm="6" md="4" lg="3">
-                        <Animate Animation="Animations.FadeDownLeft" Duration="TimeSpan.FromSeconds(1)">
-                            <a href="https://www.w3schools.com">
-                                <MudCard Elevation="25" Outlined="true">
-                                    <MudCardHeader>
-                                        <CardHeaderAvatar>
-                                            <MudAvatar Color="Color.Secondary">WJ</MudAvatar>
-                                        </CardHeaderAvatar>
-                                        <CardHeaderContent>
-                                            <MudText Typo="Typo.body1">Wisdom Jere</MudText>
-                                        </CardHeaderContent>
-                                    </MudCardHeader>
-                                    <MudCardMedia Image="images/wisdom.png" Height="300" />
-                                    <MudCardContent>
-                                        <MudText Typo="Typo.body2">I will fix all bugs.</MudText>
-                                    </MudCardContent>
-                                </MudCard>
-                            </a>
-                        </Animate>
-                    </MudItem>
                 </MudGrid>
             </MudTabPanel>
             <MudTabPanel Text="Parliamentary">
@@ -96,10 +54,20 @@
                                 <MudCard Elevation="25" Outlined="true">
                                     <MudCardHeader>
                                         <CardHeaderAvatar>
-                                            <MudAvatar Color="Color.Secondary">CS</MudAvatar>
+                                            <MudAvatar Square="true" Class="mud-elevation-25">
+                                                @* @if (string.IsNullOrEmpty(context.PersonalDetails.PictureUrl))
+                                                    {
+                                                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" />
+                                                    }
+                                                    else
+                                                    {
+                                                    <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@(fileService.GetFileUrl(context.PersonalDetails.PictureUrl))" />
+                                                    }*@
+                                                CS
+                                            </MudAvatar>
                                         </CardHeaderAvatar>
                                         <CardHeaderContent>
-                                            <MudText Typo="Typo.body1">Clarence Simukanzye</MudText>
+                                            <MudText Typo="Typo.body1"></MudText>
                                             @*<MudText Typo="Typo.body2">Peninsula in Europe</MudText>*@
                                         </CardHeaderContent>
                                         <CardHeaderActions>
@@ -118,48 +86,6 @@
                             </a>
                         </Animate>
                     </MudItem>
-
-                    <MudItem xs="12" sm="6" md="4" lg="3">
-                        <a href="https://www.w3schools.com">
-                            <Animate Animation="Animations.FadeDown" Duration="TimeSpan.FromSeconds(1)">
-                                <MudCard Elevation="25" Outlined="true">
-                                    <MudCardHeader>
-                                        <CardHeaderAvatar>
-                                            <MudAvatar Color="Color.Secondary">BM</MudAvatar>
-                                        </CardHeaderAvatar>
-                                        <CardHeaderContent>
-                                            <MudText Typo="Typo.body1">Bulaya Mwanaute</MudText>
-                                        </CardHeaderContent>
-                                    </MudCardHeader>
-                                    <MudCardMedia Image="images/bulaya.png" Height="300" />
-                                    <MudCardContent>
-                                        <MudText Typo="Typo.body2">Economic growth through Artificial Intelligence.</MudText>
-                                    </MudCardContent>
-                                </MudCard>
-                            </Animate>
-                        </a>
-                    </MudItem>
-
-                    <MudItem xs="12" sm="6" md="4" lg="3">
-                        <Animate Animation="Animations.FadeDownLeft" Duration="TimeSpan.FromSeconds(1)">
-                            <a href="https://www.w3schools.com">
-                                <MudCard Elevation="25" Outlined="true">
-                                    <MudCardHeader>
-                                        <CardHeaderAvatar>
-                                            <MudAvatar Color="Color.Secondary">WJ</MudAvatar>
-                                        </CardHeaderAvatar>
-                                        <CardHeaderContent>
-                                            <MudText Typo="Typo.body1">Wisdom Jere</MudText>
-                                        </CardHeaderContent>
-                                    </MudCardHeader>
-                                    <MudCardMedia Image="images/wisdom.png" Height="300" />
-                                    <MudCardContent>
-                                        <MudText Typo="Typo.body2">I will fix all bugs.</MudText>
-                                    </MudCardContent>
-                                </MudCard>
-                            </a>
-                        </Animate>
-                    </MudItem>
                 </MudGrid>
             </MudTabPanel>
             <MudTabPanel Text="Tab Three">
@@ -168,17 +94,50 @@
             <MudTabPanel Text="Tab Disabled" Disabled="true">
                 <MudText>Content Disabled</MudText>
             </MudTabPanel>
+            <MudToolBar Class="align-items: center;">
+                <MudButton Class="align-items: center;" Disabled="@_processing" OnClick="ProcessSomething" Variant="Variant.Filled" Color="Color.Success">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">Processing</MudText>
+                    }
+                    else
+                    {
+                        <MudText>SUBMIT</MudText>
+                    }
+                </MudButton>
+            </MudToolBar>
         </MudTabs>
     </MudItem>
 </MudGrid>
 
 
+
+
+
 @code {
-    Vote vote = new Vote();
+    private Election election = new Election();
+    private Vote vote = new Vote();
+    private List<Vote> votes = new List<Vote>();
+    private List<CandidateResponse> candidates = new List<CandidateResponse>();
 
     protected override async Task OnInitializedAsync()
     {
-        
-    } 
+
+    }
+    List<CandidateResponse> GetCandidates(string electionId)
+    {
+        return candidates.Where(c => c.Position.ElectionId.ToString() == electionId).ToList();
+    }
+    private bool _processing = false;
+
+    async Task ProcessSomething()
+    {
+        _processing = true;
+        await Task.Delay(2000);
+        _processing = false;
+    }
+
+
 
 }

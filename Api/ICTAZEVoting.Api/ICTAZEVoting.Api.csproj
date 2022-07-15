@@ -7,6 +7,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Include="Files\biometrics\file.txt" />
+	  <Content Include="Files\biometrics\lfonlswu_nxa.jpeg" />
+	  <Content Include="Files\biometrics\urj1sn12_esx.jpeg" />
+	  <Content Include="Files\images\bulaya.png" />
+	  <Content Include="Files\images\clarence.png" />
+	  <Content Include="Files\images\wisdom.png" />
+	  <Content Include="Files\_dhhfhffg\lr0aszz0_vyg.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="10.1.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.6" />
@@ -30,19 +40,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\_dhhfhffg\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="wwwroot\biometrics\file.txt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>file.cs</LastGenOutput>
-	  </None>
-	  <None Include="wwwroot\biometrics\urj1sn12_esx.jpeg" />
+	  <Folder Include="Files\_dhhfhffg\" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Files\biometrics\file.txt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>file.cs</LastGenOutput>
+	  </None>
 	</ItemGroup>
 
 </Project>

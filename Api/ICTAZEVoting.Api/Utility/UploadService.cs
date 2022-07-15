@@ -78,7 +78,7 @@ namespace ICTAZEVoting.Api.Utility
             _ => string.Empty
         };
 
-        private string GetWebRootPath() => webHostEnvironment.WebRootPath;
+        private string GetWebRootPath() =>Path.Combine(webHostEnvironment.ContentRootPath, "Files");
 
     }
 

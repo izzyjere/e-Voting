@@ -9,7 +9,7 @@
                 <MudCardHeader>
                     <CardHeaderContent>
                         <MudAvatar Size="Size.Large" Color="Color.Secondary">
-                            <MudImage Width="60" Height="60" Src="@(httpClient.BaseAddress.ToString()+Profile.ProfilePicture)" ObjectFit="ObjectFit.Contain"/>
+                            <MudImage Width="60" Height="60" Src="@(fileService.GetFileUrl(Profile.ProfilePicture))" ObjectFit="ObjectFit.Contain"/>
                         </MudAvatar>
                         <MudText Typo="Typo.body1">@Profile.FullName</MudText>                      
                     </CardHeaderContent>                   

@@ -161,7 +161,7 @@
                                                     }
                                                     else
                                                     {
-                                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src='@($"{httpClient.BaseAddress}{context.PersonalDetails.PictureUrl}")' />
+                                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@(fileService.GetFileUrl(context.PersonalDetails.PictureUrl))" />
                                                     }
                                         </MudAvatar>
                                     </CardHeaderAvatar>

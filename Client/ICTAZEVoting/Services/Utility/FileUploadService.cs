@@ -16,6 +16,12 @@ namespace ICTAZEVoting.Services.Utility
         {
             this.httpClient = httpClient;
         }
+
+        public string GetFileUrl(string filePath)
+        {
+            return httpClient.BaseAddress.ToString() + $"files/{filePath}";
+        }
+
         public async Task<IResult<UploadResponse>> UploadFile(UploadRequest uploadRequest)
         {   
             var response = await httpClient.PostAsJsonAsync(ApiEndpoints.FileUpload, uploadRequest);

@@ -3,6 +3,7 @@ using ICTAZEVoting.Core.Extensions;
 using ICTAZEVoting.Core.Middleware;
 using ICTAZEVoting.Core.Models;
 
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 
@@ -28,9 +29,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseStaticFiles();
+
 app.UseAuthentication()
-   .UseAuthorization();
+   .UseAuthorization(); 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "Files")),
+    RequestPath = "/files"
+});
 app.UseMiddleware<SignInMiddleware<User>>();
 app.UseHttpsRedirection();
 app.MapEndpointRoutes();

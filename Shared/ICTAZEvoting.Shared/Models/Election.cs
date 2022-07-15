@@ -11,9 +11,11 @@ namespace ICTAZEVoting.Shared.Models
 {
     public class Election : Entity<Guid>
     {
+        [Required]
         public DateTime? ElectionDate { get; set; }
         [Required(ErrorMessage ="Please provide a description for the election.")]
-        public string Name { get; set; }         
+        public string Name { get; set; }
+        [Required]
         public Guid ElectionTypeId { get; set; }
         [Required,Range(1,48)]
         public double Duration { get; set; }

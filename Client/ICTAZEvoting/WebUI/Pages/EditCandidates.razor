@@ -92,7 +92,7 @@
                 <MudGrid Class="mt-4">
                     <MudItem xs="12">
                         <center>
-                            <MudPaper Class="p-2" Elevation="25" MinWidth="325" MinHeight="245">
+                            <MudPaper Class="p-2" Elevation="0" MinWidth="325" MinHeight="245">
                                 @if (!string.IsNullOrEmpty(frameUri))
                                 {
                                     <img width="320" height="240" src="@frameUri" />
@@ -161,7 +161,7 @@
                                                     }
                                                     else
                                                     {
-                                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src='@($"{httpClient.BaseAddress}/{context.PersonalDetails.PictureUrl}")' />
+                                                <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@(fileService.GetFileUrl(context.PersonalDetails.PictureUrl))" />
                                                     }
                                         </MudAvatar>
                                     </CardHeaderAvatar>
@@ -216,7 +216,7 @@
     List<PollingStation> pollingStations = new();
     private List<CandidateResponse> candidates = new List<CandidateResponse>();
     private List<ElectionResponse> elections = new List<ElectionResponse>();
-    private List<PoliticalParty> politicalParties = new();
+    private List<PoliticalPartyResponse> politicalParties = new();
     ElectionResponse election = new();
     ClaimsPrincipal claimsPrincipal = new();
     bool electionChosen;

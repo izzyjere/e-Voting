@@ -18,9 +18,11 @@ namespace ICTAZEVoting.Shared.Models
         public string PhoneNumber { get; set; }
         public Gender Gender { get; set; }
         public string PictureUrl { get; set; }
+        [Required]
         public DateTime? DateOfBirth { get; set; }
         [Required]
         public string Address { get; set; }
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
         public Guid OwnerId { get; set; }

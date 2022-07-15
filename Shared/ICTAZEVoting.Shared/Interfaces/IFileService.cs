@@ -9,5 +9,6 @@ namespace ICTAZEVoting.Shared.Interfaces
     public interface IFileService
     {
         Task<IResult<UploadResponse>> UploadFile(UploadRequest uploadRequest);
+        string GetFileUrl(string filePath);
     }
 }

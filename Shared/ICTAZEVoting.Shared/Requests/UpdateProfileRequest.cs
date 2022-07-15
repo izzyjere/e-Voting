@@ -1,4 +1,4 @@
-﻿namespace ICTAZEVoting.Shared
+﻿namespace ICTAZEVoting.Shared.Requests
 {
     public class UpdateProfileRequest
     {

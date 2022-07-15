@@ -15,7 +15,7 @@
         <MudSpacer />
         <MudMenu Direction="Direction.Left" OffsetX="true" Dense="true" Class="mt-1 ml-4">
             <ActivatorContent>
-                <MudAvatar Image="@Profile.ProfilePicture" />
+                <MudAvatar Image="@(fileService.GetFileUrl(Profile.ProfilePicture))" />
             </ActivatorContent>
             <ChildContent>
                 <PersonCard Profile="@Profile" Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text);" />

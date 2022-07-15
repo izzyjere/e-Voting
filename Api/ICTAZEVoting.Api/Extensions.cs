@@ -30,6 +30,7 @@ using ICTAZEVoting.Shared.Responses.Domain;
 using ICTAZEVoting.Api.Utility;
 using System.Net.Http.Headers;
 using ICTAZEVoting.Shared.Responses;
+using System.Collections.Generic;
 
 namespace ICTAZEVoting.Api
 {
@@ -561,10 +562,11 @@ namespace ICTAZEVoting.Api
                 return Result.Fail("Not found.");
 
             });
-            app.MapGet("/constituencies/polling-station", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            app.MapGet("/constituencies/polling-stations", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IMapper mapper) =>
             {
-                var result = await unitOfWork.Repository<PollingStation>().Entities().ToListAsync();
-                return Result<IEnumerable<PollingStation>>.Success(result);
+                var data = await unitOfWork.Repository<PollingStation>().Entities().Include(c=>c.Constituency).ToListAsync();
+                var res = mapper.Map<List<PollingStationResponse>>(data);
+                return Result<List<PollingStationResponse>>.Success(res);
             });
             app.MapGet("/constituencies/polling-station/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {

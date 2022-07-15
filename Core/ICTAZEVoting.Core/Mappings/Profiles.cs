@@ -13,8 +13,22 @@ namespace ICTAZEVoting.Core.Mappings
         public RoleProfile()
         {
             CreateMap<RoleResponse, Role>().ReverseMap();
-        }       
+        }
 
+    }
+    public class PolliingStationProfile:Profile
+    {
+        public PolliingStationProfile()
+        {
+            CreateMap<PollingStationResponse, PollingStation>().ReverseMap();
+        }
+    }
+    public class ConstituencyProfile : Profile
+    {
+        public ConstituencyProfile()
+        {
+            CreateMap<ConstituencyResponse, Constituency>().ReverseMap();
+        }
     }
     public class VoterProfile : Profile
     {

@@ -47,7 +47,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> AddPolingStation(PollingStation polingStation);
         Task<IResult> UpdatePolingStation(PollingStation polingStation);
         Task<IResult> DeletePolingStation(string id);
-        Task<List<PollingStation>> GetPollingStationList();
+        Task<List<PollingStationResponse>> GetPollingStationList();
         Task<PollingStation> GetPollingStation(string Id);
         Task<int> GetNumberOfCandidates(string electionId);
         Task<int> GetNumberOfVoters(string electionId);

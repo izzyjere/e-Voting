@@ -130,13 +130,13 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public async Task<List<PoliticalParty>> GetPoliticalPartyList()
+        public async Task<List<PoliticalPartyResponse>> GetPoliticalPartyList()
         {
             var get = await httpClient.GetAsync(ApiEndpoints.GetPoliticalParties);
-            var list = new List<PoliticalParty>();
+            var list = new List<PoliticalPartyResponse>();
             if (get.IsSuccessStatusCode)
             {
-                var res = await get.ToResult<List<PoliticalParty>>();
+                var res = await get.ToResult<List<PoliticalPartyResponse>>();
                 list = res.Data;
             }
             return list;

@@ -1,9 +1,10 @@
 ﻿@page "/politicalparties"
+@using ICTAZEVoting.Shared.Responses.Domain
 
-@using ICTAZEVoting.Shared
-@using System.Linq
-@using System
-@using ICTAZEVoting.Shared.Models
+@    using ICTAZEVoting.Shared
+@    using System.Linq
+@    using System
+@    using ICTAZEVoting.Shared.Models
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
 
@@ -87,7 +88,7 @@
                         </CardHeaderAvatar>
                         <CardHeaderContent>
                             <MudText Typo="Typo.body1"><b>@context.Name</b></MudText>
-                            <MudText Typo="Typo.body2">@context.Candidates?.Count Candidates</MudText>
+                            <MudText Typo="Typo.body2">@context.Slogan</MudText>
                         </CardHeaderContent>
                     </MudCardHeader>
                 </MudCard>
@@ -125,7 +126,7 @@
 @code {
     private string searchString = "";
     private PoliticalParty politicalParty = new PoliticalParty();
-    private List<PoliticalParty> politicalParties = new List<PoliticalParty>();
+    private List<PoliticalPartyResponse> politicalParties = new List<PoliticalPartyResponse>();
 
     bool isEditing;
     protected override async Task OnInitializedAsync()
@@ -178,9 +179,14 @@
 
         }
     }
-    private void Edit(PoliticalParty politicalParty)
+    private void Edit(PoliticalPartyResponse record)
     {
-        this.politicalParty = politicalParty;
+        this.politicalParty = new();
+        politicalParty.Name = record.Name;
+        politicalParty.Id = record.Id;
+        politicalParty.LogoUrl = record.LogoUrl;
+        politicalParty.Slogan = record.Slogan;
+        politicalParty.Manifesto = record.Manifesto;
         isEditing = true;
         StateHasChanged();
     }

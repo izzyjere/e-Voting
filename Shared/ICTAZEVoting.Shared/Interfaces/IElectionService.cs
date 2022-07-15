@@ -23,7 +23,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> AddPoliticalParty(PoliticalParty politicalParty);
         Task<IResult> RemovePoliticalParty(PoliticalParty politicalParty);
         Task<IResult> UpdatePoliticalParty(PoliticalPartyUpdateRequest politicalParty);
-        Task<List<PoliticalParty>> GetPoliticalPartyList();
+        Task<List<PoliticalPartyResponse>> GetPoliticalPartyList();
         Task<PoliticalParty> GetPoliticalParty(string id);
         Task<IResult> AddElectionType(string type);
         Task<IResult> UpdateElectionType(ElectionType type);

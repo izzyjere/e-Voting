@@ -385,10 +385,11 @@ namespace ICTAZEVoting.Api
                 return Result.Fail("Not found.");
 
             });
-            app.MapGet("/elections/parties", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
+            app.MapGet("/elections/parties", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
-                var result = await unitOfWork.Repository<PoliticalParty>().Entities().Include(p => p.Candidates).ThenInclude(c => c.Position).ToListAsync();
-                return Result<IEnumerable<PoliticalParty>>.Success(result);
+                var data = await unitOfWork.Repository<PoliticalParty>().Entities().ToListAsync();
+                var result = mapper.Map<List<PoliticalPartyResponse>>(data);
+               return Result<IEnumerable<PoliticalPartyResponse>>.Success(result);
             });
             app.MapGet("/elections/parties/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {

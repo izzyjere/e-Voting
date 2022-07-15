@@ -1,19 +1,17 @@
 ﻿
 <AuthorizeView>
-    <Authorized>       
-        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-            <MudCard Elevation="0" Square="true" Class="@Class" Style="@Style">
-                <MudCardHeader>
-                    <CardHeaderAvatar>
-                        <MudAvatar Image="@(fileService.GetFileUrl(Profile.ProfilePicture))" />
-                    </CardHeaderAvatar>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.body2">@Profile.FullName</MudText>
-                        <MudText Typo="Typo.caption">@context.User.GetRole()</MudText>
-                    </CardHeaderContent>
-                </MudCardHeader>
-            </MudCard>
-        </Animate>
+    <Authorized>
+        <MudCard Elevation="0" Square="true" Class="@Class" Style="@Style">
+            <MudCardHeader>
+                <CardHeaderAvatar>
+                    <MudAvatar Image="@(fileService.GetFileUrl(Profile.ProfilePicture))" />
+                </CardHeaderAvatar>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.body2">@Profile.FullName</MudText>
+                    <MudText Typo="Typo.caption">@context.User.GetRole()</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+        </MudCard>
     </Authorized>
 </AuthorizeView>
 
@@ -22,5 +20,5 @@
     [Parameter] public string Class { get; set; }
     [Parameter] public string Style { get; set; }
     [Parameter] public UserProfileResponse Profile { get; set; }
-    
+
 }

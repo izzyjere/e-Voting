@@ -31,6 +31,7 @@ using ICTAZEVoting.Api.Utility;
 using System.Net.Http.Headers;
 using ICTAZEVoting.Shared.Responses;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ICTAZEVoting.Api
 {
@@ -500,7 +501,7 @@ namespace ICTAZEVoting.Api
                  }
 
              });
-            app.MapPost("/verify-image", async ([FromBody] VerifyRequest request) =>
+            app.MapPost("/verify-image",[Authorize] async ([FromBody] VerifyRequest request) =>
             {
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri("http:127.0.0.1:5000");
@@ -684,6 +685,21 @@ namespace ICTAZEVoting.Api
             }
             seeder.Seed();
             return app;
+        }
+        internal static async void InitializeFaceApi(this IApplicationBuilder app, IHostEnvironment env)
+        {
+            var script = Path.Combine(env.ContentRootPath, "scripts", "app.py");
+            char[] splitter = { '\r' };           
+            using Process cmd = new();
+            cmd.StartInfo.FileName = "cmd.exe";
+            cmd.StartInfo.RedirectStandardOutput = true;
+            cmd.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            cmd.StartInfo.UseShellExecute = false;
+            cmd.StartInfo.CreateNoWindow = true;
+            cmd.StartInfo.Arguments = $"cd {Path.Combine(env.ContentRootPath, "scripts")} && set FLASK_APP=app.py && set FLASK_ENV=development && flask run";
+            cmd.Start();
+            Console.WriteLine("Face api started.");
+            
         }
         internal static IServiceCollection RegisterSwagger(this IServiceCollection services)
         {

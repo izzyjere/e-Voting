@@ -113,7 +113,7 @@ namespace ICTAZEVoting.Core
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
                     IsActive = true,
-                    PictureUrl = "images/wisdom.png"
+                    PictureUrl = "biometrics/4ib2b0o5_bna.jpeg"
                 };
                 var superUserInDb = await _userManager.FindByEmailAsync(superUser.Email);
                 if (superUserInDb == null)
@@ -130,7 +130,7 @@ namespace ICTAZEVoting.Core
                             Email = superUser.Email,
                             PhoneNumber = "+260974855669",
                             Gender = Shared.Enums.Gender.Male,
-                            PictureUrl = "images/wisdom.png",
+                            PictureUrl = "biometrics/4ib2b0o5_bna.jpeg",
                             UserId = Guid.Parse(userGuid),
                             DateOfBirth = DateTime.Now,
                             Address = "Riverside, Kitwe"
@@ -150,7 +150,7 @@ namespace ICTAZEVoting.Core
                             Email = superUser.Email,
                             PhoneNumber = "+260974855669",
                             Gender = Shared.Enums.Gender.Male,
-                            PictureUrl = "images/wisdom.png",
+                            PictureUrl = "biometrics/4ib2b0o5_bna.jpeg",
                             UserId = Guid.Parse(userGuid),
                             DateOfBirth = DateTime.Now,
                             Address = "Riverside, Kitwe"

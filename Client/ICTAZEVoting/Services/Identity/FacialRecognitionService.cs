@@ -22,7 +22,15 @@ namespace ICTAZEVoting.Services.Identity
         public async Task<IResult> VerifyAsync(VerifyRequest request)
         {
             var req = await httpClient.PostAsJsonAsync(ApiEndpoints.VerifyFace, request);
-            return await req.ToResult();
+            if(req.IsSuccessStatusCode)
+            {
+               return await req.ToResult();
+            }
+            else
+            {
+                return Result.Fail("Could not connect to server. Try again");
+            }
+            
         }
 
         public Task<IResult> VerifyAsync(MemoryStream memoryStream)

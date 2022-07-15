@@ -1,0 +1,41 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm>
+            <MudRadioGroup Required="true" RequiredError="Select one" @bind-SelectedOption="@model">
+                <MudGrid Spacing="2">
+                    @foreach (var item in DataSource)
+                    {
+                        <MudItem xs="12">
+                            <MudRadio Option="@(item)" Color="Color.Secondary">
+                                <MudItem>
+                                    <MudChip Icon="@Icons.Material.Filled.Watch" IconColor="Color.Secondary" Label="true" Color="Color.Surface">Login as @item</MudChip>
+                                </MudItem>
+                            </MudRadio>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudRadioGroup>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Logout</MudButton>
+        <MudButton OnClick="Select" StartIcon="@Icons.Material.Filled.PlayArrow" Color="Color.Success">Continue</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance Dialog { get; set; }
+    IEnumerable<string> DataSource { get; set; } = new List<string> { RoleConstants.AdministratorRole, RoleConstants.BasicRole };
+    string model;
+    void Cancel() => Dialog.Cancel();
+    void Select()
+    {
+        if (string.IsNullOrEmpty(model))
+        {
+            snackBar.Add("Select a draft before continuing.", Severity.Error);
+        }
+        else
+        {
+            Dialog.Close(DialogResult.Ok(model));
+        }
+    }
+}

@@ -1,5 +1,5 @@
 ﻿@page "/dashboard-voter"
-
+@layout VotingLayout
 
 @using ICTAZEVoting.Shared
 @using System.Linq
@@ -11,11 +11,9 @@
 
 @if (currentElection == null)
 {
-    <MudContainer Class="d-flex justify-center align-center">
-        <MudContainer Class="d-flex flex-column justify-center" style="width: 200px; height: 100px">
-            <MudAlert Severity="Severity.Error">No election has been setup.</MudAlert>
-        </MudContainer>
-    </MudContainer>
+    
+   <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Error">No election has been setup.</MudAlert> 
+     
 }
 else if (currentElection.Status == ElectionStatus.Open)
 {
@@ -52,19 +50,15 @@ else if (currentElection.Status == ElectionStatus.Open)
 }
 else if (currentElection.Status == ElectionStatus.Pending)
 {
-    <MudContainer Class="d-flex justify-center align-center">
-        <MudContainer Class="d-flex flex-column justify-center" style="width: 200px; height: 100px">
-            <MudAlert Severity="Severity.Info">The election hasn't started.</MudAlert>
-        </MudContainer>
-    </MudContainer>
+   
+            <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true"    Severity="Severity.Info">The election hasn't started.</MudAlert>
+    
 }
 else if (currentElection.Status == ElectionStatus.Closed)
 {
-    <MudContainer Class="d-flex justify-center align-center">
-        <MudContainer Class="d-flex flex-column justify-center" style="width: 200px; height: 100px">
-            <MudAlert Severity="Severity.Error">The election has been closed.</MudAlert>
-        </MudContainer>
-    </MudContainer>
+   
+   <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true"  Severity="Severity.Error">The election has been closed.</MudAlert>
+       
 }
 
 

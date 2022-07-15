@@ -42,7 +42,7 @@ namespace ICTAZEVoting.Api
     }
     class VerificationResult
     {
-       public bool Match { get; set; }
+        public bool Match { get; set; }
     }
     public static class Extensions
     {
@@ -96,7 +96,7 @@ namespace ICTAZEVoting.Api
                 var myGuid = Guid.Empty;
                 if (Guid.TryParse(id, out myGuid))
                 {
-                    var systemAdmin = await unitOfWork.Repository<SystemAdmin>().Entities().Include(c=>c.Constituency).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    var systemAdmin = await unitOfWork.Repository<SystemAdmin>().Entities().Include(c => c.Constituency).FirstOrDefaultAsync(v => v.Id == myGuid);
                     if (systemAdmin == null)
                     {
                         return Result<SystemAdmin>.Fail("Not found.");
@@ -154,9 +154,9 @@ namespace ICTAZEVoting.Api
             });
 
 
-            app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IMapper mapper) =>
+            app.MapGet("/voters", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
-                var voters = await unitOfWork.Repository<Voter>().Entities(false).Include(v=>v.PolingStation).ToListAsync();
+                var voters = await unitOfWork.Repository<Voter>().Entities(false).Include(v => v.PolingStation).ToListAsync();
                 var result = mapper.Map<List<VoterResponse>>(voters);
                 return Result<IEnumerable<VoterResponse>>.Success(result);
             });
@@ -204,12 +204,12 @@ namespace ICTAZEVoting.Api
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
                     entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
                     await unitOfWork.Repository<Voter>().Add(entity);
-                    List<string> res = new () { Convert.ToBase64String(key), userRegister.Password };
+                    List<string> res = new() { Convert.ToBase64String(key), userRegister.Password };
                     var result = await unitOfWork.Repository<Voter>().Add(entity);
                     result = await unitOfWork.Commit(new CancellationToken()) != 0;
                     //returns the random generated pass and secrete key.
                     //in the future this key has to be stored in a card.
-                    return result ? Result<List<string>>.Success(data:res,"Voter registered successifully.") : Result<List<string>>.Fail("An error has occured. Try again.");
+                    return result ? Result<List<string>>.Success(data: res, "Voter registered successifully.") : Result<List<string>>.Fail("An error has occured. Try again.");
 
                 }
                 else
@@ -258,7 +258,7 @@ namespace ICTAZEVoting.Api
                     PictureUrl = entity.PersonalDetails.PictureUrl,
                     UserName = entity.PersonalDetails.NRC.Replace("/", String.Empty),
                     Email = entity.PersonalDetails.Email,
-                    Role = "Candidate",
+                    Role = RoleConstants.BasicRole,
                     PhoneNumber = entity.PersonalDetails.PhoneNumber,
                     NRC = entity.PersonalDetails.NRC
                 };
@@ -290,13 +290,13 @@ namespace ICTAZEVoting.Api
                     var Secrete = Guid.NewGuid().ToString();
                     var key = aes.Key;
                     var IV = aes.IV;
-                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete,key, IV);
+                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
                     voter.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
                     await unitOfWork.Repository<Voter>().Add(voter);
                     string[] res = new string[2] { Convert.ToBase64String(key), userRegister.Password };
                     await unitOfWork.Repository<Candidate>().Add(entity);
                     var result = await unitOfWork.Commit(new CancellationToken()) != 0;
-                    return result ? Result<string[]>.Success(data:res,"Candidate was registered.") : Result<string[]>.Fail("An error has occured. Try again.");
+                    return result ? Result<string[]>.Success(data: res, "Candidate was registered.") : Result<string[]>.Fail("An error has occured. Try again.");
                 }
                 else
                 {
@@ -310,7 +310,7 @@ namespace ICTAZEVoting.Api
                 return result ? Result.Success("Candidate details were updated.") : Result.Fail("An error has occured. Try again.");
 
             });
-            app.MapGet("elections/candidates/count/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,[FromRoute]string id) =>
+            app.MapGet("elections/candidates/count/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {
                 var result = await unitOfWork.Repository<Candidate>().Entities().Include(e => e.Position).Where(e => e.Position.ElectionId.ToString() == id).CountAsync();
                 return result;
@@ -411,7 +411,7 @@ namespace ICTAZEVoting.Api
             {
                 var data = await unitOfWork.Repository<PoliticalParty>().Entities().ToListAsync();
                 var result = mapper.Map<List<PoliticalPartyResponse>>(data);
-               return Result<IEnumerable<PoliticalPartyResponse>>.Success(result);
+                return Result<IEnumerable<PoliticalPartyResponse>>.Success(result);
             });
             app.MapGet("/elections/parties/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {
@@ -481,67 +481,50 @@ namespace ICTAZEVoting.Api
                  else
                  {
                      var profile = new PersonalDetails();
-                     profile = (await db.Set<SystemAdmin>().FirstOrDefaultAsync(s => s.PersonalDetails.UserId == Guid.Parse(id))).PersonalDetails;
+
+                     profile = (await db.Set<Voter>().FirstOrDefaultAsync(s => s.PersonalDetails.UserId == Guid.Parse(id))).PersonalDetails;
                      if (profile != null)
                      {
                          return Result<UserProfileResponse>.Success(new UserProfileResponse { FullName = profile.FullName, ProfilePicture = profile.PictureUrl });
                      }
                      else
                      {
-                         profile = profile = (await db.Set<Voter>().FirstOrDefaultAsync(s => s.PersonalDetails.UserId == Guid.Parse(id))).PersonalDetails; ;
-                         if (profile != null)
-                         {
-                             return Result<UserProfileResponse>.Success(new UserProfileResponse { FullName = profile.FullName, ProfilePicture = profile.PictureUrl });
-                         }
-                         else
-                         {
-                             profile = (await db.Set<Candidate>().FirstOrDefaultAsync(s => s.PersonalDetails.UserId == Guid.Parse(id))).PersonalDetails;
-                             if (profile != null)
-                             {
-                                 return Result<UserProfileResponse>.Success(new UserProfileResponse { FullName = profile.FullName, ProfilePicture = profile.PictureUrl });
-                             }
-                             else
-                             {
-                                 return Result<UserProfileResponse>.Fail("Not found.");
-                             }
-                         }
+                         return Result<UserProfileResponse>.Fail("Not found.");
                      }
 
                  }
+             });
+            app.MapPost("/verify-face", [Authorize] async ([FromBody] VerifyRequest request, IUploadService uploadService, IWebHostEnvironment env) =>
+             {
+                 var upload = await uploadService.UploadFileAsync(new UploadRequest { Type = Shared.Enums.UploadType.Temporary, Data = request.Data, FileName = "image.png" });
+                 if (!upload.Succeeded)
+                 {
+                     return Result.Fail("Verification failed. Try again");
+                 }
+                 var toVer = new ToVerify { FileName1 = request.FileName, FileName2 = upload.Data.Path };
+                 HttpClient httpClient = new();
+                 httpClient.BaseAddress = new Uri("http://127.0.0.1:5000");
+                 var req = await httpClient.PostAsJsonAsync("verify", toVer);
+                 var match = false;
+                 if (req.IsSuccessStatusCode)
+                 {
+                     var re = await req.Content.ReadAsStringAsync();
+                     var ress = JsonConvert.DeserializeObject<VerificationResult>(re);
+                     match = ress.Match;
+
+                 }
+
+                 var path = Path.Combine(env.ContentRootPath, "Files", upload.Data.Path);
+                 await Task.Run(() =>
+                 {
+                     if (File.Exists(path))
+                     {
+                         File.Delete(path);
+                     }
+                 });
+                 return match ? Result.Success("Face verified.") : Result.Fail("Verification failed");
 
              });
-       
-            app.MapPost("/verify-face",[Authorize] async ([FromBody] VerifyRequest request,IUploadService uploadService, IWebHostEnvironment env) =>
-            {
-                var upload = await uploadService.UploadFileAsync(new UploadRequest { Type = Shared.Enums.UploadType.Temporary, Data = request.Data, FileName = "image.png" });
-                if(!upload.Succeeded)
-                {
-                   return Result.Fail("Verification failed. Try again");
-                }
-                var toVer = new ToVerify { FileName1 = request.FileName, FileName2 = upload.Data.Path };
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri("http://127.0.0.1:5000");                
-                var req = await httpClient.PostAsJsonAsync("verify", toVer);
-                var match = false;
-                if (req.IsSuccessStatusCode)
-                {
-                    var re = await req.Content.ReadAsStringAsync();
-                    var ress = JsonConvert.DeserializeObject<VerificationResult>(re);
-                    match = ress.Match;
-                   
-                }
-
-                var path = Path.Combine(env.ContentRootPath, "Files", upload.Data.Path);
-                await Task.Run(() =>
-                {
-                    if (File.Exists(path))
-                    {
-                        File.Delete(path);
-                    }
-                });
-                return match ? Result.Success("Face verified.") : Result.Fail("Verification failed");
-
-            });
             app.MapGet("/constituencies", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork) =>
             {
                 var result = await unitOfWork.Repository<Constituency>().Entities(false).ToListAsync();
@@ -594,9 +577,9 @@ namespace ICTAZEVoting.Api
                 return Result.Fail("Not found.");
 
             });
-            app.MapGet("/constituencies/polling-stations", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,IMapper mapper) =>
+            app.MapGet("/constituencies/polling-stations", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
-                var data = await unitOfWork.Repository<PollingStation>().Entities().Include(c=>c.Constituency).ToListAsync();
+                var data = await unitOfWork.Repository<PollingStation>().Entities().Include(c => c.Constituency).ToListAsync();
                 var res = mapper.Map<List<PollingStationResponse>>(data);
                 return Result<List<PollingStationResponse>>.Success(res);
             });
@@ -626,12 +609,13 @@ namespace ICTAZEVoting.Api
                 result = await unitOfWork.Commit(new CancellationToken()) != 0;
                 return result ? Result.Success("PollingStation was updated.") : Result.Fail("An error has occured. Try again.");
             });
-            app.MapGet("/polling-stations/getbyuserid/{id}",[Authorize(Roles=RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork,[FromRoute] string id) => {
+            app.MapGet("/polling-stations/getbyuserid/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
 
                 var myGuid = Guid.Empty;
                 if (Guid.TryParse(id, out myGuid))
                 {
-                    var systemAdmin = await unitOfWork.Repository<SystemAdmin>().Entities().Include(c => c.Constituency).ThenInclude(c=>c.PolingStations).FirstOrDefaultAsync(v => v.PersonalDetails.UserId == myGuid);
+                    var systemAdmin = await unitOfWork.Repository<SystemAdmin>().Entities().Include(c => c.Constituency).ThenInclude(c => c.PolingStations).FirstOrDefaultAsync(v => v.PersonalDetails.UserId == myGuid);
                     if (systemAdmin == null)
                     {
                         return Result<List<PollingStation>>.Fail("Not found.");
@@ -639,7 +623,7 @@ namespace ICTAZEVoting.Api
                     var lis = new List<PollingStation>();
                     foreach (var item in systemAdmin.Constituency.PolingStations)
                     {
-                         lis.Add(new PollingStation { Id= item.Id, ConstituencyId=item.ConstituencyId,Name=item.Name });
+                        lis.Add(new PollingStation { Id = item.Id, ConstituencyId = item.ConstituencyId, Name = item.Name });
                     }
                     return Result<List<PollingStation>>.Success(lis);
                 }
@@ -677,7 +661,7 @@ namespace ICTAZEVoting.Api
             app.MapPost("/upload", [Authorize] async (IUploadService service, [FromBody] UploadRequest request, HttpContext context) =>
             {
                 var result = await service.UploadFileAsync(request);
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     return Result<UploadResponse>.Success(new UploadResponse { Path = result.Data.Path });
                 }
@@ -720,7 +704,7 @@ namespace ICTAZEVoting.Api
         internal static async void InitializeFaceApi(this IApplicationBuilder app, IHostEnvironment env)
         {
             var script = Path.Combine(env.ContentRootPath, "scripts", "app.py");
-            char[] splitter = { '\r' };           
+            char[] splitter = { '\r' };
             using Process cmd = new();
             cmd.StartInfo.FileName = "cmd.exe";
             cmd.StartInfo.RedirectStandardOutput = true;
@@ -730,7 +714,7 @@ namespace ICTAZEVoting.Api
             cmd.StartInfo.Arguments = $"cd {Path.Combine(env.ContentRootPath, "scripts")} && set FLASK_APP=app.py && set FLASK_ENV=development && flask run";
             cmd.Start();
             Console.WriteLine("Face api started.");
-            
+
         }
         internal static IServiceCollection RegisterSwagger(this IServiceCollection services)
         {

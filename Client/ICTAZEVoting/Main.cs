@@ -48,6 +48,7 @@ namespace ICTAZEVoting
             services.AddScoped<IVotingService, VotingService>();
             services.AddScoped<IElectionService, ElectionService>();
             services.AddScoped<ISystemAdminService, SystemAdminService>();
+            services.AddScoped<IFacialRecognitionService, FacialRecognitionService>();
             services.AddScoped<IRoleManager, RoleManager>();
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IFileService, FileUploadService>();

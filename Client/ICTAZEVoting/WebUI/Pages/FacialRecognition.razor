@@ -139,6 +139,7 @@
         if(result.Succeeded)
         {
             snackBar.Add(result.Messages.First(), Severity.Success);
+            Navigation.NavigateTo("authenticate");
         }
         else
         {

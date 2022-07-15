@@ -41,13 +41,13 @@
         {
             if (CurrentUser.Identity.IsAuthenticated)
             {
-                if (CurrentUser.IsInRole("Administrator"))
+                if (CurrentUser.IsInRole(RoleConstants.AdministratorRole))
                 {
-                    Navigation.NavigateTo("dashboardMain", true);
+                   //give them options
                 }
-                else if (CurrentUser.IsInRole("Voter"))
+                else if (CurrentUser.IsInRole(RoleConstants.BasicRole))
                 {
-                    Navigation.NavigateTo("dashboardVoter", true);
+                    Navigation.NavigateTo("dashboard-voter", true);
                 }
                 else
                 {

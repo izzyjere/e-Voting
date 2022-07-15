@@ -185,14 +185,17 @@ namespace ICTAZEVoting.Api
                 {
                     entity.PersonalDetails.UserId = register.Data;
                     //Generate Key
+                    var aes = Aes.Create();
                     var Secrete = Guid.NewGuid().ToString();
-                    var keyGuid = Guid.NewGuid().ToString();
-                    var IV = Guid.NewGuid().ToString();
-                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, Encoding.ASCII.GetBytes(keyGuid), Encoding.ASCII.GetBytes(IV));
-                    entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(Encoding.ASCII.GetBytes(IV)) };
+                    var key = aes.Key;
+                    var IV = aes.IV;
+                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
+                    entity.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
+                    await unitOfWork.Repository<Voter>().Add(entity);
+                    string[] res = new string[2] { Convert.ToBase64String(key), userRegister.Password };
                     var result = await unitOfWork.Repository<Voter>().Add(entity);
                     result = await unitOfWork.Commit(new CancellationToken()) != 0;
-                    string[] res = new string[2] { keyGuid, userRegister.Password };  //returns the random generated pass and secrete key.
+                    //returns the random generated pass and secrete key.
                     //in the future this key has to be stored in a card.
                     return result ? Result<string[]>.Success(res, "Voter was registered.") : Result<string[]>.Fail("An error has occured. Try again.");
 

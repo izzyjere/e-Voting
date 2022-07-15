@@ -32,6 +32,7 @@ namespace ICTAZEVoting.Shared.Constants
         public const string EditElection = "elections/update";
         public const string DeleteElection = "elections/delete";
         public const string GetElections = "elections";
+        public const string GetCurrentElection = "elections/current";
         public const string AddConstituency = "constituencies/add";
         public const string EditConstituency = "constituencies/update";
         public const string DeleteConstituency = "constituencies/delete";

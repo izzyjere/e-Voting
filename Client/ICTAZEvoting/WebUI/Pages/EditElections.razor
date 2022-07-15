@@ -134,7 +134,7 @@
                      @context.Status.ToString()
                 </MudChip>
             </MudTd>
-            <MudTd DataLabel="">
+            <MudTd DataLabel="">                
                 <MudButton @onclick="@(()=>Edit(@context))" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Outlined">Edit</MudButton>
                 <MudButton @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Outlined">Delete</MudButton>
             </MudTd>
@@ -180,6 +180,10 @@
             _ => Color.Default,
         };
 
+    }
+    async Task Activate(string id)
+    {
+        
     }
     async Task Refresh()
     {

@@ -36,7 +36,7 @@ namespace ICTAZEVoting.Shared.Models
                 }
             }
         }
-        public bool IsCurrent { get; set; }
+        public bool IsCurrent { get=>Status == ElectionStatus.Open; }
         public List<ElectionVoter> Voters { get; set; }
         public List<ElectionPosition> Positions { get; set; }
         public DateTime ClosingTime => ElectionDate.Value.AddHours(Duration);

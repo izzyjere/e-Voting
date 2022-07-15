@@ -23,5 +23,6 @@ namespace ICTAZEVoting.Shared.Responses.Domain
         public Guid Id { get; set; }
         public Guid ElectionId { get; set; }
         public string Position { get; set; }
+        public List<CandidateResponse> Candidates { get; set; }
     }
 }

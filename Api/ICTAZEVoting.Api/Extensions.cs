@@ -323,6 +323,12 @@ namespace ICTAZEVoting.Api
                  var result = mapper.Map<IEnumerable<ElectionResponse>>(elections);
                  return Result<IEnumerable<ElectionResponse>>.Success(result);
              });
+            app.MapGet("/elections/current", [Authorize] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
+            {
+                var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).ThenInclude(p=>p.Candidates).ThenInclude(c=>c.PoliticalParty).FirstOrDefaultAsync(e=>e.IsCurrent);
+                var result = mapper.Map<ElectionResponse>(election);
+                return Result<ElectionResponse>.Success(result);
+            });
             app.MapGet("/elections/pending", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
                 var elections = await unitOfWork.Repository<Election>().Entities().Where(e => e.Status == Shared.Enums.ElectionStatus.Pending).Include(e => e.Voters).Include(e => e.Positions).ToListAsync();

@@ -10,7 +10,7 @@ namespace ICTAZEVoting.Shared.Interfaces
 {
     public interface IElectionService
     {
-        Task<Election> GetCurrentElection();
+        Task<ElectionResponse> GetCurrentElection();
         Task<List<ElectionType>> GetElectionTypes();
         Task<List<ElectionResponse>> GetPendingElections();
         Task<ElectionType> GetElectionType(string id);

@@ -89,9 +89,15 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<Election> GetCurrentElection()
+        public async Task<ElectionResponse> GetCurrentElection()
         {
-            throw new NotImplementedException();
+            var get = await httpClient.GetAsync(ApiEndpoints.GetCurrentElection);
+            if(get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<ElectionResponse>();
+                 return res.Data;
+            }
+            return default;
         }
 
         public Task<Election> GetElection(string Id)

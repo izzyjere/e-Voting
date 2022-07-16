@@ -3,6 +3,6 @@
     public class VoterVerificationRequest
     {
         public string Key { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

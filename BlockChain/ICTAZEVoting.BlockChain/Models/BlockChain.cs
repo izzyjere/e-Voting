@@ -6,31 +6,31 @@ namespace ICTAZEVoting.BlockChain.Models
     {
         public IList<Block> Chain { get; set; }
         public Guid ElectionId { get; set; }
-        public List<Vote> PendingVotes { get; set; } = new();
+        public List<Ballot> PendingBallots { get; set; } = new();
         public int Difficulty { set; get; } = 2;
         public BlockChain()
         {
             InitializeChain();
         }
-        public void AddVote(Vote vote)
+        public void AddBallot(Ballot Ballot)
         {
-           PendingVotes.Add(vote);
+           PendingBallots.Add(Ballot);
         }
-        public void ProcessPendingVotes()
+        public void ProcessPendingBallots()
         {   
-            if(!PendingVotes.Any())
+            if(!PendingBallots.Any())
             {
                 return;
             }
-            foreach(var vote in PendingVotes)
+            foreach(var ballot in PendingBallots)
             {
-                Block block = new(DateTime.Now, GetLatestBlock().Hash, vote);
+                Block block = new(DateTime.Now, GetLatestBlock().Hash, ballot);
                 //Verify Validity of block
                 //Proof of work etc.
                 AddBlock(block);
             }
             
-            PendingVotes = new();
+            PendingBallots = new();
         }
         public void InitializeChain()
         {
@@ -58,13 +58,13 @@ namespace ICTAZEVoting.BlockChain.Models
         }
         
         /// <summary>
-        /// Counts the votes for a particular candidate
+        /// Counts the Ballots for a particular candidate
         /// </summary>
         /// <param name="candidateId"></param>
         /// <returns></returns>
-        public int GetVotesCount(Guid candidateId)
+        public int GetBallotsCount(Guid candidateId)
         {
-            return Chain.Count(b => b.Data.CandidateId == candidateId);
+            return 0;
         }
         /// <summary>
         /// Adds a new block to the chain.

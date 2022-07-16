@@ -219,6 +219,10 @@ namespace ICTAZEVoting.Api
 
 
             });
+            app.MapPost("/verify-voter", () =>
+            {
+
+            });
             app.MapPost("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity, IWebHostEnvironment env) =>
             {
                 await unitOfWork.Repository<Voter>().Update(entity);

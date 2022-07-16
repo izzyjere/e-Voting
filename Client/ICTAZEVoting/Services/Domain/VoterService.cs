@@ -1,5 +1,7 @@
 ﻿using ICTAZEVoting.Shared.Interfaces;
 using ICTAZEVoting.Shared.Models;
+using ICTAZEVoting.Shared.Requests;
+using ICTAZEVoting.Shared.Responses;
 using ICTAZEVoting.Shared.Responses.Domain;
 using ICTAZEVoting.Shared.Wrapper;
 
@@ -77,9 +79,14 @@ namespace ICTAZEVoting.Services.Domain
             
         }
 
-        public Task<IResult> VerifyVoter(byte[] facialData)
+        public async Task<IResult<VoterVerificationResponse>> VerifyVoter(VoterVerificationRequest request)
         {
-            throw new NotImplementedException();
+            var post = await httpClient.PostAsJsonAsync(ApiEndpoints.VerifyVoter, request);
+            if(post.IsSuccessStatusCode)
+            {
+                return await post.ToResult<VoterVerificationResponse>();
+            }
+            return Result<VoterVerificationResponse>.Fail("Could not connect to the server. Try again");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ICTAZEVoting.Shared.Models;
+using ICTAZEVoting.Shared.Responses;
 using ICTAZEVoting.Shared.Responses.Domain;
 using ICTAZEVoting.Shared.Wrapper;
 
@@ -17,6 +18,6 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<Voter>GetByUserId(string id);
         Task<Voter> GetById(string id);
         Task<IResult> Delete(string id);
-        Task<IResult> VerifyVoter(byte[] facialData);
+        Task<IResult<VoterVerificationResponse>> VerifyVoter(VoterVerificationRequest request);
     }
 }

@@ -19,6 +19,7 @@ namespace ICTAZEVoting
         public Main()
         {
             InitializeComponent();
+            ApplicationService.OnCloseClicked += OnClose;
             Task.Run(async()=> await SessionStorage.RemoveItemAsync("UserToken"));
             var services = new ServiceCollection();
 
@@ -60,16 +61,26 @@ namespace ICTAZEVoting
             blazorWebView1.HostPage = "wwwroot\\index.html";
             blazorWebView1.Services = services.BuildServiceProvider();
             blazorWebView1.RootComponents.Add<App>("#app");
+            
         }
 
         private void blazorWebView1_Click(object sender, EventArgs e)
         {
            
         }
-
+       
         private void Main_Load(object sender, EventArgs e)
         {
 
         }
+        private void OnClose(object sender, EventArgs args)
+        {
+            Task.Run(async () => await SessionStorage.RemoveItemAsync("UserToken"));
+            Application.Restart();
+            Environment.Exit(0);
+
+        }
+       
     }
+
 }

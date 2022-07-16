@@ -13,5 +13,6 @@ namespace ICTAZEVoting
             ApplicationConfiguration.Initialize();
             Application.Run(new Main());
         }
+       
     }
 }

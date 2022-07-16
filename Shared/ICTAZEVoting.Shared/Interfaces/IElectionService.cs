@@ -45,7 +45,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> DeleteConstituency(string id);
         Task<List<Constituency>> GetConstituencyList();
         Task<Election> GetConstituency(string Id);
-        Task<IResult> AddPolingStation(PollingStation polingStation);
+        Task<IResult> AddPollingStation(PollingStation pollingStation);
         Task<IResult> UpdatePolingStation(PollingStation polingStation);
         Task<IResult> DeletePolingStation(string id);
         Task<List<PollingStationResponse>> GetPollingStationList();

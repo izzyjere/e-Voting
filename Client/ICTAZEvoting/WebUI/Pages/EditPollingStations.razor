@@ -20,7 +20,20 @@
             <MudGrid>
                 <MudItem xs="12" sm="6" md="3">
                     <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                        <MudTextField For="()=>pollingStation.Name" @bind-Value="pollingStation.Name" Label="Election Type" Variant="Variant.Outlined" Margin="Margin.Normal"></MudTextField>
+                        <MudTextField For="()=>pollingStation.Name" @bind-Value="pollingStation.Name" Label="Polling Station" Variant="Variant.Outlined"></MudTextField>
+                    </Animate>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="3">
+                    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudSelect T="Guid" @bind-Value="pollingStation.ConstituencyId" Label="Constituency" Variant="Variant.Outlined">
+                            <MudSelectItem T="Guid" Value="default">No Constituency selected</MudSelectItem>
+                            @foreach (var item in constituencies)
+                            {
+                                <MudSelectItem T="Guid" Value="@item.Id">
+                                    @item.Name
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
                     </Animate>
                 </MudItem>
             </MudGrid>
@@ -29,7 +42,7 @@
 
     </MudCardContent>
 </MudCard>
-<br/>
+<br />
 
 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
     <MudTable Bordered="true" Hover="true" Style="color: white; padding:2em" Elevation="25" Items="pollingStations">
@@ -75,6 +88,7 @@
     private PollingStation pollingStation = new PollingStation();
     private List<PollingStationResponse> pollingStations = new List<PollingStationResponse>();
     private List<Constituency> constituencies = new List<Constituency>();
+    private Constituency constituency = new Constituency();
     bool isEditing;
     protected override async Task OnInitializedAsync()
     {
@@ -84,6 +98,7 @@
     {
         pollingStation = new();
         isEditing = false;
+        constituencies = await electionService.GetConstituencyList();
         pollingStations = await electionService.GetPollingStationList();
         StateHasChanged();
     }
@@ -92,7 +107,7 @@
         if (!isEditing)
         {
             //adding
-            var result = await electionService.AddElectionType(pollingStation.Name);
+            var result = await electionService.AddPollingStation(pollingStation);
             if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
@@ -129,13 +144,13 @@
     }
 
 
-    MudMessageBox mbox { get; set; }
+    MudMessageBox mbox;
     private async Task Delete(Guid id)
     {
         bool? confirmed = await mbox.Show();
         if (confirmed == true)
         {
-            var result = await electionService.DeleteElectionType(id.ToString());
+            var result = await electionService.DeletePolingStation(id.ToString());
             if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);

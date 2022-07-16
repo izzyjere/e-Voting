@@ -326,14 +326,22 @@
     }
 
 
-    MudMessageBox mbox { get; set; }
+    MudMessageBox mbox;
     private async Task Delete(Guid id)
     {
         bool? confirmed = await mbox.Show();
         if (confirmed == true)
         {
-            await Delete(id);
-            snackBar.Add("Loan Deleted.", Severity.Success);
+            var result = await electionService.DeleteCandidate(id.ToString());
+            if (result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
         }
     }
     private async Task StartVideFrame()

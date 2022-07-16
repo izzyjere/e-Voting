@@ -219,6 +219,7 @@
     }
     async Task Save()
     {
+
         election.ElectionDate = dateTime.Value.Add(time.Value);
         if (!isEditing)
         {
@@ -263,6 +264,7 @@
         StateHasChanged();
     }
 
+    
     private async Task Delete(Guid id)
     {
         bool? confirmed = await mbox.Show();

@@ -140,8 +140,8 @@
             @context.PolingStation.Name
         </MudTd>
         <MudTd DataLabel="">
-            <MudButton OnClick='()=>Edit(context)' StartIcon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Warning">Edit</MudButton>
-            <MudButton OnClick='()=>Delete(context.Id)' StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error">Remove</MudButton>
+            <MudButton OnClick="@(()=>Edit(context))" StartIcon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Warning">Edit</MudButton>
+            <MudButton OnClick="@(()=>Delete(context.Id))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error">Remove</MudButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -182,7 +182,7 @@
         frameUri = null;
         voter.PersonalDetails = new PersonalDetails();
         pollingStations = await systemAdminService.GetPollingStations(claimsPrincipal.GetUserId().ToString());
-        voters = await voterSevice.GetAll();
+        voters = await voterService.GetAll();
         await StartVideFrame();
         StateHasChanged();
     }
@@ -196,7 +196,7 @@
         if (!isEditing)
         {
             //adding
-            var result = await voterSevice.Register(voter);
+            var result = await voterService.Register(voter);
             if (result.Succeeded)
             {
                 await javaScript.InvokeAsync<object>("downloadPasswordFile", result.Data[1], result.Data[0]); //preferably sent to voter's email.
@@ -210,10 +210,11 @@
         }
         else
         {
-            var result = await voterSevice.Update(voter);
+            var result = await voterService.Update(voter);
             if (result.Succeeded)
             {
                 snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
 
             }
             else
@@ -252,8 +253,16 @@
         bool? confirmed = await mbox.Show();
         if (confirmed == true)
         {
-            await Delete(id);
-            snackBar.Add("Loan Deleted.", Severity.Success);
+            var result = await voterService.Delete(id.ToString());
+            if (result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
         }
     }
 

@@ -49,7 +49,14 @@
             }
 
             <MudToolBar Class="align-items: center;">
-                <MudButton Class="align-items: center;" Disabled="@_processing" OnClick="ProcessSomething" Variant="Variant.Filled" Color="Color.Success">
+                @if (tabs.ActivePanelIndex != 0)
+                {
+                    <MudButton OnClick="()=>{ tabs.ActivatePanel(tabs.Panels[tabs.ActivePanelIndex-1]);}" Class="align-items: center;" Variant="Variant.Filled" Color="Color.Primary">
+                        <MudText>Previous</MudText>
+                    </MudButton>
+                    <MudSpacer />
+                }
+                <MudButton Class="align-items: center;" Disabled="@_processing" OnClick="()=>ProcessSomething(tabs.ActivePanelIndex)" Variant="Variant.Filled" Color="Color.Success">
                     @if (_processing)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -57,7 +64,7 @@
                     }
                     else
                     {
-                        <MudText>NEXT</MudText>
+                        <MudText>@buttonText</MudText>
                     }
                 </MudButton>
             </MudToolBar>
@@ -80,8 +87,8 @@
     [Parameter] public string ElectionId { get; set; }
     private List<CandidateResponse> candidates = new List<CandidateResponse>();
     ElectionResponse election = new();
-    MudTabs tabs;    
-    Ballot ballot = new();
+    MudTabs tabs;
+    Ballot ballot;
     protected override async Task OnInitializedAsync()
     {
         await Refresh();
@@ -92,29 +99,49 @@
         election.Positions = new();
         election = await electionService.GetElection(ElectionId);
         candidates = await electionService.GetCandidates(ElectionId);
+        if (election.Positions.Count == 1)
+        {
+            buttonText = "Submit";
+        }
+        else
+        {
+            buttonText = "Next";
+        }
         StateHasChanged();
 
     }
 
     private bool _processing = false;
-    bool CandidateClicked(CandidateResponse candidate, ElectionPositionResponse  position)
-    {   
-        if(ballot.Votes.Any(v=>v.CandidateId==candidate.Id && v.PositionId==position.Id))
+    bool CandidateClicked(CandidateResponse candidate, ElectionPositionResponse position)
+    {
+        if (ballot.Votes.Any(v => v.CandidateId == candidate.Id && v.PositionId == position.Id))
         {
             return false;
         }
         else
         {
-            candidates.Where(c => c.ElectionPositionId == position.Id).ToList().ForEach(c=>c.IsSelected=false);
+            candidates.Where(c => c.ElectionPositionId == position.Id).ToList().ForEach(c => c.IsSelected = false);
             StateHasChanged();
+            ballot.Votes.Add(new Vote { CandidateId = candidate.Id, PositionId = position.Id });
             return true;
         }
 
     }
-    async Task ProcessSomething()
+    string buttonText;
+    async Task ProcessSomething(int index)
     {
+        if (election.Positions.IndexOf(election.Positions.Last()) == index)
+        {
+            //
+            buttonText = "Submit";
+            StateHasChanged();
+            return;
+        }
         _processing = true;
-        await Task.Delay(2000);
+        if (ballot.Votes[index] != null)
+        {
+            tabs.ActivatePanel(index + 1,true);
+        }        
         _processing = false;
     }
 

@@ -1,5 +1,6 @@
 ﻿using ICTAZEVoting.Core.Data.Contexts;
 using ICTAZEVoting.Shared.Constants;
+using ICTAZEVoting.Shared.Contracts;
 using ICTAZEVoting.Shared.Interfaces;
 using ICTAZEVoting.Shared.Models;
 using ICTAZEVoting.Shared.Security;
@@ -98,7 +99,7 @@ namespace ICTAZEVoting.Core
                 }
                 if (adminRoleInDb2 == null)
                 {
-                    await _roleManager.CreateAsync(voterr);                    
+                    await _roleManager.CreateAsync(voterr);
                     _logger.LogInformation("Seeded Basic Role.");
                 }
                 //Check if User Exists
@@ -162,7 +163,7 @@ namespace ICTAZEVoting.Core
                     };
                     //Generate Key
                     var aes = Aes.Create();
-                    var Secrete = Guid.NewGuid().ToString();
+                    var Secrete = voter.Id.ToString().Replace('-', '_') + voter.PersonalDetails.NRC.Reverse();
                     var key = aes.Key;
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);

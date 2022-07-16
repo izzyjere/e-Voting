@@ -198,7 +198,7 @@ namespace ICTAZEVoting.Api
                     entity.PersonalDetails.UserId = register.Data;
                     //Generate Key
                     var aes = Aes.Create();
-                    var Secrete = Guid.NewGuid().ToString();
+                    var Secrete = entity.Id.ToString().Replace('-','_')+entity.PersonalDetails.NRC.Reverse();
                     var key = aes.Key;
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
@@ -219,9 +219,26 @@ namespace ICTAZEVoting.Api
 
 
             });
-            app.MapPost("/verify-voter", () =>
+            app.MapPost("/verify-voter",[Authorize] async (IUnitOfWork<Guid>  unitOfWork, VoterVerificationRequest request) =>
             {
-
+                var voter = await unitOfWork.Repository<Voter>().Get(Guid.Parse(request.UserId));
+                if(voter ==null)
+                {
+                    return Result<VoterVerificationResponse>.Fail("Verification Failed.");
+                }
+                var key = Convert.FromBase64String(request.Key);
+                var iv = Convert.FromBase64String(voter.SecreteKey.IV);
+                var encrypted = Convert.FromBase64String(voter.SecreteKey.EncryptedKey);
+                var str = EncryptionService.DecryptStringFromBytes_Aes(encrypted,key,iv);
+                if(voter.Id.ToString().Replace('-', '_') + voter.PersonalDetails.NRC.Reverse()==str)
+                {
+                    return Result<VoterVerificationResponse>.Success(new VoterVerificationResponse { });
+                }
+                else
+                {
+                    return  Result<VoterVerificationResponse>.Fail("Verification Failed.");
+                }
+                
             });
             app.MapPost("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity, IWebHostEnvironment env) =>
             {
@@ -327,7 +344,7 @@ namespace ICTAZEVoting.Api
                     };
                     //Generate Key
                     var aes = Aes.Create();
-                    var Secrete = Guid.NewGuid().ToString();
+                    var Secrete = entity.Id.ToString().Replace('-', '_') + entity.PersonalDetails.NRC.Reverse();
                     var key = aes.Key;
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);

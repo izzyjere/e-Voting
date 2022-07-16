@@ -243,7 +243,7 @@ namespace ICTAZEVoting.Api
             });
             app.MapPost("/verify-voter", [Authorize] async (IUnitOfWork<Guid> unitOfWork, VoterVerificationRequest request) =>
              {
-                 var voter = await unitOfWork.Repository<Voter>().Get(Guid.Parse(request.UserId));
+                 var voter = await unitOfWork.Repository<Voter>().Entities().FirstOrDefaultAsync(v=>v.PersonalDetails.UserId.ToString()==request.UserId);
                  if (voter == null)
                  {
                      return Result<VoterVerificationResponse>.Fail("Verification Failed.");

@@ -12,7 +12,7 @@ namespace ICTAZEVoting.BlockChain.Network
         static Server server;
         public static void Add(string nodeAddress, WebSocket server)
         {
-            if(!Nodes.ContainsKey(nodeAddress)|| !nodeAddress.Equals(NodeInstance.IPAddress))
+            if(!Nodes.ContainsKey(nodeAddress)|| !nodeAddress.Equals(NodeInstance.Uri))
                 Nodes.Add(nodeAddress, server);
         }
         public static StorageContext  Storage { get; private set; }
@@ -20,7 +20,7 @@ namespace ICTAZEVoting.BlockChain.Network
         public static void InitializeNode(string storagePath, string address, int portNumber)
         {
             server = new Server(portNumber,address);
-            NodeInstance = new Node (server.GetIpAddress(),portNumber);           
+            NodeInstance = new Node (server.GetIpAddress());           
             Storage = new(storagePath);
             server.Start();
             //:TODO  Register node with the network

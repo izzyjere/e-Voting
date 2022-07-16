@@ -10,9 +10,9 @@ namespace ICTAZEVoting.BlockChain.Models
         public DateTime TimeStamp { get; set; }
         public string PreviousHash { get; set; }
         public string Hash { get; set; }
-        public Vote Data { get; set; }
+        public Ballot Data { get; set; }
         public int Nonce { get; set; } = 0;
-        public Block(DateTime timeStamp, string previousHash, Vote data)
+        public Block(DateTime timeStamp, string previousHash, Ballot data)
         {
             TimeStamp = timeStamp;
             PreviousHash = previousHash;

@@ -34,7 +34,7 @@ namespace ICTAZEVoting.BlockChain.Network
             if (message.Type == MessageType.Greeting)
             {
                 var node = JsonConvert.DeserializeObject<Node>(message.Payload);
-                NodeService.Add(node.IPAddress, new WebSocket(node.IPAddress));
+                NodeService.Add(node.Uri, new WebSocket(node.Uri));
                 logger.Info($"Node has been created and started on: {GetIpAddress()}\n");
                 Send(JsonConvert.SerializeObject(new NetworkMessage { Type=MessageType.Greeting,Payload=JsonConvert.SerializeObject(NodeService.NodeInstance)}));
             }
@@ -47,10 +47,10 @@ namespace ICTAZEVoting.BlockChain.Network
                 if (newBlockChain.IsValid() && newBlockChain.Chain.Count > myChain.Chain.Count)
                 {
                     //:TODO
-                    var newVotes = new List<Vote>();
-                    newVotes.AddRange(newBlockChain.PendingVotes);
-                    newVotes.AddRange(myChain.PendingVotes);
-                    newBlockChain.PendingVotes = newVotes;
+                    var newBallots = new List<Ballot>();
+                    newBallots.AddRange(newBlockChain.PendingBallots);
+                    newBallots.AddRange(myChain.PendingBallots);
+                    newBlockChain.PendingBallots = newBallots;
                     NodeService.Storage.UpdateBlockChain(newBlockChain);
 
                 }

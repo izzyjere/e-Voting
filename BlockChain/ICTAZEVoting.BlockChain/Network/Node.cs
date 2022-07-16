@@ -9,11 +9,10 @@ namespace ICTAZEVoting.BlockChain.Network
 {
     public class Node 
     {
-        public Node(string address, int port)
+        public Node(string address)
         {
-
+            Uri = address;
         }
-        public string IPAddress { get; }
-        public int Port { get;  }        
+        public string Uri { get; }      
     }
 }

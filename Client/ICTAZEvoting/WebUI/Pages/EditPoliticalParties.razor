@@ -46,7 +46,7 @@
                 <MudItem xs="12" md="4">
                     <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
                         <MudPaper Elevation="25" Square="true" MinHeight="100" MinWidth="100">
-                            <MudImage Height="150" Width="100" ObjectFit="ObjectFit.Contain" Src="@(fileService.GetFileUrl(politicalParty.LogoUrl))"/>
+                            <MudImage Height="150" Width="100" ObjectFit="ObjectFit.Contain" Src="@(fileService.GetFileUrl(politicalParty.LogoUrl))" />
                         </MudPaper>
                     </Animate>
                 </MudItem>
@@ -56,7 +56,7 @@
 
     </MudCardContent>
 </MudCard>
-<br/>
+<br />
 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
     <MudTable Bordered="true" Hover="true" Style="color: white; padding:2em;" Elevation="25" Items="politicalParties">
         <ToolBarContent>
@@ -96,8 +96,14 @@
             <MudTd DataLabel="Slogan">
                 @context.Slogan
             </MudTd>
-            <MudTd DataLabel="Manifesto">
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary">Show Manifesto</MudButton>
+            <MudTd DataLabel="Manifesto">   
+                  <MudPopover Open="@context.ViewManifesto" Fixed="true" Class="px-4 pt-4">
+                    <div class="d-flex flex-column">
+                        <MudText>@context.Manifesto</MudText>
+                        <MudButton OnClick="@(()=>{context.ViewManifesto=!context.ViewManifesto;})" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+                    </div>
+                </MudPopover>
+                <MudButton OnClick="@(()=>{context.ViewManifesto=!context.ViewManifesto;})"  Variant="Variant.Outlined" Color="Color.Secondary">Show Manifesto</MudButton>
             </MudTd>
             <MudTd DataLabel="Actions">
                 <MudFab @onclick="@(()=>Edit(context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
@@ -139,7 +145,7 @@
         isEditing = false;
         politicalParties = await electionService.GetPoliticalPartyList();
         StateHasChanged();
-    }    
+    }
     async Task Save()
     {
         if (!isEditing)
@@ -227,7 +233,7 @@
                 Type = UploadType.ProfilePicture
             };
         var rs = await fileService.UploadFile(request);
-        if(rs.Succeeded)
+        if (rs.Succeeded)
         {
             politicalParty.LogoUrl = rs.Data.Path;
             StateHasChanged();

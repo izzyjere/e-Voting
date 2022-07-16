@@ -230,7 +230,8 @@ namespace ICTAZEVoting.Api
                 var candidates = await unitOfWork.Repository<Candidate>().Entities().Include(c => c.Position).ThenInclude(p => p.Election).Include(c => c.PoliticalParty).ToListAsync();
                 var result = mapper.Map<List<CandidateResponse>>(candidates);
                 return Result<IEnumerable<CandidateResponse>>.Success(result);
-            });
+            });  
+            
             app.MapGet("/candidates/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {
                 var myGuid = Guid.Empty;
@@ -244,6 +245,18 @@ namespace ICTAZEVoting.Api
                     return Result<Candidate>.Success(candidate);
                 }
                 return Result<Candidate>.Fail("Not found.");
+
+            });  
+            app.MapGet("/candidates/getbyelection/{id}", async (IUnitOfWork<Guid> unitOfWork,IMapper mapper, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var candidates = await unitOfWork.Repository<Candidate>().Entities().Include(c => c.Position).Include(c => c.PoliticalParty).Where(v => v.Position.ElectionId == myGuid).ToListAsync();
+                    var result = mapper.Map<List<CandidateResponse>>(candidates);
+                    return Result<List<CandidateResponse>>.Success(result);
+                }
+                return Result<List<CandidateResponse>>.Success(new List<CandidateResponse>());
 
             });
             app.MapPost("/candidates/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IUserService userService, [FromBody] Candidate entity) =>
@@ -335,19 +348,24 @@ namespace ICTAZEVoting.Api
                 var result = mapper.Map<IEnumerable<ElectionResponse>>(elections);
                 return Result<IEnumerable<ElectionResponse>>.Success(result);
             });
-            app.MapGet("/elections/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            app.MapGet("/elections/{id}", async (IUnitOfWork<Guid> unitOfWork, IMapper mapper, [FromRoute] string id) =>
             {
                 var myGuid = Guid.Empty;
                 if (Guid.TryParse(id, out myGuid))
                 {
-                    var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Voters).Include(e => e.Positions).ThenInclude(p => p.Candidates).ThenInclude(c => c.PoliticalParty).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).FirstOrDefaultAsync(v => v.Id == myGuid);
                     if (election == null)
                     {
-                        return Result<Election>.Fail("Not found.");
+                        return Result<ElectionResponse>.Fail("Not found.");
                     }
-                    return Result<Election>.Success(election);
+                    else
+                    {
+                         var result =  mapper.Map<ElectionResponse>(election); 
+                         return Result<ElectionResponse>.Success(result);
+                    }
+                   
                 }
-                return Result<Election>.Fail("Not found.");
+                return Result<ElectionResponse>.Fail("Not found.");
             });
             app.MapPost("/elections/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Election entity) =>
              {

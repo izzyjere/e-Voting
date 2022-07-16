@@ -12,5 +12,6 @@ namespace ICTAZEVoting.Shared.Responses.Domain
         public string? Slogan { get; set; }
         public string? Manifesto { get; set; }
         public string? LogoUrl { get; set; }
+        public bool ViewManifesto { get; set; }
     }
 }

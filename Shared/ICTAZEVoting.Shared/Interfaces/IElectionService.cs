@@ -15,6 +15,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<List<ElectionResponse>> GetPendingElections();
         Task<ElectionType> GetElectionType(string id);
         Task<Candidate> GetCandidate(string id);
+        Task<List<CandidateResponse>> GetCandidates(string electionId);
         Task<IResult> DeleteCandidate(string id);
         Task<IResult<string[]>> AddCandidate(Candidate candidate);
         Task<List<CandidateResponse>> GetCandidateList();
@@ -38,7 +39,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<IResult> UpdateElection(Election election);
         Task<IResult> DeleteElection(string id);
         Task<List<ElectionResponse>> GetElectionList();
-        Task<Election> GetElection(string Id);
+        Task<ElectionResponse> GetElection(string Id);
         Task<IResult> AddConstituency(Constituency election);
         Task<IResult> UpdateConstituency(Constituency election);
         Task<IResult> DeleteConstituency(string id);

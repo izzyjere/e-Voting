@@ -13,6 +13,7 @@ namespace ICTAZEVoting.Shared.Responses.Domain
         public PersonalDetailsResponse PersonalDetails { get; set; }
         public ElectionPositionResponse Position { get; set; }
         public PoliticalPartyResponse PoliticalParty { get; set; }
+        public bool IsSelected { get; set; }
 
     }
    

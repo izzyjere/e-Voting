@@ -53,5 +53,6 @@ namespace ICTAZEVoting.Shared.Constants
         public const string GetPollingStationsByUserId = "polling-stations/getbyuserid";
         public const string CountCandidates = "elections/candidates/count";
         public const string CountVoters = "elections/voters/count";
+        public const string GetCandidatesByElection= "candidates/getbyelection";
     }
 }

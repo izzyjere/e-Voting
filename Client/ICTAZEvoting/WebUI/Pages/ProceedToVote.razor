@@ -40,7 +40,7 @@
             </video>
         </MudContainer>
         <div class="mt-4 mb-4 ml-4 mr-4">
-            <MudButton Link="voting" Variant="Variant.Filled" Color="Color.Info" FullWidth="true">Proceed To Vote</MudButton>
+            <MudButton Link='@($"voting/{currentElection.Id.ToString()}")' Variant="Variant.Filled" Color="Color.Info" FullWidth="true">Proceed To Vote</MudButton>
         </div>
     }
     else if (currentElection.Status == ElectionStatus.Pending)

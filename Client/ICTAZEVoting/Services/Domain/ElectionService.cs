@@ -100,9 +100,15 @@ namespace ICTAZEVoting.Services.Domain
             return default;
         }
 
-        public Task<Election> GetElection(string Id)
+        public async Task<ElectionResponse> GetElection(string id)
         {
-            throw new NotImplementedException();
+            var get = await httpClient.GetAsync(ApiEndpoints.GetElections+$"/{id}");
+            if (get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<ElectionResponse>();
+                return res.Data;
+            }
+            return default;
         }
 
         public Task<List<ElectionPosition>> GetElectionPositionList(string electionId)

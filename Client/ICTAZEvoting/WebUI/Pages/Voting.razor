@@ -1,5 +1,6 @@
 ﻿@layout BallotLayout
 @page "/voting"
+@page "/voting/{electionId}"
 
 @using ICTAZEVoting.Shared
 @using System.Linq
@@ -11,7 +12,7 @@
 
 <MudGrid>
     <MudItem xs="12">
-        <h1>Ballot Paper</h1>
+        <h1>Ballot</h1>
     </MudItem>
     <MudItem xs="12">
         <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
@@ -19,7 +20,7 @@
                 <MudGrid>
                     <MudItem xs="12" sm="6" md="4">
                         <Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
-                            <a href="https://www.w3schools.com">
+                            <div >
                                 <MudCard Elevation="25" Outlined="true">
                                     <MudCardHeader>
                                         <CardHeaderAvatar>
@@ -36,58 +37,15 @@
                                     <MudCardMedia Image="images/clarence.png" Height="300" />
                                     <MudCardContent>
                                         <MudText Typo="Typo.body2">Knowldge drives innovation, innovation drives productivity and productivity drives economic growth.</MudText>
-                                    </MudCardContent>
-                                    @*<MudCardActions>
-                                        @*<MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                                        <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
-                                        </MudCardActions>*@
+                                    </MudCardContent>                                    
                                 </MudCard>
-                            </a>
+                            </div>
                         </Animate>
                     </MudItem>
                 </MudGrid>
             </MudTabPanel>
             <MudTabPanel Text="Parliamentary">
-                <MudGrid>
-                    <MudItem xs="12" sm="6" md="4" lg="3">
-                        <Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
-                            <a href="https://www.w3schools.com">
-                                <MudCard Elevation="25" Outlined="true">
-                                    <MudCardHeader>
-                                        <CardHeaderAvatar>
-                                            <MudAvatar Square="true" Class="mud-elevation-25">
-                                                @* @if (string.IsNullOrEmpty(context.PersonalDetails.PictureUrl))
-                                                    {
-                                                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" />
-                                                    }
-                                                    else
-                                                    {
-                                                    <MudImage ObjectFit="ObjectFit.Contain" Width="50" Height="50" Src="@(fileService.GetFileUrl(context.PersonalDetails.PictureUrl))" />
-                                                    }*@
-                                                CS
-                                            </MudAvatar>
-                                        </CardHeaderAvatar>
-                                        <CardHeaderContent>
-                                            <MudText Typo="Typo.body1"></MudText>
-                                            @*<MudText Typo="Typo.body2">Peninsula in Europe</MudText>*@
-                                        </CardHeaderContent>
-                                        <CardHeaderActions>
-                                            @*<MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />*@
-                                        </CardHeaderActions>
-                                    </MudCardHeader>
-                                    <MudCardMedia Image="images/clarence.png" Height="300" />
-                                    <MudCardContent>
-                                        <MudText Typo="Typo.body2">Knowldge drives innovation, innovation drives productivity and productivity drives economic growth.</MudText>
-                                    </MudCardContent>
-                                    @*<MudCardActions>
-                                        @*<MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                                        <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
-                                        </MudCardActions>*@
-                                </MudCard>
-                            </a>
-                        </Animate>
-                    </MudItem>
-                </MudGrid>
+               
             </MudTabPanel>
             <MudTabPanel Text="Tab Three">
                 <MudText>Content Three</MudText>
@@ -117,15 +75,15 @@
 
 
 @code {
-    private Election election = new Election();
-    private Vote vote = new Vote();
-    private List<Vote> votes = new List<Vote>();
-    private List<CandidateResponse> candidates = new List<CandidateResponse>();
 
+    [Parameter] public string ElectionId { get; set; }
+    private List<CandidateResponse> candidates = new List<CandidateResponse>();
+    ElectionResponse Election = new();
     protected override async Task OnInitializedAsync()
     {
-
+        
     }
+    
     List<CandidateResponse> GetCandidates(string electionId)
     {
         return candidates.Where(c => c.Position.ElectionId.ToString() == electionId).ToList();

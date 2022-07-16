@@ -325,8 +325,9 @@ namespace ICTAZEVoting.Services.Domain
 
         public async Task<int> GetNumberOfCandidates(string electionId)
         {
-            var get = await httpClient.GetAsync(ApiEndpoints.CountCandidates+$"/{electionId}");
-            return JsonConvert.DeserializeObject<int>(await get.Content.ReadAsStringAsync());
+            var get = await httpClient.GetAsync(ApiEndpoints.CountCandidates + $"/{electionId}");
+
+            return (await get.ToResult<int>()).Data;
 
         }
 

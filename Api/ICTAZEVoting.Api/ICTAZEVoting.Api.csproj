@@ -41,6 +41,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Files\temp\" />
+	  <Folder Include="Files\temp\" />
 	  <Folder Include="Files\_dhhfhffg\" />
 	</ItemGroup>
 

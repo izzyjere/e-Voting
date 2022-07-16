@@ -346,10 +346,10 @@ namespace ICTAZEVoting.Api
                 return result ? Result.Success("Candidate details were updated.") : Result.Fail("An error has occured. Try again.");
 
             });
-            app.MapGet("elections/candidates/count/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            app.MapGet("/elections/candidates/count/{id}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {
                 var result = await unitOfWork.Repository<Candidate>().Entities().Include(e => e.Position).Where(e => e.Position.ElectionId.ToString() == id).CountAsync();
-                return result;
+                return Result<int>.Success(result);
 
             });
             //Election

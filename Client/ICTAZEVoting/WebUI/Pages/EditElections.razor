@@ -255,7 +255,9 @@
         election.Duration = record.Duration;
         election.ElectionTypeId = record.ElectionTypeId;
         election.ElectionDate = record.ElectionDate;
-        election.Name = record.Name;      
+        election.Name = record.Name;  
+        dateTime = election.ElectionDate.Value.Date;
+        time = election.ElectionDate.Value.TimeOfDay;
         record.Positions.ForEach(p=> election.Positions.Add(new ElectionPosition{Id=p.Id, Position = p.Position, ElectionId = p.ElectionId}));
         isEditing = true;
         StateHasChanged();

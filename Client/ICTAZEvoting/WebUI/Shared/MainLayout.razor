@@ -76,6 +76,6 @@
     async void Logout()
     {
         await authenticationService.SignOut();
-        Navigation.NavigateTo("/");
+        ApplicationService.NotifyOncloseClicked(this,new EventArgs());
     }
 }

@@ -16,22 +16,26 @@
     </MudItem>
     <MudItem xs="12">
         <MudTabs @ref="tabs" Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
-            @foreach (var position in election.Positions)
+            @foreach (var position in election.Positions.OrderByDescending(p=>p.CandidateCount))
             {
-                <MudTabPanel Disabled="@(position!=election.Positions.First())" Text="@position.Position.ToUpper()">
+                <MudTabPanel Disabled="@(position!=election.Positions.First()||!HasCandidates(position.Id))" Text="@position.Position.ToUpper()">
                     <MudGrid>
+                        @if (!candidates.Any(c => c.ElectionPositionId == position.Id))
+                        {
+                            <MudAlert Severity="Severity.Info" AlertTextPosition="AlertTextPosition.Center"> No one is stating in for this posistion</MudAlert>
+                        }
                         @foreach (var candidate in candidates.Where(c => c.ElectionPositionId == position.Id))
                         {
                             <MudItem xs="12" sm="6" md="4">
                                 <Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
-                                    <div @onclick="()=>{candidate.IsSelected=CandidateClicked(candidate,position); StateHasChanged();}" class='@(candidate.IsSelected?"selected":"")'>
+                                    <div @onclick="()=>{if(candidate.IsSelected){return;}candidate.IsSelected=CandidateClicked(candidate,position); StateHasChanged();}" class='@(candidate.IsSelected?"selected":"")'>
                                         <MudCard Elevation="25" Outlined="true">
                                             <MudCardHeader>
                                                 <CardHeaderAvatar>
                                                     <MudAvatar Color="Color.Secondary">@candidate.PersonalDetails.FirstName.First() @candidate.PersonalDetails.LastName.First() </MudAvatar>
                                                 </CardHeaderAvatar>
                                                 <CardHeaderContent>
-                                                    <MudText Typo="Typo.body1">@candidate.PersonalDetails.FullName</MudText>
+                                                    <MudText Typo="Typo.h6">@candidate.PersonalDetails.FullName</MudText>
                                                     <MudText Typo="Typo.body2">@candidate.PoliticalParty.Name</MudText>
                                                 </CardHeaderContent>
                                             </MudCardHeader>
@@ -93,8 +97,13 @@
     {
         await Refresh();
     }
+    bool HasCandidates(Guid id)
+    {
+        return candidates.Any(c => c.ElectionPositionId == id);
+    }
     async Task Refresh()
     {
+        ballot = new();
         ballot.Votes = new();
         election.Positions = new();
         election = await electionService.GetElection(ElectionId);
@@ -105,7 +114,10 @@
         }
         else
         {
-            buttonText = "Next";
+            if (election.Positions.Count > 1 && !HasCandidates(election.Positions[tabs.ActivePanelIndex + 1].Id))
+            {
+                buttonText = "Submit";
+            }
         }
         StateHasChanged();
 
@@ -120,6 +132,10 @@
         }
         else
         {
+            if (ballot.Votes.Any(v => v.PositionId == position.Id))
+            {
+                ballot.Votes.Remove(ballot.Votes.FirstOrDefault(v => v.PositionId == position.Id));
+            }
             candidates.Where(c => c.ElectionPositionId == position.Id).ToList().ForEach(c => c.IsSelected = false);
             StateHasChanged();
             ballot.Votes.Add(new Vote { CandidateId = candidate.Id, PositionId = position.Id });
@@ -128,21 +144,37 @@
 
     }
     string buttonText;
-    async Task ProcessSomething(int index)
+    void ProcessSomething(int index)
     {
-        if (election.Positions.IndexOf(election.Positions.Last()) == index)
+        _processing = true;
+        if (ballot.Votes.Count <= index)
         {
-            //
-            buttonText = "Submit";
-            StateHasChanged();
+            _processing = false;
             return;
         }
-        _processing = true;
-        if (ballot.Votes[index] != null)
+        else
         {
-            tabs.ActivatePanel(index + 1,true);
-        }        
-        _processing = false;
+
+            if (tabs.Panels.Count != election.Positions.Count)
+            {
+               
+                _processing = false;
+                StateHasChanged();
+                return;
+            }
+            if (!HasCandidates(election.Positions[index + 1].Id) || election.Positions.IndexOf(election.Positions.Last()) == index)
+            {
+                
+
+                _processing = false;
+                StateHasChanged();
+                return;
+            }
+            tabs.ActivatePanel(index + 1, true);
+            _processing = false;
+            StateHasChanged();
+        }
+
     }
 
 

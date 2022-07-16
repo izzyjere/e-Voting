@@ -397,7 +397,7 @@ namespace ICTAZEVoting.Api
                 var myGuid = Guid.Empty;
                 if (Guid.TryParse(id, out myGuid))
                 {
-                    var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).ThenInclude(p=>p.Candidates).FirstOrDefaultAsync(v => v.Id == myGuid);
                     if (election == null)
                     {
                         return Result<ElectionResponse>.Fail("Not found.");

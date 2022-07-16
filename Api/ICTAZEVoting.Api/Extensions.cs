@@ -431,7 +431,7 @@ namespace ICTAZEVoting.Api
             });
             app.MapGet("/elections/pending", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
-                var elections = await unitOfWork.Repository<Election>().Entities().Where(e => e.Status == Shared.Enums.ElectionStatus.Pending).Include(e => e.Voters).Include(e => e.Positions).ToListAsync();
+                var elections = await unitOfWork.Repository<Election>().Entities().Where(e => e.ElectionDate.Value < DateTime.Now).Include(e => e.Positions).ToListAsync();
                 var result = mapper.Map<IEnumerable<ElectionResponse>>(elections);
                 return Result<IEnumerable<ElectionResponse>>.Success(result);
             });

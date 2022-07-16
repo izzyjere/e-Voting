@@ -6,6 +6,7 @@
 @using System.Linq
 @using System
 @using ICTAZEVoting.Shared.Models
+@using ICTAZEVoting.Shared.Responses
 @using ICTAZEVoting.Shared.Responses.Domain
 @inject MudBlazor.ISnackbar snackBar
 @inject IJSRuntime JsRuntime
@@ -16,7 +17,7 @@
     </MudItem>
     <MudItem xs="12">
         <MudTabs @ref="tabs" Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
-            @foreach (var position in election.Positions.OrderByDescending(p=>p.CandidateCount))
+            @foreach (var position in election.Positions.OrderByDescending(p => p.CandidateCount))
             {
                 <MudTabPanel Disabled="@(position!=election.Positions.First()||!HasCandidates(position.Id))" Text="@position.Position.ToUpper()">
                     <MudGrid>
@@ -144,7 +145,7 @@
 
     }
     string buttonText;
-    void ProcessSomething(int index)
+    async void ProcessSomething(int index)
     {
         _processing = true;
         if (ballot.Votes.Count <= index)
@@ -157,14 +158,24 @@
 
             if (tabs.Panels.Count != election.Positions.Count)
             {
-               
+
                 _processing = false;
                 StateHasChanged();
                 return;
             }
             if (!HasCandidates(election.Positions[index + 1].Id) || election.Positions.IndexOf(election.Positions.Last()) == index)
             {
-                
+                var dialog = dialogService.Show<SecreteKeyEntryDialog>("Enter Your Secrete Key");
+                var result = await dialog.Result;
+                if (!result.Cancelled)
+                {
+                    var response = (VoterVerificationResponse)result.Data;
+                    if(response.Verified)
+                    {
+                        //Save to block chain.
+                    }
+
+                }
 
                 _processing = false;
                 StateHasChanged();

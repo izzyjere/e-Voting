@@ -46,6 +46,28 @@ namespace ICTAZEVoting.Api
     }
     public static class Extensions
     {
+
+        public static async Task<IApplicationBuilder> CleanUneccessaryFiles(this IApplicationBuilder app)
+        {
+
+            var scope = app.ApplicationServices.CreateScope();
+            var userManager = scope.ServiceProvider.GetService<UserManager<User>>();
+            var env = scope.ServiceProvider.GetService<IWebHostEnvironment>();
+            var users = await userManager.Users.ToListAsync();
+
+            foreach (var file in Directory.GetFiles(Path.Combine(env.ContentRootPath, "Files"), "*", SearchOption.AllDirectories))
+            {
+                if (!users.Any(u => Path.GetFileName(file) == Path.GetFileName(Path.Combine(env.ContentRootPath, "Files", u.PictureUrl))))
+                {
+                    File.Delete(file);
+                    Console.WriteLine("Deleted file: " + file);
+                }
+
+            }
+
+
+            return app;
+        }
         public static IEndpointRouteBuilder MapEndpointRoutes(this IEndpointRouteBuilder app)
         {
             #region Identity             
@@ -198,7 +220,7 @@ namespace ICTAZEVoting.Api
                     entity.PersonalDetails.UserId = register.Data;
                     //Generate Key
                     var aes = Aes.Create();
-                    var Secrete = entity.Id.ToString().Replace('-','_')+entity.PersonalDetails.NRC.Reverse();
+                    var Secrete = entity.Id.ToString().Replace('-', '_') + entity.PersonalDetails.NRC.Reverse();
                     var key = aes.Key;
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
@@ -219,27 +241,27 @@ namespace ICTAZEVoting.Api
 
 
             });
-            app.MapPost("/verify-voter",[Authorize] async (IUnitOfWork<Guid>  unitOfWork, VoterVerificationRequest request) =>
-            {
-                var voter = await unitOfWork.Repository<Voter>().Get(Guid.Parse(request.UserId));
-                if(voter ==null)
-                {
-                    return Result<VoterVerificationResponse>.Fail("Verification Failed.");
-                }
-                var key = Convert.FromBase64String(request.Key);
-                var iv = Convert.FromBase64String(voter.SecreteKey.IV);
-                var encrypted = Convert.FromBase64String(voter.SecreteKey.EncryptedKey);
-                var str = EncryptionService.DecryptStringFromBytes_Aes(encrypted,key,iv);
-                if(voter.Id.ToString().Replace('-', '_') + voter.PersonalDetails.NRC.Reverse()==str)
-                {
-                    return Result<VoterVerificationResponse>.Success(new VoterVerificationResponse { });
-                }
-                else
-                {
-                    return  Result<VoterVerificationResponse>.Fail("Verification Failed.");
-                }
-                
-            });
+            app.MapPost("/verify-voter", [Authorize] async (IUnitOfWork<Guid> unitOfWork, VoterVerificationRequest request) =>
+             {
+                 var voter = await unitOfWork.Repository<Voter>().Get(Guid.Parse(request.UserId));
+                 if (voter == null)
+                 {
+                     return Result<VoterVerificationResponse>.Fail("Verification Failed.");
+                 }
+                 var key = Convert.FromBase64String(request.Key);
+                 var iv = Convert.FromBase64String(voter.SecreteKey.IV);
+                 var encrypted = Convert.FromBase64String(voter.SecreteKey.EncryptedKey);
+                 var str = EncryptionService.DecryptStringFromBytes_Aes(encrypted, key, iv);
+                 if (voter.Id.ToString().Replace('-', '_') + voter.PersonalDetails.NRC.Reverse() == str)
+                 {
+                     return Result<VoterVerificationResponse>.Success(new VoterVerificationResponse { });
+                 }
+                 else
+                 {
+                     return Result<VoterVerificationResponse>.Fail("Verification Failed.");
+                 }
+
+             });
             app.MapPost("/voters/update", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Voter entity, IWebHostEnvironment env) =>
             {
                 await unitOfWork.Repository<Voter>().Update(entity);
@@ -251,8 +273,8 @@ namespace ICTAZEVoting.Api
                 var candidates = await unitOfWork.Repository<Candidate>().Entities().Include(c => c.Position).ThenInclude(p => p.Election).Include(c => c.PoliticalParty).ToListAsync();
                 var result = mapper.Map<List<CandidateResponse>>(candidates);
                 return Result<IEnumerable<CandidateResponse>>.Success(result);
-            });  
-            
+            });
+
             app.MapGet("/candidates/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
             {
                 var myGuid = Guid.Empty;
@@ -267,8 +289,8 @@ namespace ICTAZEVoting.Api
                 }
                 return Result<Candidate>.Fail("Not found.");
 
-            });  
-            app.MapGet("/candidates/getbyelection/{id}", async (IUnitOfWork<Guid> unitOfWork,IMapper mapper, [FromRoute] string id) =>
+            });
+            app.MapGet("/candidates/getbyelection/{id}", async (IUnitOfWork<Guid> unitOfWork, IMapper mapper, [FromRoute] string id) =>
             {
                 var myGuid = Guid.Empty;
                 if (Guid.TryParse(id, out myGuid))
@@ -403,7 +425,7 @@ namespace ICTAZEVoting.Api
              });
             app.MapGet("/elections/current", [Authorize] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
-                var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).FirstOrDefaultAsync(e=> e.ElectionDate.Value.AddHours(e.Duration) >= DateTime.Now && e.ElectionDate <= DateTime.Now);
+                var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).FirstOrDefaultAsync(e => e.ElectionDate.Value.AddHours(e.Duration) >= DateTime.Now && e.ElectionDate <= DateTime.Now);
                 var result = mapper.Map<ElectionResponse>(election);
                 return Result<ElectionResponse>.Success(result);
             });
@@ -418,17 +440,17 @@ namespace ICTAZEVoting.Api
                 var myGuid = Guid.Empty;
                 if (Guid.TryParse(id, out myGuid))
                 {
-                    var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).ThenInclude(p=>p.Candidates).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).ThenInclude(p => p.Candidates).FirstOrDefaultAsync(v => v.Id == myGuid);
                     if (election == null)
                     {
                         return Result<ElectionResponse>.Fail("Not found.");
                     }
                     else
                     {
-                         var result =  mapper.Map<ElectionResponse>(election); 
-                         return Result<ElectionResponse>.Success(result);
+                        var result = mapper.Map<ElectionResponse>(election);
+                        return Result<ElectionResponse>.Success(result);
                     }
-                   
+
                 }
                 return Result<ElectionResponse>.Fail("Not found.");
             });

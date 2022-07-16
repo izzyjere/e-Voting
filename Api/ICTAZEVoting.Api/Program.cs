@@ -42,4 +42,5 @@ app.UseMiddleware<SignInMiddleware<User>>();
 app.UseHttpsRedirection();
 app.MapEndpointRoutes();
 app.Initialize();
+await app.CleanUneccessaryFiles();
 app.Run();

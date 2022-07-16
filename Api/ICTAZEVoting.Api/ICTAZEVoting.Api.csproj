@@ -10,10 +10,6 @@
 	  <Content Include="Files\biometrics\file.txt" />
 	  <Content Include="Files\biometrics\lfonlswu_nxa.jpeg" />
 	  <Content Include="Files\biometrics\urj1sn12_esx.jpeg" />
-	  <Content Include="Files\images\bulaya.png" />
-	  <Content Include="Files\images\clarence.png" />
-	  <Content Include="Files\images\wisdom.png" />
-	  <Content Include="Files\_dhhfhffg\lr0aszz0_vyg.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -40,9 +36,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Files\images\" />
 	  <Folder Include="Files\temp\" />
 	  <Folder Include="Files\temp\" />
-	  <Folder Include="Files\_dhhfhffg\" />
 	</ItemGroup>
 
 	<ItemGroup>

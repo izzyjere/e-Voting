@@ -18,7 +18,7 @@ namespace ICTAZEVoting.Core
         private readonly ILogger<DatabaseSeeder> _logger;
         private readonly SystemDbContext _db;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
+        private readonly RoleManager<Role> _roleManager;         
 
         public DatabaseSeeder(
             UserManager<User> userManager,
@@ -40,6 +40,7 @@ namespace ICTAZEVoting.Core
             await MakeAllUsersVoters();
             _db.SaveChanges();
         }
+        
         async Task MakeAllUsersVoters()
         {
 

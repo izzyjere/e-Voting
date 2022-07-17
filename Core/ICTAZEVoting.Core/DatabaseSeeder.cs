@@ -164,7 +164,7 @@ namespace ICTAZEVoting.Core
                     };
                     //Generate Key
                     var aes = Aes.Create();
-                    var Secrete = voter.Id.ToString().Replace('-', '_') + voter.PersonalDetails.NRC.Reverse();
+                    var Secrete = voter.Id.ToString().Replace('-', '_') + voter.PersonalDetails.NRC;
                     var key = aes.Key;
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);

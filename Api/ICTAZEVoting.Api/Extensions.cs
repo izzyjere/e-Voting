@@ -220,7 +220,7 @@ namespace ICTAZEVoting.Api
                     entity.PersonalDetails.UserId = register.Data;
                     //Generate Key
                     var aes = Aes.Create();
-                    var Secrete = entity.Id.ToString().Replace('-', '_') + entity.PersonalDetails.NRC.Reverse();
+                    var Secrete = entity.Id.ToString().Replace('-', '_') + entity.PersonalDetails.NRC;
                     var key = aes.Key;
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
@@ -366,7 +366,7 @@ namespace ICTAZEVoting.Api
                     };
                     //Generate Key
                     var aes = Aes.Create();
-                    var Secrete = entity.Id.ToString().Replace('-', '_') + entity.PersonalDetails.NRC.Reverse();
+                    var Secrete = entity.Id.ToString().Replace('-', '_') + entity.PersonalDetails.NRC;
                     var key = aes.Key;
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
@@ -431,7 +431,7 @@ namespace ICTAZEVoting.Api
             });
             app.MapGet("/elections/pending", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
-                var elections = await unitOfWork.Repository<Election>().Entities().Where(e => e.ElectionDate.Value < DateTime.Now).Include(e => e.Positions).ToListAsync();
+                var elections = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).ToListAsync();
                 var result = mapper.Map<IEnumerable<ElectionResponse>>(elections);
                 return Result<IEnumerable<ElectionResponse>>.Success(result);
             });

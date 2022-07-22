@@ -10,19 +10,21 @@ using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
 using System.Globalization;
+using System.IO.IsolatedStorage;
 using System.Net.Http;
 
 namespace ICTAZEVoting
 {
     public partial class Main : Form
     {
+        NodeConnectionInstance NodeConnection;
         public Main()
         {
-            InitializeComponent();
+            InitializeComponent();            
             ApplicationService.OnCloseClicked += OnClose;
             Task.Run(async()=> await SessionStorage.RemoveItemAsync("UserToken"));
-            var services = new ServiceCollection();
 
+            var services = new ServiceCollection();
             services.AddMudServices(configuration =>
             {
                 configuration.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
@@ -54,6 +56,7 @@ namespace ICTAZEVoting
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IFileService, FileUploadService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddSingleton(NodeConnection);
             services.AddAuthorizationCore()
             .AddScoped<IAuthenticationService, AuthenticationService>();       
             services.AddWindowsFormsBlazorWebView();
@@ -62,6 +65,11 @@ namespace ICTAZEVoting
             blazorWebView1.Services = services.BuildServiceProvider();
             blazorWebView1.RootComponents.Add<App>("#app");
             
+        }
+        async void InitNode()
+        {
+            using var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null));
+            NodeConnection = await NodeConnectionInstance.BuildConnectionAsync(isoStore);
         }
 
         private void blazorWebView1_Click(object sender, EventArgs e)
@@ -78,7 +86,6 @@ namespace ICTAZEVoting
             Task.Run(async () => await SessionStorage.RemoveItemAsync("UserToken"));
             Application.Restart();
             Environment.Exit(0);
-
         }
        
     }

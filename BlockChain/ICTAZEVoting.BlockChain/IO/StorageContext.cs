@@ -1,6 +1,7 @@
 ﻿using ICTAZEVoting.BlockChain.Extensions;
 using LevelDB;
 
+using System.IO.IsolatedStorage;
 namespace ICTAZEVoting.BlockChain.IO
 {
     public class StorageContext : IDisposable
@@ -13,7 +14,7 @@ namespace ICTAZEVoting.BlockChain.IO
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
-            var options = new Options { CreateIfMissing = true };
+            var options = new Options { CreateIfMissing = true };           
             database = new(options, filePath);
         }
         public Models.BlockChain GetBlockChain()
@@ -51,6 +52,14 @@ namespace ICTAZEVoting.BlockChain.IO
                 keyStore.Add("key", keyAndIV[0]);
                 keyStore.Add("iv", keyAndIV[1]);
             }
+        }
+        void AddKeys(Dictionary<string,object> valuePairs)
+        {
+            
+        }
+        public bool ChainExists()
+        {
+            throw new NotImplementedException();
         }
 
         public void Remove(string key)

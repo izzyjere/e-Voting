@@ -2,11 +2,12 @@
 using ICTAZEVoting.BlockChain.Network;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
+using System.IO.IsolatedStorage;
 namespace ICTAZEVoting.Services.Domain
 {
-    public class NodeConnectionService : IAsyncDisposable
+    public class NodeConnectionInstance : IAsyncDisposable
     {
-        HubConnection hubConnection;
+        static HubConnection? hubConnection;        
         readonly HashSet<IDisposable> hubRegistrations = new();
         Dictionary<string, Node> ConnectedNodes { get; set; } = new();
         readonly StorageContext storageContext;
@@ -24,9 +25,9 @@ namespace ICTAZEVoting.Services.Domain
             }
             return Task.CompletedTask;
         }
-        private NodeConnectionService(string storagePath)
+        private NodeConnectionInstance(IsolatedStorageFile isolatedStorage)
         {
-            storageContext = new StorageContext(storagePath);
+            storageContext = new StorageContext("");
             hubConnection = new HubConnectionBuilder()
                                 .WithAutomaticReconnect()
                                 .Build();
@@ -35,11 +36,15 @@ namespace ICTAZEVoting.Services.Domain
                 RegisterNode(node)));
             hubRegistrations.Add(hubConnection.OnNodeDisconneted(nodeId =>
                 RemoveNode(nodeId)));
+            storageContext.InitializeBlockChain();  
         }
-        public async Task<NodeConnectionService> BuildConnectionAsync(string storagePath)
+        public static async Task<NodeConnectionInstance> BuildConnectionAsync(IsolatedStorageFile isolatedStorage)
         {
-            var service = new NodeConnectionService(storagePath);
-            await hubConnection.StartAsync();
+            var service = new NodeConnectionInstance(isolatedStorage);             
+            if (hubConnection != null)
+            {
+                await hubConnection.StartAsync();
+            }
             return service;
         }
         async Task OnMessageRecievedAsync(NetworkMessage message)
@@ -67,8 +72,6 @@ namespace ICTAZEVoting.Services.Domain
         {
             await hubConnection.InvokeAsync("SendMessage", storageContext.GetBlockChain());
         }
-
-
         public async  ValueTask DisposeAsync()
         {
             if (hubRegistrations is { Count: > 0 })

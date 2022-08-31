@@ -1,63 +1,86 @@
 ﻿@page "/electionresults"
+@using ICTAZEVoting.Shared.Responses.Domain
 
-<MudText Typo="Typo.h5" Color="Color.Dark" Class="mb-4">Main Dashboard</MudText>
+
+@if (currentElection == null)
+{
+    <MudText Typo="Typo.h5" Color="Color.Dark" Class="mb-4"> No Election Configured.</MudText>
+}
+else if (currentElection.Status == ElectionStatus.Open)
+{
+    <MudAlert Severity="Severity.Success">@currentElection.Name started at @currentElection.ElectionDate.TimeOfDay.ToString() ending at @currentElection.ClosingTime.TimeOfDay.ToString()</MudAlert>
+}
+else if (currentElection.Status == ElectionStatus.Pending)
+{
+
+    <MudAlert Severity="Severity.Info">The election hasn't started.</MudAlert>
+
+}
+else if (currentElection.Status == ElectionStatus.Closed)
+{
+
+    <MudAlert Severity="Severity.Error">The election has been closed.</MudAlert>
+
+}
+
 <MudGrid>
     <MudItem xs="12" sm="6" md="3">
         <a Href="candidates">
-        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-            <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
-                <MudIcon Icon="@Icons.Material.Filled.EmojiPeople" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
-                <div>
-                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Candidates</MudText>
-                    <MudText Typo="Typo.h5">@NumberOfCandidates</MudText>
-                </div>
-            </MudPaper>
-        </Animate>
+            <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                    <MudIcon Icon="@Icons.Material.Filled.EmojiPeople" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                    <div>
+                        <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Candidates</MudText>
+                        <MudText Typo="Typo.h5">@NumberOfCandidates</MudText>
+                    </div>
+                </MudPaper>
+            </Animate>
         </a>
     </MudItem>
 
-<MudItem xs="12" sm="6" md="3">
-    <a Href="voters">
-    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
-            <MudIcon Icon="@Icons.Material.Filled.WhereToVote" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
-            <div>
-                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Voters</MudText>
-                <MudText Typo="Typo.h5">@NumberOfVoters</MudText>
-            </div>
-        </MudPaper>
-    </Animate>
-    </a>
-</MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <a Href="voters">
+            <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                    <MudIcon Icon="@Icons.Material.Filled.WhereToVote" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                    <div>
+                        <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Voters</MudText>
+                        <MudText Typo="Typo.h5">@NumberOfVoters</MudText>
+                    </div>
+                </MudPaper>
+            </Animate>
+        </a>
+    </MudItem>
 
-<MudItem xs="12" sm="6" md="3">
-    <a Href="electionstats">
-    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
-            <MudIcon Icon="@Icons.Material.Filled.HowToVote" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
-            <div>
-                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Votes Casted</MudText>
-                <MudText Typo="Typo.h5">@NumberOfVotes</MudText>
-            </div>
-        </MudPaper>
-    </Animate>
-    </a>
-</MudItem>
-<MudItem xs="12" sm="6" md="3">
-    <a Href="candidates">
-    <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-        <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
-            <MudIcon Icon="@Icons.Material.Filled.Ballot" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
-            <div>
-                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Polling Booths</MudText>
-                <MudText Typo="Typo.h5">@NumberOfPollingBooths</MudText>
-            </div>
-        </MudPaper>
-    </Animate>
-    </a>
-</MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <a Href="electionstats">
+            <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                    <MudIcon Icon="@Icons.Material.Filled.HowToVote" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                    <div>
+                        <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Votes Casted</MudText>
+                        <MudText Typo="Typo.h5">@nodeConnectionInstance.CountBallots(currentElection?.Id)</MudText>
+                    </div>
+                </MudPaper>
+            </Animate>
+        </a>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <a Href="candidates">
+            <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                <MudPaper Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                    <MudIcon Icon="@Icons.Material.Filled.Ballot" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                    <div>
+                        <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Polling Booths</MudText>
+                        <MudText Typo="Typo.h5">@nodeConnectionInstance.NodeCount</MudText>
+                    </div>
+                </MudPaper>
+            </Animate>
+        </a>
+    </MudItem>
 </MudGrid>
-<br/><br/>
+<br />
+<br />
 @* Begenning of MudTabs *@
 <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
     <MudTabPanel Text="Presidential">
@@ -203,23 +226,26 @@
 </MudScrollToTop>
 
 @code {
-    private int NumberOfVotes = 0;
-    private int NumberOfPollingBooths = 0;
+
+    ElectionResponse currentElection = null;
+    [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    ClaimsPrincipal claimsPrincipal = new();
+   
     private int NumberOfCandidates = 0;
     private int NumberOfVoters = 0;
-    private string electionId;
-
-
-
     private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
     int dataSize = 4;
     double[] data = { 77, 25, 20, 5 };
     string[] President = { "Clarence Simukanzye", "Wisdom Jere", "Ndanji Bupe Soko", "Bulaya Mwanaute" };
 
     protected override async Task OnInitializedAsync()
-    {
-        //NumberOfCandidates = await electionService.GetNumberOfCandidates(electionId);
-        //NumberOfVoters = await electionService.GetNumberOfVoters(electionId);
+    {    
+        currentElection = await electionService.GetCurrentElection();
+        if(currentElection!=null)
+        {
+            NumberOfVoters = currentElection.VoterCount;
+            NumberOfCandidates = currentElection.CandidateCount;            
+        }
     }
 
     Random random = new Random();

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ICTAZEVoting.Shared.Responses.Domain
@@ -17,6 +18,8 @@ namespace ICTAZEVoting.Shared.Responses.Domain
         public ElectionStatus Status { get; set; }
         public DateTime ClosingTime { get; set; }
         public List<ElectionPositionResponse> Positions { get; set; }
+        public int VoterCount { get; set; }
+        public int CandidateCount => Positions.Sum(prop =>prop.CandidateCount);
     }
     public class ElectionPositionResponse
     {

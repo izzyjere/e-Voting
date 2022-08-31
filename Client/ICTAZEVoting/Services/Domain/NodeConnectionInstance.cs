@@ -8,11 +8,12 @@ namespace ICTAZEVoting.Services.Domain
 {
     public class NodeConnectionInstance : IAsyncDisposable
     {
-         HubConnection? hubConnection;
+        HubConnection? hubConnection;
         readonly HashSet<IDisposable> hubRegistrations = new();
         Dictionary<string, Node> ConnectedNodes { get; set; } = new();
         readonly StorageContext storageContext;
         bool chainSynced;
+        public int NodeCount { get => ConnectedNodes.Count; }
         Task RegisterNode(Node node)
         {
             ConnectedNodes.Add(node.NodeId, node);
@@ -25,6 +26,14 @@ namespace ICTAZEVoting.Services.Domain
                 ConnectedNodes.Remove(id);
             }
             return Task.CompletedTask;
+        }
+        public int CountBallots(Guid? electionId)
+        {
+            if(electionId==null)
+            {
+                return 0;
+            }
+            return GetBallots((Guid)electionId).Count;
         }
         public NodeConnectionInstance()
         {
@@ -65,6 +74,20 @@ namespace ICTAZEVoting.Services.Domain
                 await SendMessageAsync();
             }
 
+        }
+        public List<Ballot> GetBallots(Guid electionId)
+        {
+            var chain = storageContext.GetBlockChain();
+            var ballots = new List<Ballot>();
+            if(chain==null)
+            {
+                return new();
+            }
+            foreach (var item in chain.Chain.Where(b=>b.Data.ElectionId==electionId))
+            {
+                ballots.Add(item.Data);
+            }
+            return ballots;
         }
         public async Task AddBallotAsync(Ballot ballot)
         {

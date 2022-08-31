@@ -115,8 +115,7 @@
                 </MudItem>
                 <MudItem xs="12">
                     <center><MudText GutterBottom="true" Typo="Typo.h6">Voters</MudText></center>
-
-                    <table class="table table-hover table-bordered table-striped">
+                   <MudSimpleTable Dense="true" Bordered="true" Hover="true" FixedHeader="true">
                         <thead>
                             <tr>
                                 <th>NRC</th>
@@ -140,7 +139,7 @@
 
                             }
                         </tbody>
-                    </table>
+                   </MudSimpleTable>
                 </MudItem>
             </MudGrid>
             <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Election</MudButton>

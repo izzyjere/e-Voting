@@ -72,7 +72,9 @@
         voter = await voterService.GetByUserId(claimsPrincipal.GetUserId());
         if (voter == null)
         {
-            ApplicationService.NotifyOncloseClicked(this, new EventArgs());
+            currentElection = null;
+            StateHasChanged();
+            isloading = false;
             return;
         }
         isAllowedToVote = await electionService.IsAllowedToVote(voter.Id, currentElection.Id);

@@ -41,7 +41,8 @@ namespace ICTAZEVoting.Core.Mappings
     {
         public ElectionProfile()
         {
-            CreateMap<ElectionResponse, Election>().ReverseMap();
+            CreateMap<ElectionResponse, Election>().ReverseMap()
+                 .ForMember(dest => dest.VoterCount, source => source.MapFrom(source => source.Voters.Count));
         }
 
     }

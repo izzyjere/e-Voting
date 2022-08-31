@@ -4,8 +4,7 @@ namespace ICTAZEVoting.BlockChain.Models
 {
     public class BlockChain
     {
-        public IList<Block> Chain { get; set; }
-        public Guid ElectionId { get; set; }
+        public IList<Block> Chain { get; set; }       
         public List<Ballot> PendingBallots { get; set; } = new();
         public static int Difficulty { set; get; } = 2;
         public BlockChain()

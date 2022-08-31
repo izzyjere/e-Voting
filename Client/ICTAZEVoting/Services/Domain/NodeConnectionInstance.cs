@@ -1,15 +1,14 @@
 ﻿using ICTAZEVoting.BlockChain.IO;
 using ICTAZEVoting.BlockChain.Network;
-using ICTAZEVoting.Core.Extensions;
+
 using Microsoft.AspNetCore.SignalR.Client;
 
 using Newtonsoft.Json;
-using System.IO.IsolatedStorage;
 namespace ICTAZEVoting.Services.Domain
 {
     public class NodeConnectionInstance : IAsyncDisposable
     {
-        static HubConnection? hubConnection;      
+        static HubConnection? hubConnection;
         readonly HashSet<IDisposable> hubRegistrations = new();
         Dictionary<string, Node> ConnectedNodes { get; set; } = new();
         readonly StorageContext storageContext;
@@ -21,31 +20,31 @@ namespace ICTAZEVoting.Services.Domain
         }
         Task RemoveNode(string id)
         {
-            if(ConnectedNodes.ContainsKey(id))
+            if (ConnectedNodes.ContainsKey(id))
             {
-                ConnectedNodes.Remove(id);  
+                ConnectedNodes.Remove(id);
             }
             return Task.CompletedTask;
         }
-        private NodeConnectionInstance(string path)
+        public NodeConnectionInstance()
         {
-            storageContext = new StorageContext(path);
-            hubConnection = new HubConnectionBuilder().WithUrl("").WithAutomaticReconnect().Build();
+            var appPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            storageContext = new StorageContext(Path.Combine(appPath,"Evoting","data"));
+            hubConnection = new HubConnectionBuilder().WithUrl("https://localhost:7119/blockchain").WithAutomaticReconnect().Build();
             hubRegistrations.Add(hubConnection.OnMessageReceived(OnMessageRecievedAsync));
             hubRegistrations.Add(hubConnection.OnNodeConnected(node =>
                 RegisterNode(node)));
             hubRegistrations.Add(hubConnection.OnNodeDisconneted(nodeId =>
                 RemoveNode(nodeId)));
-            storageContext.InitializeBlockChain();  
+            storageContext.InitializeBlockChain();
+            BuildConnectionAsync();
         }
-        public static async Task<NodeConnectionInstance> BuildConnectionAsync(string path)
+         async void BuildConnectionAsync() 
         {
-            var service = new NodeConnectionInstance(path);             
             if (hubConnection != null)
             {
                 await hubConnection.StartAsync();
-            }
-            return service;
+            }     
         }
         async Task OnMessageRecievedAsync(NetworkMessage message)
         {
@@ -61,7 +60,7 @@ namespace ICTAZEVoting.Services.Domain
                 newBlockChain.PendingBallots = newBallots;
                 storageContext.UpdateBlockChain(newBlockChain);
             }
-            if(!chainSynced)
+            if (!chainSynced)
             {
                 await SendMessageAsync();
             }
@@ -73,10 +72,11 @@ namespace ICTAZEVoting.Services.Domain
             await SendMessageAsync();
         }
         async Task SendMessageAsync()
-        {  if(hubConnection is not null)
-           await hubConnection.InvokeAsync("SendMessage", storageContext.GetBlockChain());
+        {
+            if (hubConnection is not null)
+                await hubConnection.InvokeAsync("SendMessage", storageContext.GetBlockChain());
         }
-        public async  ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
             if (hubRegistrations is { Count: > 0 })
             {

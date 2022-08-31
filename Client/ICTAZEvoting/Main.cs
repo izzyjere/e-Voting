@@ -10,20 +10,17 @@ using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
 using System.Globalization;
-using System.IO.IsolatedStorage;
-using System.Net.Http;
 
 namespace ICTAZEVoting
 {
     public partial class Main : Form
     {
-        NodeConnectionInstance NodeConnection;
+        
         public Main()
         {
-            InitializeComponent();            
+            InitializeComponent();                        
             ApplicationService.OnCloseClicked += OnClose;
-            Task.Run(async()=> await SessionStorage.RemoveItemAsync("UserToken"));
-            InitNode();
+            Task.Run(async()=> await SessionStorage.RemoveItemAsync("UserToken"));         
             var services = new ServiceCollection();
             services.AddMudServices(configuration =>
             {
@@ -56,7 +53,7 @@ namespace ICTAZEVoting
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IFileService, FileUploadService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-            services.AddSingleton(NodeConnection);
+            services.AddSingleton<NodeConnectionInstance>();         
             services.AddAuthorizationCore()
             .AddScoped<IAuthenticationService, AuthenticationService>();       
             services.AddWindowsFormsBlazorWebView();
@@ -66,12 +63,7 @@ namespace ICTAZEVoting
             blazorWebView1.RootComponents.Add<App>("#app");
             
         }
-        async void InitNode()
-        {
-            var appPath = Environment.CurrentDirectory;
-            NodeConnection = await NodeConnectionInstance.BuildConnectionAsync(Path.Combine(appPath,"data"));
-        }
-
+       
         private void blazorWebView1_Click(object sender, EventArgs e)
         {
            

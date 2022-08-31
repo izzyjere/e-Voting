@@ -1,4 +1,5 @@
 using ICTAZEVoting.Api;
+using ICTAZEVoting.Api.Hubs;
 using ICTAZEVoting.Core.Extensions;
 using ICTAZEVoting.Core.Middleware;
 using ICTAZEVoting.Core.Models;
@@ -19,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers().AddJsonOptions(o => {
     o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
+builder.Services.AddSignalR();
 builder.Services.RegisterSwagger();
 
 var app = builder.Build();
@@ -41,6 +43,7 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseMiddleware<SignInMiddleware<User>>();
 app.UseHttpsRedirection();
 app.MapEndpointRoutes();
+app.MapHub<BlockChainHub>("/blockchain");
 app.Initialize();
 await app.CleanUneccessaryFiles();
 app.Run();

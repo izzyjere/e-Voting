@@ -5,7 +5,6 @@ using LevelDB;
 
 using Newtonsoft.Json;
 
-using System.IO.IsolatedStorage;
 namespace ICTAZEVoting.BlockChain.IO
 {
     public class StorageContext : IDisposable
@@ -69,6 +68,7 @@ namespace ICTAZEVoting.BlockChain.IO
             var keyAndIV = database.SaveEncrypted(chain);
             if (keyAndIV != null)
             {
+                keyStore.Clear();
                 keyStore.Add("key",keyAndIV[0]);
                 keyStore.Add("iv",keyAndIV[1]);
                 database.Put("keys", JsonConvert.SerializeObject(keyStore));

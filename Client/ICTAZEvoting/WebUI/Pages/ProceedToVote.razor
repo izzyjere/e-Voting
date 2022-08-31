@@ -40,7 +40,7 @@
             </video>
         </MudContainer>
         <div class="mt-4 mb-4 ml-4 mr-4">
-            <MudButton Link='@($"voting/{currentElection.Id.ToString()}")' Variant="Variant.Filled" Color="Color.Info" FullWidth="true">Proceed To Vote</MudButton>
+            <MudButton Disabled="@(!isAllowedToVote)" Link='@($"voting/{currentElection.Id.ToString()}")' Variant="Variant.Filled" Color="Color.Info" FullWidth="true">Proceed To Vote</MudButton>
         </div>
     }
     else if (currentElection.Status == ElectionStatus.Pending)
@@ -61,10 +61,21 @@
 
 @code {
     ElectionResponse currentElection = null;
+    [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    ClaimsPrincipal claimsPrincipal = new();
+    Voter voter = new();
     bool isloading = true;
+    bool isAllowedToVote;
     protected override async Task OnInitializedAsync()
     {
         currentElection = await electionService.GetCurrentElection();
+        voter = await voterService.GetByUserId(claimsPrincipal.GetUserId());
+        if (voter == null)
+        {
+            ApplicationService.NotifyOncloseClicked(this, new EventArgs());
+            return;
+        }
+        isAllowedToVote = await electionService.IsAllowedToVote(voter.Id, currentElection.Id);
         isloading = false;
         StateHasChanged();
     }

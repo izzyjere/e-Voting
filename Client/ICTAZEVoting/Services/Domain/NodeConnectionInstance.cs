@@ -8,7 +8,7 @@ namespace ICTAZEVoting.Services.Domain
 {
     public class NodeConnectionInstance : IAsyncDisposable
     {
-        static HubConnection? hubConnection;
+         HubConnection? hubConnection;
         readonly HashSet<IDisposable> hubRegistrations = new();
         Dictionary<string, Node> ConnectedNodes { get; set; } = new();
         readonly StorageContext storageContext;

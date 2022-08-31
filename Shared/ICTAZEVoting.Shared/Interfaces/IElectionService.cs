@@ -55,6 +55,7 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<int> GetnumberOfPollingbooths(string elecitonId);
         Task<int> GetNumberOfconstituencies(string electionId);
         Task<int> GetNumberOfConstituencies(string elecitonId);
-
+        Task<bool> IsAllowedToVote(Guid voterId, Guid electionId);
+        Task<bool> MarkVoted(Guid voterId, Guid electionId);
     }
 }

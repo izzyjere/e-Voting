@@ -12,9 +12,9 @@ namespace ICTAZEVoting.BlockChain.Network
         public Node(string address)
         {
             Uri = address;
-            NodeId = Guid.NewGuid().ToString();
+            
         }
         public string Uri { get; }    
-        public string NodeId { get; init; }
+        public string NodeId { get; set; }
     }
 }

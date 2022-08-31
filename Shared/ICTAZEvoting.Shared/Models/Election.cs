@@ -6,6 +6,7 @@ using ICTAZEVoting.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace ICTAZEVoting.Shared.Models
 {
@@ -47,6 +48,25 @@ namespace ICTAZEVoting.Shared.Models
             ElectionDate = DateTime.Today.AddDays(1);
             Name = $"{DateTime.Today.Year} General Elections";
             ElectionTypeId = default;
+        }
+        public bool CanVote(string voterId)
+        {
+            if(Voters!=null && Voters.Any(v=>v.VoterId.ToString()==voterId && !v.HasVoted))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void MarkVoted(string voterId)
+        {
+            foreach (var item in Voters)
+            {
+                if(voterId==item.VoterId.ToString())
+                {
+                    item.HasVoted = true;
+                }
+            }
         }
     }
 }

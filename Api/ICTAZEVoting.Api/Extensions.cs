@@ -435,7 +435,7 @@ namespace ICTAZEVoting.Api
                 var result = mapper.Map<IEnumerable<ElectionResponse>>(elections);
                 return Result<IEnumerable<ElectionResponse>>.Success(result);
             });
-            app.MapGet("/elections/{id}", async (IUnitOfWork<Guid> unitOfWork, IMapper mapper, [FromRoute] string id) =>
+            app.MapGet("/elections/{id}",[Authorize] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper, [FromRoute] string id) =>
             {
                 var myGuid = Guid.Empty;
                 if (Guid.TryParse(id, out myGuid))
@@ -453,6 +453,51 @@ namespace ICTAZEVoting.Api
 
                 }
                 return Result<ElectionResponse>.Fail("Not found.");
+            });        
+            app.MapGet("/elections/voters/check/{electionId}/{voterId}",[Authorize] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper, [FromRoute] string electionId, [FromRoute] string voterId) =>
+            {
+                var myGuid = Guid.Empty;
+                var myGuid2 = Guid.Empty;
+                if (Guid.TryParse(electionId, out myGuid))
+                {
+                    var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).ThenInclude(p => p.Candidates).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (election == null)
+                    {
+                        return Result.Fail("Not found.");
+                    }
+                    else
+                    {                     
+                        return election.CanVote(voterId)?Result.Success(): Result.Fail();
+                    }
+
+                }
+                return Result.Fail("Not found.");
+            });    
+            app.MapGet("/elections/voters/mark/{electionId}/{voterId}",[Authorize] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper, [FromRoute] string electionId, [FromRoute] string voterId) =>
+            {
+                var myGuid = Guid.Empty;
+                var myGuid2 = Guid.Empty;
+                if (Guid.TryParse(electionId, out myGuid)&& Guid.TryParse(voterId, out myGuid2))
+                {
+                    var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).ThenInclude(p => p.Candidates).FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (election == null)
+                    {
+                        return Result.Fail("Not found.");
+                    }
+                    else
+                    {                     
+                        if(election.CanVote(voterId))
+                        {
+                            election.MarkVoted(voterId);
+                            await unitOfWork.Repository<Election>().Update(election);
+                            await unitOfWork.Commit(new CancellationToken());
+                            return Result.Success();
+                        }
+                        return Result.Fail("Not found.");
+                    }
+
+                }
+                return Result.Fail("Not found.");
             });
             app.MapPost("/elections/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] Election entity) =>
              {

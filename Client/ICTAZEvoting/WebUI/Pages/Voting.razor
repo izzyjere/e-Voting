@@ -92,10 +92,15 @@
     [Parameter] public string ElectionId { get; set; }
     private List<CandidateResponse> candidates = new List<CandidateResponse>();
     ElectionResponse election = new();
+    [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    ClaimsPrincipal claimsPrincipal = new();
+    Voter voter = new();
     MudTabs tabs;
     Ballot ballot;
+    bool hasVoted;
     protected override async Task OnInitializedAsync()
     {
+        claimsPrincipal = (await AuthenticationStateTask).User;
         await Refresh();
     }
     bool HasCandidates(Guid id)
@@ -109,6 +114,12 @@
         election.Positions = new();
         election = await electionService.GetElection(ElectionId);
         candidates = await electionService.GetCandidates(ElectionId);
+        voter = await voterService.GetByUserId(claimsPrincipal.GetUserId());
+        if(voter==null)
+        {
+            ApplicationService.NotifyOncloseClicked(this, new EventArgs());
+            return;
+        }        
         if (election.Positions.Count == 1)
         {
             buttonText = "Submit";
@@ -174,6 +185,12 @@
                     if (response.Verified)
                     {
                         //Save to block chain.
+                        await nodeConnectionInstance.AddBallotAsync(ballot);
+                        snackBar.Add("Your vote was registered.", Severity.Success);
+                        var done = await dialogService.ShowMessageBox("Confirmation", "Your vote was saved");
+                        await electionService.MarkVoted(voter.Id, election.Id);
+                        await authenticationService.SignOut();
+                        ApplicationService.NotifyOncloseClicked(this, new EventArgs());
                     }
 
                 }

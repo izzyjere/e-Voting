@@ -357,7 +357,30 @@ namespace ICTAZEVoting.Services.Domain
         {
             throw new NotImplementedException();
         }
-
+        public async Task<bool> IsAllowedToVote(Guid voterId, Guid electionId)
+        {
+            var get = await httpClient.GetAsync(ApiEndpoints.CheckEligibility + $"/{electionId}/{voterId}");
+            if (get.IsSuccessStatusCode)
+            {
+                return (await get.ToResult()).Succeeded;
+            }
+            else
+            {
+                return false;
+            }
+        }   
+        public async Task<bool> MarkVoted(Guid voterId, Guid electionId)
+        {
+            var get = await httpClient.GetAsync(ApiEndpoints.MarkVoted + $"/{electionId}/{voterId}");
+            if (get.IsSuccessStatusCode)
+            {
+                return (await get.ToResult()).Succeeded;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public async Task<List<CandidateResponse>> GetCandidates(string electionId)
         {
             var get = await httpClient.GetAsync(ApiEndpoints.GetCandidatesByElection + $"/{electionId}");

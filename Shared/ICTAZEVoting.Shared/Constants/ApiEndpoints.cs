@@ -55,5 +55,8 @@ namespace ICTAZEVoting.Shared.Constants
         public const string CountCandidates = "elections/candidates/count";
         public const string CountVoters = "elections/voters/count";
         public const string GetCandidatesByElection= "candidates/getbyelection";
+
+        public const string CheckEligibility = "elections/voters/check";
+        public const string MarkVoted = "elections/voters/mark";
     }
 }

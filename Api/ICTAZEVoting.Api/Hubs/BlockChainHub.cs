@@ -25,15 +25,15 @@ namespace ICTAZEVoting.Api.Hubs
         {
             var nodeAddress = GetRequestIP(Context.GetHttpContext());
             var node = new Node(nodeAddress);
-            Clients.Caller.NodeId = node.NodeId;
+            node.NodeId = Context.ConnectionId;
             await Clients.Others.NodeConnected(node);
-            logger.LogInformation($"New node connected: at : {node}");
+            logger.LogInformation($"New node connected: at : {node.NodeId}");
             await base.OnConnectedAsync();
         }
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            await Clients.Others.NodeDisconnected(Clients.Caller.NodeId);
-            logger.LogInformation($"Node disconnected: at : {Clients.Caller.NodeId}");
+            Clients.All.NodeDisconnected(Context.ConnectionId);
+            logger.LogInformation($"Node disconnected: at : {Context.ConnectionId}");
             await base.OnDisconnectedAsync(exception);
         }
         public static string GetRequestIP(HttpContext context, bool tryUseXForwardHeader = true)

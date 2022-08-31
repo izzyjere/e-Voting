@@ -25,9 +25,9 @@ namespace ICTAZEVoting.Services.Domain
             }
             return Task.CompletedTask;
         }
-        private NodeConnectionInstance(IsolatedStorageFile isolatedStorage)
+        private NodeConnectionInstance(string path)
         {
-            storageContext = new StorageContext("");
+            storageContext = new StorageContext(path);
             hubConnection = new HubConnectionBuilder()
                                 .WithAutomaticReconnect()
                                 .Build();
@@ -38,9 +38,9 @@ namespace ICTAZEVoting.Services.Domain
                 RemoveNode(nodeId)));
             storageContext.InitializeBlockChain();  
         }
-        public static async Task<NodeConnectionInstance> BuildConnectionAsync(IsolatedStorageFile isolatedStorage)
+        public static async Task<NodeConnectionInstance> BuildConnectionAsync(string path)
         {
-            var service = new NodeConnectionInstance(isolatedStorage);             
+            var service = new NodeConnectionInstance(path);             
             if (hubConnection != null)
             {
                 await hubConnection.StartAsync();

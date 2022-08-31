@@ -68,7 +68,7 @@ namespace ICTAZEVoting
         }
         async void InitNode()
         {
-            using var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null));
+            using var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null);
             NodeConnection = await NodeConnectionInstance.BuildConnectionAsync(isoStore);
         }
 

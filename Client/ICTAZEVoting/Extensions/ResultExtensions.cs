@@ -58,7 +58,7 @@ namespace ICTAZEVoting.Extensions
             return responseObject;
         }
 
-        internal static async Task<IResult> ToResult(this HttpResponseMessage response)
+        internal static async Task<Shared.Wrapper.IResult> ToResult(this HttpResponseMessage response)
         {
             var responseAsString = await response.Content.ReadAsStringAsync();
             var responseObject = JsonSerializer.Deserialize<Result>(responseAsString, new JsonSerializerOptions

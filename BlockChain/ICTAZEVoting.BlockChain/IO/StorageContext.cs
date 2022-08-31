@@ -1,5 +1,8 @@
 ﻿using ICTAZEVoting.BlockChain.Extensions;
+
 using LevelDB;
+
+using Newtonsoft.Json;
 
 using System.IO.IsolatedStorage;
 namespace ICTAZEVoting.BlockChain.IO
@@ -7,18 +10,18 @@ namespace ICTAZEVoting.BlockChain.IO
     public class StorageContext : IDisposable
     {
         readonly DB database;
-        readonly Dictionary<string, string> keyStore = new();
+        IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User |IsolatedStorageScope.Assembly | IsolatedStorageScope.Domain, null, null);
         public StorageContext(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
-            var options = new Options { CreateIfMissing = true };           
+            var options = new Options { CreateIfMissing = true };
             database = new(options, filePath);
         }
         public Models.BlockChain GetBlockChain()
-        {
+        {   if()
             if (keyStore.Any())
             {
                 return database.GetEncrypted(keyStore["key"], keyStore["iv"]);
@@ -49,13 +52,27 @@ namespace ICTAZEVoting.BlockChain.IO
             var keyAndIV = database.SaveEncrypted(chain);
             if (keyAndIV != null)
             {
-                keyStore.Add("key", keyAndIV[0]);
-                keyStore.Add("iv", keyAndIV[1]);
+                AddKeys(keyAndIV);
             }
         }
-        void AddKeys(Dictionary<string,object> valuePairs)
+        void AddKeys(string[] keys)
         {
-            
+           
+            if (!isoStore.DirectoryExists("Data"))
+            {
+                isoStore.CreateDirectory("Data");
+                isoStore.CreateDirectory("Data/BlockChain");
+                isoStore.CreateDirectory("Data/BlockChain/Keys");
+            }
+            var dict = new Dictionary<string, string>();
+            dict.Add("key", keys[0]);
+            dict.Add("iv", keys[1]);
+            var json = JsonConvert.SerializeObject(dict);
+            using IsolatedStorageFileStream isoStream = new("Data/BlockChain/Keys/keys.txt", FileMode.CreateNew, isoStore);
+            using StreamWriter writer = new(isoStream);
+            writer.WriteLine(json);        
+
+
         }
         public bool ChainExists()
         {
@@ -64,7 +81,7 @@ namespace ICTAZEVoting.BlockChain.IO
 
         public void Remove(string key)
         {
-           database.Delete(key);
+            database.Delete(key);
         }
 
         public void Dispose()

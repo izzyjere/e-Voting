@@ -1,8 +1,7 @@
-﻿namespace ICTAZEVoting.Shared.Constants
+﻿namespace ICTAZEVoting.Shared.Constants;
+
+public class RoleConstants
 {
-    public class RoleConstants
-    {
-        public const string AdministratorRole = "Administrator"; 
-        public const string BasicRole = "Voter"; 
-    }
+    public const string AdministratorRole = "Administrator"; 
+    public const string BasicRole = "Voter"; 
 }

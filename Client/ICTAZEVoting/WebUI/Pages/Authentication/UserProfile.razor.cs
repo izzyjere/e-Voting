@@ -8,72 +8,71 @@ using MudBlazor;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ICTAZEVoting.WebUI.Pages.Authentication
+namespace ICTAZEVoting.WebUI.Pages.Authentication;
+
+public partial class UserProfile
 {
-    public partial class UserProfile
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string Description { get; set; }
+    [Inject] IUserManager userManager { get; set; }
+    private bool _active;
+    private char _firstLetterOfName;
+    private string _firstName;
+    private string _lastName;
+    private string _phoneNumber;
+    private string _email;
+
+    private bool _loaded;
+
+    private async Task ToggleUserStatus()
     {
-        [Parameter] public string Id { get; set; }
-        [Parameter] public string Title { get; set; }
-        [Parameter] public string Description { get; set; }
-        [Inject] IUserManager userManager { get; set; }
-        private bool _active;
-        private char _firstLetterOfName;
-        private string _firstName;
-        private string _lastName;
-        private string _phoneNumber;
-        private string _email;
-
-        private bool _loaded;
-
-        private async Task ToggleUserStatus()
+        var request = new ToggleUserStatusRequest { ActivateUser = _active, UserId = Guid.Parse(Id) };
+        var result = await userManager.ToggleUserStatusAsync(request);
+        if (result.Succeeded)
         {
-            var request = new ToggleUserStatusRequest { ActivateUser = _active, UserId = Guid.Parse(Id) };
-            var result = await userManager.ToggleUserStatusAsync(request);
-            if (result.Succeeded)
+            snackBar.Add("Updated User Status.", Severity.Success);
+            Navigation.NavigateTo("/users");
+        }
+        else
+        {
+            foreach (var error in result.Messages)
             {
-                snackBar.Add("Updated User Status.", Severity.Success);
-                Navigation.NavigateTo("/users");
+                snackBar.Add(error, Severity.Error);
             }
-            else
+        }
+    }
+
+    [Parameter] public string ImageDataUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = Id;
+        var result = await userManager.GetUser(userId);
+        if (result.Succeeded)
+        {
+            var user = result.Data;
+            if (user != null)
             {
-                foreach (var error in result.Messages)
+                _firstName = user.FirstName;
+                _lastName = user.LastName;
+                _email = user.Email;
+                _phoneNumber = user.PhoneNumber;
+                _active = user.IsActive;
+                var data = await userManager.GetProfilePictureAsync(userId);
+                if (data.Succeeded)
                 {
-                    snackBar.Add(error, Severity.Error);
+                    ImageDataUrl = data.Data;
                 }
+            }
+            Title = $"{_firstName} {_lastName}'s Profile";
+            Description = _email;
+            if (_firstName.Length > 0)
+            {
+                _firstLetterOfName = _firstName[0];
             }
         }
 
-        [Parameter] public string ImageDataUrl { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            var userId = Id;
-            var result = await userManager.GetUser(userId);
-            if (result.Succeeded)
-            {
-                var user = result.Data;
-                if (user != null)
-                {
-                    _firstName = user.FirstName;
-                    _lastName = user.LastName;
-                    _email = user.Email;
-                    _phoneNumber = user.PhoneNumber;
-                    _active = user.IsActive;
-                    var data = await userManager.GetProfilePictureAsync(userId);
-                    if (data.Succeeded)
-                    {
-                        ImageDataUrl = data.Data;
-                    }
-                }
-                Title = $"{_firstName} {_lastName}'s Profile";
-                Description = _email;
-                if (_firstName.Length > 0)
-                {
-                    _firstLetterOfName = _firstName[0];
-                }
-            }
-
-            _loaded = true;
-        }
+        _loaded = true;
     }
 }

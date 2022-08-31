@@ -6,87 +6,86 @@ using ICTAZEVoting.Shared.Models;
 using ICTAZEVoting.Shared.Responses.Audit;
 using ICTAZEVoting.Shared.Responses.Domain;
 
-namespace ICTAZEVoting.Core.Mappings
+namespace ICTAZEVoting.Core.Mappings;
+
+public class RoleProfile : Profile
 {
-    public class RoleProfile : Profile
+    public RoleProfile()
     {
-        public RoleProfile()
-        {
-            CreateMap<RoleResponse, Role>().ReverseMap();
-        }
+        CreateMap<RoleResponse, Role>().ReverseMap();
+    }
 
-    }
-    public class PolliingStationProfile:Profile
+}
+public class PolliingStationProfile:Profile
+{
+    public PolliingStationProfile()
     {
-        public PolliingStationProfile()
-        {
-            CreateMap<PollingStationResponse, PollingStation>().ReverseMap();
-        }
+        CreateMap<PollingStationResponse, PollingStation>().ReverseMap();
     }
-    public class ConstituencyProfile : Profile
+}
+public class ConstituencyProfile : Profile
+{
+    public ConstituencyProfile()
     {
-        public ConstituencyProfile()
-        {
-            CreateMap<ConstituencyResponse, Constituency>().ReverseMap();
-        }
+        CreateMap<ConstituencyResponse, Constituency>().ReverseMap();
     }
-    public class VoterProfile : Profile
+}
+public class VoterProfile : Profile
+{
+    public VoterProfile()
     {
-        public VoterProfile()
-        {
-            CreateMap<VoterResponse, Voter>().ReverseMap();
-        }
+        CreateMap<VoterResponse, Voter>().ReverseMap();
     }
-    public class ElectionProfile : Profile
+}
+public class ElectionProfile : Profile
+{
+    public ElectionProfile()
     {
-        public ElectionProfile()
-        {
-            CreateMap<ElectionResponse, Election>().ReverseMap();
-        }
+        CreateMap<ElectionResponse, Election>().ReverseMap();
+    }
 
-    }
-    public class PoliticalPartyProfile : Profile
+}
+public class PoliticalPartyProfile : Profile
+{
+    public PoliticalPartyProfile()
     {
-        public PoliticalPartyProfile()
-        {
-            CreateMap<PoliticalPartyResponse, PoliticalParty>().ReverseMap();
-        }
+        CreateMap<PoliticalPartyResponse, PoliticalParty>().ReverseMap();
     }
-    public class ElectionPositionProfile : Profile
+}
+public class ElectionPositionProfile : Profile
+{
+    public ElectionPositionProfile()
     {
-        public ElectionPositionProfile()
-        {
-            CreateMap<ElectionPositionResponse, ElectionPosition>().ReverseMap()
-                .ForMember(dest => dest.CandidateCount, source => source.MapFrom(source => source.Candidates.Count)); ;
-        }
+        CreateMap<ElectionPositionResponse, ElectionPosition>().ReverseMap()
+            .ForMember(dest => dest.CandidateCount, source => source.MapFrom(source => source.Candidates.Count)); ;
+    }
 
-    }
-    public class UserProfile : Profile
+}
+public class UserProfile : Profile
+{
+    public UserProfile()
     {
-        public UserProfile()
-        {
-            CreateMap<UserResponse, User>().ReverseMap();
-        }
+        CreateMap<UserResponse, User>().ReverseMap();
     }
-    public class AuditProfile : Profile
+}
+public class AuditProfile : Profile
+{
+    public AuditProfile()
     {
-        public AuditProfile()
-        {
-            CreateMap<AuditResponse, Audit>().ReverseMap();
-        }
+        CreateMap<AuditResponse, Audit>().ReverseMap();
     }
-    public class PersonalDetailsProfile : Profile
+}
+public class PersonalDetailsProfile : Profile
+{
+    public PersonalDetailsProfile()
     {
-        public PersonalDetailsProfile()
-        {
-            CreateMap<PersonalDetailsResponse, PersonalDetails>().ReverseMap();
-        }
+        CreateMap<PersonalDetailsResponse, PersonalDetails>().ReverseMap();
     }
-    public class CandidateProfile : Profile
+}
+public class CandidateProfile : Profile
+{
+    public CandidateProfile()
     {
-        public CandidateProfile()
-        {
-            CreateMap<Candidate, CandidateResponse>().ReverseMap();
-        }
+        CreateMap<Candidate, CandidateResponse>().ReverseMap();
     }
 }

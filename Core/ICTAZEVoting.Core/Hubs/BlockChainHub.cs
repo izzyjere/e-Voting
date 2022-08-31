@@ -2,12 +2,10 @@
 using ICTAZEVoting.BlockChain.Network;
 using ICTAZEVoting.Core.Extensions;
 using ICTAZEVoting.Shared.Wrapper;
-
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Primitives;
 
-namespace ICTAZEVoting.Hubs;
+
+namespace ICTAZEVoting.Core.Hubs;
 
 public class BlockChainHub : Hub<INodeClient>
 {

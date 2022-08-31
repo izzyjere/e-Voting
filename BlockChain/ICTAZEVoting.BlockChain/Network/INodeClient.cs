@@ -5,13 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICTAZEVoting.BlockChain.Network
+namespace ICTAZEVoting.BlockChain.Network;
+
+public interface INodeClient
 {
-    public interface INodeClient
-    {
-        string NodeId { get; set; }
-        Task NodeConnected(Node node);      
-        Task NodeDisconnected(string nodeId);    
-        Task ReceiveMessage(NetworkMessage message);
-    }
+    string NodeId { get; set; }
+    Task NodeConnected(Node node);      
+    Task NodeDisconnected(string nodeId);    
+    Task ReceiveMessage(NetworkMessage message);
 }

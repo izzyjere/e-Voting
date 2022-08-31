@@ -5,16 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.WebSockets;
 
-namespace ICTAZEVoting.BlockChain.Network
+namespace ICTAZEVoting.BlockChain.Network;
+
+public class Node 
 {
-    public class Node 
+    public Node(string address)
     {
-        public Node(string address)
-        {
-            Uri = address;
-            NodeId = Guid.NewGuid().ToString();
-        }
-        public string Uri { get; }    
-        public string NodeId { get; init; }
+        Uri = address;
+        NodeId = Guid.NewGuid().ToString();
     }
+    public string Uri { get; }    
+    public string NodeId { get; init; }
 }

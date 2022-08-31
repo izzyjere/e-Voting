@@ -7,50 +7,49 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using ICTAZEVoting.Shared.Responses.Identity;
 
-namespace ICTAZEVoting.WebUI.Pages.Authentication
+namespace ICTAZEVoting.WebUI.Pages.Authentication;
+
+public partial class UserRoles
 {
-    public partial class UserRoles
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Title { get; set; }         
+    public List<UserRoleModel> UserRolesList { get; set; } = new();
+    [Inject] IUserManager userManager { get; set; }  
+    private UserRoleModel _userRole = new();
+    private string _searchString = "";
+    private bool _dense = false;
+    private bool _striped = true;
+    private bool _bordered = false;
+
+    private ClaimsPrincipal _currentUser;
+
+    private bool _loaded;
+
+    protected override async Task OnInitializedAsync()
     {
-        [Parameter] public string Id { get; set; }
-        [Parameter] public string Title { get; set; }         
-        public List<UserRoleModel> UserRolesList { get; set; } = new();
-        [Inject] IUserManager userManager { get; set; }  
-        private UserRoleModel _userRole = new();
-        private string _searchString = "";
-        private bool _dense = false;
-        private bool _striped = true;
-        private bool _bordered = false;
+        await Load();
+    }
+    async Task Load()
+    {
+        UserRolesList = await userManager.GetUserRoles(Id);
+        _loaded = true;
+    }
+    private async Task SaveAsync()
+    {
+        
+    }
 
-        private ClaimsPrincipal _currentUser;
-   
-        private bool _loaded;
-
-        protected override async Task OnInitializedAsync()
+    private bool Search(UserRoleModel userRole)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString)) return true;
+        if (userRole.RoleName?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
         {
-            await Load();
+            return true;
         }
-        async Task Load()
+        if (userRole.RoleDescription?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
         {
-            UserRolesList = await userManager.GetUserRoles(Id);
-            _loaded = true;
+            return true;
         }
-        private async Task SaveAsync()
-        {
-            
-        }
-
-        private bool Search(UserRoleModel userRole)
-        {
-            if (string.IsNullOrWhiteSpace(_searchString)) return true;
-            if (userRole.RoleName?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
-            {
-                return true;
-            }
-            if (userRole.RoleDescription?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
-            {
-                return true;
-            }
-            return false;
-        }
+        return false;
     }
 }

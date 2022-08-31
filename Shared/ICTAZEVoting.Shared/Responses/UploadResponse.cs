@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICTAZEVoting.Shared.Responses
+namespace ICTAZEVoting.Shared.Responses;
+
+public class UploadResponse
 {
-    public class UploadResponse
-    {
-        public string Path { get; set; }
-    }
+    public string Path { get; set; }
 }

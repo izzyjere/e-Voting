@@ -12,71 +12,42 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace ICTAZEVoting.Extensions
+namespace ICTAZEVoting.Extensions;
+
+internal static class ResultExtensions
 {
+    
 
-    internal static class ResultExtensions
+ 
+    internal static async Task<IResult<T>> ToResult<T>(this HttpResponseMessage response)
     {
-        public static bool IsNullOrWhitespace(this string s)
+        var responseAsString = await response.Content.ReadAsStringAsync();
+        var responseObject = JsonSerializer.Deserialize<Result<T>>(responseAsString, new JsonSerializerOptions
         {
-            return string.IsNullOrWhiteSpace(s);
-        }
-        public static string GetHeaderValueAs(this HttpContext context, string headerName)
+            PropertyNameCaseInsensitive = true,
+            ReferenceHandler = ReferenceHandler.Preserve
+        });
+        return responseObject;
+    }
+
+    internal static async Task<Shared.Wrapper.IResult> ToResult(this HttpResponseMessage response)
+    {
+        var responseAsString = await response.Content.ReadAsStringAsync();
+        var responseObject = JsonSerializer.Deserialize<Result>(responseAsString, new JsonSerializerOptions
         {
-            StringValues values;
+            PropertyNameCaseInsensitive = true,
+            ReferenceHandler = ReferenceHandler.Preserve
+        });
+        return responseObject;
+    }
 
-            if (context.Request?.Headers?.TryGetValue(headerName, out values) ?? false)
-            {
-                string rawValues = values.ToString();   // writes out as Csv when there are multiple.
-
-                if (!rawValues.IsNullOrWhitespace())
-                    return rawValues;
-            }
-            return string.Empty;
-        }
-
-        public static List<string> SplitCsv(this string csvList, bool nullOrWhitespaceInputReturnsNull = false)
+    internal static async Task<PaginatedResult<T>> ToPaginatedResult<T>(this HttpResponseMessage response)
+    {
+        var responseAsString = await response.Content.ReadAsStringAsync();
+        var responseObject = JsonSerializer.Deserialize<PaginatedResult<T>>(responseAsString, new JsonSerializerOptions
         {
-            if (string.IsNullOrWhiteSpace(csvList))
-                return nullOrWhitespaceInputReturnsNull ? null : new List<string>();
-
-            return csvList
-                .TrimEnd(',')
-                .Split(',')
-                .AsEnumerable<string>()
-                .Select(s => s.Trim())
-                .ToList();
-        }
-        internal static async Task<IResult<T>> ToResult<T>(this HttpResponseMessage response)
-        {
-            var responseAsString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonSerializer.Deserialize<Result<T>>(responseAsString, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                ReferenceHandler = ReferenceHandler.Preserve
-            });
-            return responseObject;
-        }
-
-        internal static async Task<Shared.Wrapper.IResult> ToResult(this HttpResponseMessage response)
-        {
-            var responseAsString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonSerializer.Deserialize<Result>(responseAsString, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                ReferenceHandler = ReferenceHandler.Preserve
-            });
-            return responseObject;
-        }
-
-        internal static async Task<PaginatedResult<T>> ToPaginatedResult<T>(this HttpResponseMessage response)
-        {
-            var responseAsString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonSerializer.Deserialize<PaginatedResult<T>>(responseAsString, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-            return responseObject;
-        }
+            PropertyNameCaseInsensitive = true
+        });
+        return responseObject;
     }
 }

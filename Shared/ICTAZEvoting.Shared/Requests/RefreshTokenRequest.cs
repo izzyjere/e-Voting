@@ -1,8 +1,7 @@
-﻿namespace ICTAZEVoting.Shared.Requests
+﻿namespace ICTAZEVoting.Shared.Requests;
+
+public class RefreshTokenRequest
 {
-    public class RefreshTokenRequest
-    {
-        public string Token { get; set; }
-        public string RefreshToken { get; set; }
-    }
+    public string Token { get; set; }
+    public string RefreshToken { get; set; }
 }

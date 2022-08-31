@@ -803,72 +803,72 @@
 
 @code {
 
-    private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
-    int dataSize = 4;
-    double[] data = { 77, 25, 20, 5 };
-    string[] President = { "Clarence Simukanzye", "Wisdom Jere", "Ndanji Bupe Soko", "Bulaya Mwanaute" };
+private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
+int dataSize = 4;
+double[] data = { 77, 25, 20, 5 };
+string[] President = { "Clarence Simukanzye", "Wisdom Jere", "Ndanji Bupe Soko", "Bulaya Mwanaute" };
 
 
 
-    Random random = new Random();
+Random random = new Random();
 
-    void RandomizeData()
+void RandomizeData()
+{
+    var new_data = new double[dataSize];
+    for (int i = 0; i < new_data.Length; i++)
+        new_data[i] = random.NextDouble() * 100;
+    data = new_data;
+    StateHasChanged();
+}
+
+void AddDataSize()
+{
+    if (dataSize < 20)
     {
-        var new_data = new double[dataSize];
-        for (int i = 0; i < new_data.Length; i++)
-            new_data[i] = random.NextDouble() * 100;
-        data = new_data;
-        StateHasChanged();
+        dataSize = dataSize + 1;
+        RandomizeData();
     }
-
-    void AddDataSize()
+}
+void RemoveDataSize()
+{
+    if (dataSize > 0)
     {
-        if (dataSize < 20)
-        {
-            dataSize = dataSize + 1;
-            RandomizeData();
-        }
+        dataSize = dataSize - 1;
+        RandomizeData();
     }
-    void RemoveDataSize()
-    {
-        if (dataSize > 0)
-        {
-            dataSize = dataSize - 1;
-            RandomizeData();
-        }
-    }
+}
 
 
-    private int Index2 = -1; //default value cannot be 0 -> first selectedindex is 0.
+private int Index2 = -1; //default value cannot be 0 -> first selectedindex is 0.
 
-    public List<ChartSeries> PresidentProvince = new List<ChartSeries>()
-    {
-        new ChartSeries() { Name = "Clarence simukanzye", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
-        new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
-        new ChartSeries() { Name = "Ndanji Bupe Soko", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18, 10 } },
-        new ChartSeries() { Name = "Bulaya Mwanaute", Data = new double[] { 20, 15, 2, 6, 10, 50, 19, 46, 80, 4 } },
-    };
-    public string[] XAxisLabels = { "Northen", "North Western", "Luapula", "Lusaka", "Muchinga", "Central", "Southern", "Eastern", "Copperbelt", "Western" };
+public List<ChartSeries> PresidentProvince = new List<ChartSeries>()
+{
+    new ChartSeries() { Name = "Clarence simukanzye", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
+    new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
+    new ChartSeries() { Name = "Ndanji Bupe Soko", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18, 10 } },
+    new ChartSeries() { Name = "Bulaya Mwanaute", Data = new double[] { 20, 15, 2, 6, 10, 50, 19, 46, 80, 4 } },
+};
+public string[] XAxisLabels = { "Northen", "North Western", "Luapula", "Lusaka", "Muchinga", "Central", "Southern", "Eastern", "Copperbelt", "Western" };
 
-    private int Index3 = -1; //default value cannot be 0 -> first selectedindex is 0.
-    int dataSize3 = 2;
-    double[] data3 = { 77, 62 };
-    string[] Gender = { "Male", "Female", "Other" };
+private int Index3 = -1; //default value cannot be 0 -> first selectedindex is 0.
+int dataSize3 = 2;
+double[] data3 = { 77, 62 };
+string[] Gender = { "Male", "Female", "Other" };
 
-    private int Index4 = -1; //default value cannot be 0 -> first selectedindex is 0.
-    int dataSize4 = 2;
-    double[] data4 = { 77, 25 };
-    string[] Gender2 = { "Male", "Female", "Other" };
+private int Index4 = -1; //default value cannot be 0 -> first selectedindex is 0.
+int dataSize4 = 2;
+double[] data4 = { 77, 25 };
+string[] Gender2 = { "Male", "Female", "Other" };
 
-    private int Index5 = -1; //default value cannot be 0 -> first selectedindex is 0.
+private int Index5 = -1; //default value cannot be 0 -> first selectedindex is 0.
 
-    public List<ChartSeries> VotersPerProvince = new List<ChartSeries>()
-    {
-        new ChartSeries() {  Data = new double[] { 100, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
-    //    new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
-    //    new ChartSeries() { Name = "2000", Data = new double[] { 100, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
-    //    new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
-    //
-    };
-    public string[] XAxisLabels5 = { "Northen", "North Western", "Luapula", "Lusaka", "Muchinga", "Central", "Southern", "Eastern", "Copperbelt", "Western" };
+public List<ChartSeries> VotersPerProvince = new List<ChartSeries>()
+{
+    new ChartSeries() {  Data = new double[] { 100, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
+//    new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
+//    new ChartSeries() { Name = "2000", Data = new double[] { 100, 20, 25, 27, 46, 60, 48, 80, 15, 20 } },
+//    new ChartSeries() { Name = "Wisdom Jere", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31, 15 } },
+//
+};
+public string[] XAxisLabels5 = { "Northen", "North Western", "Luapula", "Lusaka", "Muchinga", "Central", "Southern", "Eastern", "Copperbelt", "Western" };
 }

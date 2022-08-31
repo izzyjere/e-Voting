@@ -8,16 +8,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICTAZEVoting.Shared.Interfaces
+namespace ICTAZEVoting.Shared.Interfaces;
+
+public interface IVoterService
 {
-    public interface IVoterService
-    {
-        Task<IResult<List<string>>> Register(Voter entity);
-        Task<IResult> Update(Voter entity);
-        Task<List<VoterResponse>> GetAll();
-        Task<Voter>GetByUserId(string id);
-        Task<Voter> GetById(string id);
-        Task<IResult> Delete(string id);
-        Task<IResult<VoterVerificationResponse>> VerifyVoter(VoterVerificationRequest request);
-    }
+    Task<IResult<List<string>>> Register(Voter entity);
+    Task<IResult> Update(Voter entity);
+    Task<List<VoterResponse>> GetAll();
+    Task<Voter>GetByUserId(string id);
+    Task<Voter> GetById(string id);
+    Task<IResult> Delete(string id);
+    Task<IResult<VoterVerificationResponse>> VerifyVoter(VoterVerificationRequest request);
 }

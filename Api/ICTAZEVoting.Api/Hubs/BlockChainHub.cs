@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Primitives;
 
-namespace ICTAZEVoting.Hubs;
+namespace ICTAZEVoting.Api.Hubs;
 
 public class BlockChainHub : Hub<INodeClient>
 {

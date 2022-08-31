@@ -1,5 +1,6 @@
 ﻿@using System.Net.Http
 @using ICTAZEVoting.Services
+@using ICTAZEVoting.Services.Domain
 @using ICTAZEVoting.Shared.Interfaces
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
@@ -35,3 +36,4 @@
 @inject IFileService fileService
 @inject ISystemAdminService systemAdminService
 @inject AuthenticationStateProvider stateProvider
+@inject NodeConnectionInstance nodeConnectionInstance

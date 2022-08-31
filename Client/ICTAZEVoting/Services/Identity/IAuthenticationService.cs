@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 
 
-namespace ICTAZEVoting.Services.Identity
+namespace ICTAZEVoting.Services.Identity;
+
+public interface IAuthenticationService
 {
-    public interface IAuthenticationService
-    {
-        Task<IResult> SignIn(TokenRequest request);
-        Task<IResult> SignOut();         
-        Task<AuthenticationState> GetAuthenticationState();
-        Task<ClaimsPrincipal> CurrentUser();
-    }
+    Task<IResult> SignIn(TokenRequest request);
+    Task<IResult> SignOut();         
+    Task<AuthenticationState> GetAuthenticationState();
+    Task<ClaimsPrincipal> CurrentUser();
 }

@@ -48,34 +48,34 @@
 @code {
 
 
-    public bool _drawerOpen = true;
-    UserProfileResponse Profile = new();
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
+public bool _drawerOpen = true;
+UserProfileResponse Profile = new();
+void DrawerToggle()
+{
+    _drawerOpen = !_drawerOpen;
+}
 
-    ClaimsPrincipal claimsPrincipal = new();
-    [CascadingParameter] Task<AuthenticationState> authenticationState { get; set; }
+ClaimsPrincipal claimsPrincipal = new();
+[CascadingParameter] Task<AuthenticationState> authenticationState { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        claimsPrincipal = (await authenticationState).User;
-        if (claimsPrincipal.Identity.IsAuthenticated)
-        {  
-            var req = new UserProfileRequest {Id = claimsPrincipal.GetUserId()};
-            var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);            
-            var r = await request.ToResult<UserProfileResponse>();
-            if(r.Succeeded)
-            {
-                Profile = r.Data;
-            }
-
+protected override async Task OnInitializedAsync()
+{
+    claimsPrincipal = (await authenticationState).User;
+    if (claimsPrincipal.Identity.IsAuthenticated)
+    {  
+        var req = new UserProfileRequest {Id = claimsPrincipal.GetUserId()};
+        var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);            
+        var r = await request.ToResult<UserProfileResponse>();
+        if(r.Succeeded)
+        {
+            Profile = r.Data;
         }
+
     }
-    async void Logout()
-    {
-        await authenticationService.SignOut();
-        ApplicationService.NotifyOncloseClicked(this,new EventArgs());
-    }
+}
+async void Logout()
+{
+    await authenticationService.SignOut();
+    ApplicationService.NotifyOncloseClicked(this,new EventArgs());
+}
 }

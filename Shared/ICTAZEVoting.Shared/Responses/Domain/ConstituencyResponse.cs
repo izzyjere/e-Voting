@@ -1,8 +1,7 @@
-﻿namespace ICTAZEVoting.Shared.Responses.Domain
+﻿namespace ICTAZEVoting.Shared.Responses.Domain;
+
+public class ConstituencyResponse
 {
-    public class ConstituencyResponse
-    {
-         public Guid Id { get; set; }
-         public string Name { get; set; }
-    }
+     public Guid Id { get; set; }
+     public string Name { get; set; }
 }

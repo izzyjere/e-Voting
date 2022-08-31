@@ -1,12 +1,11 @@
 ﻿using ICTAZEVoting.Shared.Requests;
 using ICTAZEVoting.Shared.Wrapper;
 
-namespace ICTAZEVoting.Core.Services.Identity
-{
-    public interface IUserAccountService
-    {
-        Task<IResult> ChangePasswordAsync(ChangePasswordRequest model, Guid userId);
+namespace ICTAZEVoting.Core.Services.Identity;
 
-        Task<IResult<string>> GetProfilePictureAsync(Guid userId);        
-    }
+public interface IUserAccountService
+{
+    Task<IResult> ChangePasswordAsync(ChangePasswordRequest model, Guid userId);
+
+    Task<IResult<string>> GetProfilePictureAsync(Guid userId);        
 }

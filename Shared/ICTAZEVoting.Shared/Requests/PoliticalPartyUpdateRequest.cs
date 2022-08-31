@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICTAZEVoting.Shared.Requests
+namespace ICTAZEVoting.Shared.Requests;
+
+public class PoliticalPartyUpdateRequest
 {
-    public class PoliticalPartyUpdateRequest
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string? Slogan { get; set; }
-        public string? Manifesto { get; set; }
-        public string? LogoUrl { get; set; }
-    }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string? Slogan { get; set; }
+    public string? Manifesto { get; set; }
+    public string? LogoUrl { get; set; }
 }

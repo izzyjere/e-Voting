@@ -3,15 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICTAZEVoting.Shared.Responses.Domain
+namespace ICTAZEVoting.Shared.Responses.Domain;
+
+public class PoliticalPartyResponse
 {
-    public class PoliticalPartyResponse
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string? Slogan { get; set; }
-        public string? Manifesto { get; set; }
-        public string? LogoUrl { get; set; }
-        public bool ViewManifesto { get; set; }
-    }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string? Slogan { get; set; }
+    public string? Manifesto { get; set; }
+    public string? LogoUrl { get; set; }
+    public bool ViewManifesto { get; set; }
 }

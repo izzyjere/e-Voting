@@ -141,6 +141,21 @@ namespace ICTAZEVoting.Api
                 }
                 return Result<SystemAdmin>.Fail("Not found.");
             });
+            app.MapGet("/voters/byuserid/{id}", [Authorize] async (IUnitOfWork<Guid> unitOfWork,IMapper mapper, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var voter = await unitOfWork.Repository<Voter>().Entities().Include(c => c.PolingStation).FirstOrDefaultAsync(v => v.PersonalDetails.UserId == myGuid);
+                    if (voter == null)
+                    {
+                        return Result<VoterResponse>.Fail("Not found.");
+                    }
+                    var res = mapper.Map<VoterResponse>(voter);
+                    return Result<VoterResponse>.Success(res);
+                }
+                return Result<VoterResponse>.Fail("Not found.");
+            });
             app.MapPost("/system-admins/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, [FromBody] SystemAdmin entity) =>
             {
                 var result = await unitOfWork.Repository<SystemAdmin>().Add(entity);

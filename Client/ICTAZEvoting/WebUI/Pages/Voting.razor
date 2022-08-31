@@ -94,7 +94,7 @@
     ElectionResponse election = new();
     [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; }
     ClaimsPrincipal claimsPrincipal = new();
-    Voter voter = new();
+    VoterResponse voter = new();
     MudTabs tabs;
     Ballot ballot;
     bool hasVoted;

@@ -46,9 +46,15 @@ namespace ICTAZEVoting.Services.Domain
             throw new NotImplementedException();
         }
 
-        public Task<Voter> GetByUserId(string id)
+        public async Task<VoterResponse> GetByUserId(string id)
         {
-            throw new NotImplementedException();
+            var get = await httpClient.GetAsync(ApiEndpoints.GetVoterByUserId +"/"+id);
+            if (get.IsSuccessStatusCode)
+            {
+                var res = await get.ToResult<VoterResponse>();
+                return res.Data;
+            }
+            return null;
         }
 
         public async Task<IResult<List<string>>> Register(Voter entity)

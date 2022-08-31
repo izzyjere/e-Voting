@@ -63,7 +63,7 @@
     ElectionResponse currentElection = null;
     [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; }
     ClaimsPrincipal claimsPrincipal = new();
-    Voter voter = new();
+    VoterResponse voter = new();
     bool isloading = true;
     bool isAllowedToVote;
     protected override async Task OnInitializedAsync()

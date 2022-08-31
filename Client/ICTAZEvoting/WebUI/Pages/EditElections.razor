@@ -51,16 +51,31 @@
                 </MudItem>
                 <MudItem xs="12" sm="6" md="4">
                     <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                        <MudSelect T="VoterResponse"
+                                   SelectAll="true"
+                                   MultiSelection="true"
+                                   @bind-SelectedValues="@selectedVoters"
+                                   Variant="Variant.Outlined"
+                                   AnchorOrigin="Origin.BottomLeft"
+                                   Label="Select Voters">
+                            @if (voters.Any())
+                            {
+                                @foreach (var item in voters)
+                                {
+                                    <MudSelectItem T="VoterResponse" Value="@item">@item.PersonalDetails.NRC</MudSelectItem>
+                                }
 
+                            }
+                        </MudSelect>
                     </Animate>
                 </MudItem>
                 <MudDivider />
                 <MudItem xs="12">
                     <center><MudText GutterBottom="true" Color="Color.Primary" Typo="Typo.h5">Election Positions</MudText></center>
-                    <MudItem xs="4">                        
-                       <MudButton OnClick="ToggleAdd" StartIcon="@Icons.Material.Filled.Add" Class="mb-4"Variant="Variant.Outlined" Size="Size.Small" Color="Color.Secondary">Create position</MudButton>
-                    </MudItem>          
-                                                      
+                    <MudItem xs="4">
+                        <MudButton OnClick="ToggleAdd" StartIcon="@Icons.Material.Filled.Add" Class="mb-4" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Secondary">Create position</MudButton>
+                    </MudItem>
+
                     <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
                         <MudSimpleTable Dense="true" Bordered="true" Hover="true" FixedHeader="true">
                             <thead>
@@ -95,14 +110,44 @@
                                 }
                             </tbody>
                         </MudSimpleTable>
+
                     </Animate>
+                </MudItem>
+                <MudItem xs="12">
+                    <center><MudText GutterBottom="true" Typo="Typo.h6">Voters</MudText></center>
+
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>NRC</th>
+                                <th>Full Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (selectedVoters.Any())
+                            {
+                                @foreach (var candidate in selectedVoters)
+                                {
+                                    <tr>
+                                        <td>@candidate.PersonalDetails.NRC</td>
+                                        <td>@candidate.PersonalDetails.FirstName @candidate.PersonalDetails.LastName</td>
+                                        <td>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Remove" Variant="Variant.Outlined" Color="Color.Error" />
+                                        </td>
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
                 </MudItem>
             </MudGrid>
             <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Election</MudButton>
         </EditForm>
     </MudCardContent>
 </MudCard>
-<br/>
+<br />
 <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
     <MudTable Style="color: white" Elevation="25" Items="elections">
         <ToolBarContent>
@@ -113,7 +158,7 @@
         <HeaderContent>
             <MudTh>Description</MudTh>
             <MudTh>Starting Time</MudTh>
-            <MudTh>Closing Time</MudTh>           
+            <MudTh>Closing Time</MudTh>
             <MudTh>Status</MudTh>
             <MudTh>Actions</MudTh>
         </HeaderContent>
@@ -121,20 +166,20 @@
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Date">
                 <MudChip Label="true" Color="Color.Success" Icon="@Icons.Material.Filled.Watch">
-                @context.ElectionDate.ToString("dd MMM yyyy H:mm")
+                    @context.ElectionDate.ToString("dd MMM yyyy H:mm")
                 </MudChip>
             </MudTd>
-             <MudTd DataLabel="Date">
+            <MudTd DataLabel="Date">
                 <MudChip Label="true" Color="Color.Secondary" Icon="@Icons.Material.Filled.Watch">
-                @context.ClosingTime.ToString("dd MMM yyyy H:mm")
+                    @context.ClosingTime.ToString("dd MMM yyyy H:mm")
                 </MudChip>
             </MudTd>
             <MudTd>
-                 <MudChip Color="GetColor(context.Status)">
-                     @context.Status.ToString()
+                <MudChip Color="GetColor(context.Status)">
+                    @context.Status.ToString()
                 </MudChip>
             </MudTd>
-            <MudTd DataLabel="">                
+            <MudTd DataLabel="">
                 <MudButton @onclick="@(()=>Edit(@context))" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Outlined">Edit</MudButton>
                 <MudButton @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Outlined">Delete</MudButton>
             </MudTd>
@@ -164,6 +209,8 @@
     private List<ElectionType> electionTypes = new List<ElectionType>();
     private DateTime? dateTime = DateTime.Now;
     private TimeSpan? time = new TimeSpan(0, 8, 0, 0);
+    IEnumerable<VoterResponse> selectedVoters = Enumerable.Empty<VoterResponse>();
+    IEnumerable<VoterResponse> voters = Enumerable.Empty<VoterResponse>();
     ElectionPosition position = new();
     bool isEditing;
     MudMessageBox mbox { get; set; }
@@ -171,9 +218,10 @@
     {
         await Refresh();
     }
-    Color GetColor (ElectionStatus status)
-    {   
-        return status switch {
+    Color GetColor(ElectionStatus status)
+    {
+        return status switch
+        {
             ElectionStatus.Open => Color.Success,
             ElectionStatus.Closed => Color.Error,
             ElectionStatus.Pending => Color.Default,
@@ -183,35 +231,38 @@
     }
     async Task Activate(string id)
     {
-        
+
     }
     async Task Refresh()
     {
         election = new();
         election.Positions = new();
+        election.Voters = new();
+        selectedVoters = Enumerable.Empty<VoterResponse>();
         isEditing = false;
         elections = await electionService.GetElectionList();
         electionTypes = await electionService.GetElectionTypes();
+        voters = await voterService.GetAll();
         StateHasChanged();
     }
     async void Remove(ElectionPosition record)
-    {   
+    {
         bool? result = await mbox.Show();
-        if(result!=null)
+        if (result != null)
         {
             election.Positions.Remove(record);
             snackBar.Add("Position was removed.", Severity.Success);
             StateHasChanged();
-        }        
+        }
 
     }
     async void ToggleAdd()
     {
-        var dialog =  dialogService.Show<AddElectionPositionDialog>("Add Election Position");
+        var dialog = dialogService.Show<AddElectionPositionDialog>("Add Election Position");
         var result = await dialog.Result;
-        if(!result.Cancelled)
+        if (!result.Cancelled)
         {
-            var data = (ElectionPosition) result.Data;
+            var data = (ElectionPosition)result.Data;
             election.Positions.Add(data);
             snackBar.Add("Position was added.", Severity.Success);
             StateHasChanged();
@@ -221,6 +272,10 @@
     {
 
         election.ElectionDate = dateTime.Value.Add(time.Value);
+        foreach (var item in selectedVoters)
+        {
+            election.Voters.Add(new ElectionVoter { VoterId = item.Id });
+        }
         if (!isEditing)
         {
             //adding
@@ -256,15 +311,15 @@
         election.Duration = record.Duration;
         election.ElectionTypeId = record.ElectionTypeId;
         election.ElectionDate = record.ElectionDate;
-        election.Name = record.Name;  
+        election.Name = record.Name;
         dateTime = election.ElectionDate.Value.Date;
         time = election.ElectionDate.Value.TimeOfDay;
-        record.Positions.ForEach(p=> election.Positions.Add(new ElectionPosition{Id=p.Id, Position = p.Position, ElectionId = p.ElectionId}));
+        record.Positions.ForEach(p => election.Positions.Add(new ElectionPosition { Id = p.Id, Position = p.Position, ElectionId = p.ElectionId }));
         isEditing = true;
         StateHasChanged();
     }
 
-    
+
     private async Task Delete(Guid id)
     {
         bool? confirmed = await mbox.Show();

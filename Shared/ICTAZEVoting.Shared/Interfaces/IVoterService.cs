@@ -14,10 +14,10 @@ namespace ICTAZEVoting.Shared.Interfaces
     {
         Task<IResult<List<string>>> Register(Voter entity);
         Task<IResult> Update(Voter entity);
-        Task<List<VoterResponse>> GetAll();
-        Task<Voter>GetByUserId(string id);
+        Task<List<VoterResponse>> GetAll();      
         Task<Voter> GetById(string id);
         Task<IResult> Delete(string id);
         Task<IResult<VoterVerificationResponse>> VerifyVoter(VoterVerificationRequest request);
+        Task<VoterResponse> GetByUserId(string id);
     }
 }

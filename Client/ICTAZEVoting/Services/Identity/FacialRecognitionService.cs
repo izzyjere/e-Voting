@@ -10,31 +10,32 @@ using Microsoft.ProjectOxford.Face;
 
 using System.Net.Http.Json;
 
-namespace ICTAZEVoting.Services.Identity;
-
-public class FacialRecognitionService : IFacialRecognitionService
+namespace ICTAZEVoting.Services.Identity
 {
-    readonly HttpClient httpClient;
-    public FacialRecognitionService(HttpClient httpClient)
+    public class FacialRecognitionService : IFacialRecognitionService
     {
-        this.httpClient = httpClient;
-    }
-    public async Task<IResult> VerifyAsync(VerifyRequest request)
-    {
-        var req = await httpClient.PostAsJsonAsync(ApiEndpoints.VerifyFace, request);
-        if(req.IsSuccessStatusCode)
+        readonly HttpClient httpClient;
+        public FacialRecognitionService(HttpClient httpClient)
         {
-           return await req.ToResult();
+            this.httpClient = httpClient;
         }
-        else
+        public async Task<IResult> VerifyAsync(VerifyRequest request)
         {
-            return Result.Fail("Could not connect to server. Try again");
+            var req = await httpClient.PostAsJsonAsync(ApiEndpoints.VerifyFace, request);
+            if(req.IsSuccessStatusCode)
+            {
+               return await req.ToResult();
+            }
+            else
+            {
+                return Result.Fail("Could not connect to server. Try again");
+            }
+            
         }
-        
-    }
 
-    public Task<IResult> VerifyAsync(MemoryStream memoryStream)
-    {
-        throw new NotImplementedException();
+        public Task<IResult> VerifyAsync(MemoryStream memoryStream)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

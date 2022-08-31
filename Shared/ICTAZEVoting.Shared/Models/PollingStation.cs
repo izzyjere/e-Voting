@@ -4,15 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICTAZEVoting.Shared.Models;
-
-public class PollingStation : Entity<Guid>
+namespace ICTAZEVoting.Shared.Models
 {
-    public string Name { get; set; }
-    public Guid ConstituencyId { get; set; }       
-    public Constituency Constituency { get; set; }
-    public PollingStation()
+    public class PollingStation : Entity<Guid>
     {
-        Id = new();
+        public string Name { get; set; }
+        public Guid ConstituencyId { get; set; }       
+        public Constituency Constituency { get; set; }
+        public PollingStation()
+        {
+            Id = new();
+        }
     }
 }

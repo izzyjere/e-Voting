@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICTAZEVoting.Shared.Interfaces;
-
-public interface IVotingService
+namespace ICTAZEVoting.Shared.Interfaces
 {
-    Task<IResult> Vote(string secretKey, string electionId, Vote vote);
-    Task<List<Candidate>> GetCandidates(string electionId);
-    Task<List<ElectionResult>> GetElectionResults(string electionId);
-    Task<ElectionResult> GetElectionResult(string candidateId);
-    Task<int> GetVoterCount(int electionId);
+    public interface IVotingService
+    {
+        Task<IResult> Vote(string secretKey, string electionId, Vote vote);
+        Task<List<Candidate>> GetCandidates(string electionId);
+        Task<List<ElectionResult>> GetElectionResults(string electionId);
+        Task<ElectionResult> GetElectionResult(string candidateId);
+        Task<int> GetVoterCount(int electionId);
+    }
 }

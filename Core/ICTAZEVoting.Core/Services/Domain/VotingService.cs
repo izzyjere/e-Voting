@@ -1,5 +1,6 @@
-﻿namespace ICTAZEVoting.Core.Services.Domain;
-
-internal class VotingService
+﻿namespace ICTAZEVoting.Core.Services.Domain
 {
+    internal class VotingService
+    {
+    }
 }

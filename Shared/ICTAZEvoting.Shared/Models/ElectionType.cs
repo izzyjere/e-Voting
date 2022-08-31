@@ -2,14 +2,15 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ICTAZEVoting.Shared.Models;
-
-public class ElectionType : Entity<Guid>
+namespace ICTAZEVoting.Shared.Models
 {
-    [Required]
-    public string Name { get; set; }
-    public ElectionType()
+    public class ElectionType : Entity<Guid>
     {
-        Id = Guid.NewGuid();
+        [Required]
+        public string Name { get; set; }
+        public ElectionType()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

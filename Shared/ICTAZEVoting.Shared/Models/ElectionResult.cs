@@ -1,12 +1,13 @@
-﻿namespace ICTAZEVoting.Shared.Models;
-
-public class ElectionResult
+﻿namespace ICTAZEVoting.Shared.Models
 {
-    public Election Election { get; set; }
+    public class ElectionResult
+    {
+        public Election Election { get; set; }
 
-    public string Position { get; set; }
+        public string Position { get; set; }
 
-    public Candidate Candidate { get; set; }
+        public Candidate Candidate { get; set; }
 
-    public int VoteCount { get; set; }
+        public int VoteCount { get; set; }
+    }
 }

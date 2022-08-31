@@ -17,16 +17,16 @@
                 </MudCardHeader>
                 <MudPaper Elevation="0" Class="p-2" MinWidth="325" MinHeight="245">
                     @if (!string.IsNullOrEmpty(frameUri))
-                {
-                    <img width="320" height="240" src="@frameUri" />
-                }
+                    {
+                        <img width="320" height="240" src="@frameUri" />
+                    }
                     @if (!hideVideo)
-                {
+                    {
 
-                    <video id="videoFeed" width="320" height="240" />
-                    <canvas id="currentFrame" class="d-none" width="320" height="240" />
+                        <video id="videoFeed" width="320" height="240" />
+                        <canvas id="currentFrame" class="d-none" width="320" height="240" />
 
-                }
+                    }
                     <center>
                         <MudButtonGroup>
                             <MudButton ButtonType="ButtonType.Button" OnClick="Refresh" Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Refresh">REFRESH</MudButton>
@@ -74,80 +74,80 @@
 
 
 @code {
-private string frameUri;
-private string searchString = "";
-bool dis = true;
-bool hideVideo;
-private Voter voter = new Voter();
-[CascadingParameter] Task<AuthenticationState> authenticationState { get; set; }
-ClaimsPrincipal claimsPrincipal = new();
-bool showProgress = false;
-UserProfileResponse Profile = new();
-protected override async Task OnInitializedAsync()
-{
-    claimsPrincipal = (await authenticationState).User;
-    if (claimsPrincipal.Identity.IsAuthenticated)
+    private string frameUri;
+    private string searchString = "";
+    bool dis = true;
+    bool hideVideo;
+    private Voter voter = new Voter();
+    [CascadingParameter] Task<AuthenticationState> authenticationState { get; set; }
+    ClaimsPrincipal claimsPrincipal = new();
+    bool showProgress = false;
+    UserProfileResponse Profile = new();
+    protected override async Task OnInitializedAsync()
     {
-        var req = new UserProfileRequest { Id = claimsPrincipal.GetUserId() };
-        var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);
-        var r = await request.ToResult<UserProfileResponse>();
-        if (r.Succeeded)
+        claimsPrincipal = (await authenticationState).User;
+        if (claimsPrincipal.Identity.IsAuthenticated)
         {
-            Profile = r.Data;
+            var req = new UserProfileRequest { Id = claimsPrincipal.GetUserId() };
+            var request = await httpClient.PostAsJsonAsync($"{ApiEndpoints.UserProfile}", req);
+            var r = await request.ToResult<UserProfileResponse>();
+            if (r.Succeeded)
+            {
+                Profile = r.Data;
+            }
+
         }
-
+        await Refresh();
     }
-    await Refresh();
-}
-async Task Refresh()
-{
-    voter = new();
-    hideVideo = false;
-    frameUri = null;
-    await StartVideFrame();
-    StateHasChanged();
-}
-
-private async Task StartVideFrame()
-{
-    await JsRuntime.InvokeVoidAsync("startVideo", "videoFeed");
-    dis = false;
-    StateHasChanged();
-}
-private async Task CaptureFrame()
-{
-    showProgress = true;
-    StateHasChanged();       
-    await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
-}
-
-
-[JSInvokable]
-public async void ProcessImage(string imageString)
-{
-    frameUri = imageString;
-    hideVideo = true;
-    StateHasChanged();
-    byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
-    var request = new VerifyRequest
-     {
-            Data = imageData,
-            FileName = Profile.ProfilePicture,
-            Dimensions = new List<int> { 240, 320 }
-    };
-    var result = await facialRecognitionService.VerifyAsync(request);
-    if(result.Succeeded)
+    async Task Refresh()
     {
-        snackBar.Add(result.Messages.First(), Severity.Success);
-        Navigation.NavigateTo("authenticate");
-    }
-    else
-    {
-        snackBar.Add(result.Messages.First(), Severity.Error);
-        showProgress = false;
+        voter = new();
+        hideVideo = false;
+        frameUri = null;
+        await StartVideFrame();
         StateHasChanged();
     }
 
-}
+    private async Task StartVideFrame()
+    {
+        await JsRuntime.InvokeVoidAsync("startVideo", "videoFeed");
+        dis = false;
+        StateHasChanged();
+    }
+    private async Task CaptureFrame()
+    {
+        showProgress = true;
+        StateHasChanged();       
+        await JsRuntime.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
+    }
+
+
+    [JSInvokable]
+    public async void ProcessImage(string imageString)
+    {
+        frameUri = imageString;
+        hideVideo = true;
+        StateHasChanged();
+        byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
+        var request = new VerifyRequest
+         {
+                Data = imageData,
+                FileName = Profile.ProfilePicture,
+                Dimensions = new List<int> { 240, 320 }
+        };
+        var result = await facialRecognitionService.VerifyAsync(request);
+        if(result.Succeeded)
+        {
+            snackBar.Add(result.Messages.First(), Severity.Success);
+            Navigation.NavigateTo("authenticate");
+        }
+        else
+        {
+            snackBar.Add(result.Messages.First(), Severity.Error);
+            showProgress = false;
+            StateHasChanged();
+        }
+
+    }
 
 }

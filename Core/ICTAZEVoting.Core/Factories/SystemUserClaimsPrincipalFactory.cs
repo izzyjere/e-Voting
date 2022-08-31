@@ -5,22 +5,23 @@ using Microsoft.Extensions.Options;
 
 using System.Security.Claims;
 
-namespace ICTAZEVoting.Core.Factories;
-
-public class SystemUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<User, Role>
+namespace ICTAZEVoting.Core.Factories
 {
-
-    public SystemUserClaimsPrincipalFactory(UserManager<User> userManager, RoleManager<Role> roleManager, IOptions<IdentityOptions> options) : base(userManager, roleManager, options)
+    public class SystemUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<User, Role>
     {
 
-    }
-    protected override async Task<ClaimsIdentity> GenerateClaimsAsync(User user)
-    {
+        public SystemUserClaimsPrincipalFactory(UserManager<User> userManager, RoleManager<Role> roleManager, IOptions<IdentityOptions> options) : base(userManager, roleManager, options)
+        {
 
-        var identity = await base.GenerateClaimsAsync(user);           
-        identity.AddClaim(new Claim("UserId", user.Id.ToString()));
-        identity.AddClaim(new Claim("FullName", user.FirstName+" "+ user.FirstName));
-        identity.AddClaim(new Claim("Picture", user.PictureUrl));
-        return identity;
+        }
+        protected override async Task<ClaimsIdentity> GenerateClaimsAsync(User user)
+        {
+
+            var identity = await base.GenerateClaimsAsync(user);           
+            identity.AddClaim(new Claim("UserId", user.Id.ToString()));
+            identity.AddClaim(new Claim("FullName", user.FirstName+" "+ user.FirstName));
+            identity.AddClaim(new Claim("Picture", user.PictureUrl));
+            return identity;
+        }
     }
 }

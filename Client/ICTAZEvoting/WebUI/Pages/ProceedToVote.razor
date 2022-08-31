@@ -12,25 +12,24 @@
 @if (!isloading)
 {
     @if (currentElection == null)
-{
+    {
 
-    <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Error">No election has been setup.</MudAlert>
+        <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Error">No election has been setup.</MudAlert>
 
-}
-else if (currentElection.Status == ElectionStatus.Open)
-{
-    <MudContainer Class="d-flex justify-center align-center">
+    }
+    else if (currentElection.Status == ElectionStatus.Open)
+    {
+        <MudContainer Class="d-flex justify-center align-center">
             <MudContainer Class="d-flex flex-column justify-center" style="width: 200px; height: 100px">
                 <MudImage Src="images/logo.png" ObjectPosition="ObjectPosition.Center" />
             </MudContainer>
         </MudContainer>
 
-    <MudContainer Class="d-flex flex-column justify-center">
+        <MudContainer Class="d-flex flex-column justify-center">
             <MudText Style="font-family: fantasy" Typo="Typo.h4" Align="Align.Center"><b>YOU ARE PARTICIPATING IN THE </b></MudText>
             <MudText Style="font-family: fantasy" Typo="Typo.h5" Align="Align.Center"><b>@currentElection.Name.ToUpper()</b></MudText>
         </MudContainer>
 
-    
         <MudContainer Class="d-flex flex-column justify-center">
             <MudText Style="font-family: 'Arial Rounded MT'" Typo="Typo.h6" Align="Align.Center"><b>HERE'S HOW TO VOTE:</b></MudText>
         </MudContainer>
@@ -43,32 +42,32 @@ else if (currentElection.Status == ElectionStatus.Open)
         <div class="mt-4 mb-4 ml-4 mr-4">
             <MudButton Link='@($"voting/{currentElection.Id.ToString()}")' Variant="Variant.Filled" Color="Color.Info" FullWidth="true">Proceed To Vote</MudButton>
         </div>
-}
-else if (currentElection.Status == ElectionStatus.Pending)
-{
+    }
+    else if (currentElection.Status == ElectionStatus.Pending)
+    {
 
-    <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Info">The election hasn't started.</MudAlert>
+        <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Info">The election hasn't started.</MudAlert>
 
-}
-else if (currentElection.Status == ElectionStatus.Closed)
-{
+    }
+    else if (currentElection.Status == ElectionStatus.Closed)
+    {
 
-    <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Error">The election has been closed.</MudAlert>
+        <MudAlert CloseIconClicked='async ()=> { await authenticationService.SignOut(); Navigation.NavigateTo("/");}' ShowCloseIcon="true" Severity="Severity.Error">The election has been closed.</MudAlert>
 
-}
+    }
 
 }
 
 
 @code {
-ElectionResponse currentElection = null;
-bool isloading = true;
-protected override async Task OnInitializedAsync()
-{
-    currentElection = await electionService.GetCurrentElection();
-    isloading = false;
-    StateHasChanged();
-}
+    ElectionResponse currentElection = null;
+    bool isloading = true;
+    protected override async Task OnInitializedAsync()
+    {
+        currentElection = await electionService.GetCurrentElection();
+        isloading = false;
+        StateHasChanged();
+    }
 
 }
 

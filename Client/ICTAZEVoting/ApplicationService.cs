@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICTAZEVoting;
-
-internal static class ApplicationService
+namespace ICTAZEVoting
 {
-    public static event EventHandler OnCloseClicked;
-    public static void NotifyOncloseClicked(object sender, EventArgs args)
+    internal static class ApplicationService
     {
-        OnCloseClicked?.Invoke(sender, args);
+        public static event EventHandler OnCloseClicked;
+        public static void NotifyOncloseClicked(object sender, EventArgs args)
+        {
+            OnCloseClicked?.Invoke(sender, args);
+        }
     }
 }

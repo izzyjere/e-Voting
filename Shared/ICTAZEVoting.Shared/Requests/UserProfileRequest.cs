@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICTAZEVoting.Shared.Requests;
-
-public class UserProfileRequest
+namespace ICTAZEVoting.Shared.Requests
 {
-    public string Id { get; set; }
+    public class UserProfileRequest
+    {
+        public string Id { get; set; }
+    }
 }

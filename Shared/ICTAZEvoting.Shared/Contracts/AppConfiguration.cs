@@ -1,6 +1,7 @@
-﻿namespace ICTAZEVoting.Shared.Contracts;
-
-public class AppConfiguration
+﻿namespace ICTAZEVoting.Shared.Contracts
 {
-    public string Secret { get; set; }        
+    public class AppConfiguration
+    {
+        public string Secret { get; set; }        
+    }
 }

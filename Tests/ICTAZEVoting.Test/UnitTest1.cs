@@ -1,17 +1,18 @@
 using NUnit.Framework;
 
-namespace ICTAZEVoting.Test;
-
-public class Tests
+namespace ICTAZEVoting.Test
 {
-    [SetUp]
-    public void Setup()
+    public class Tests
     {
-    }
+        [SetUp]
+        public void Setup()
+        {
+        }
 
-    [Test]
-    public void Test1()
-    {
-        Assert.Pass();
+        [Test]
+        public void Test1()
+        {
+            Assert.Pass();
+        }
     }
 }

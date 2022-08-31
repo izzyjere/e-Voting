@@ -11,183 +11,184 @@ using Microsoft.Extensions.Logging;
 
 using System.Security.Cryptography;
 
-namespace ICTAZEVoting.Core;
-
-public class DatabaseSeeder : ISeeder
+namespace ICTAZEVoting.Core
 {
-    private readonly ILogger<DatabaseSeeder> _logger;
-    private readonly SystemDbContext _db;
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<Role> _roleManager;         
-
-    public DatabaseSeeder(
-        UserManager<User> userManager,
-        RoleManager<Role> roleManager,
-        SystemDbContext db,
-        ILogger<DatabaseSeeder> logger)
+    public class DatabaseSeeder : ISeeder
     {
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _db = db;
-        _logger = logger;
+        private readonly ILogger<DatabaseSeeder> _logger;
+        private readonly SystemDbContext _db;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;         
 
-    }
-
-    public async void Seed()
-    {
-        AddConstituency();
-        AddAdministrator();
-        await MakeAllUsersVoters();
-        _db.SaveChanges();
-    }
-    
-    async Task MakeAllUsersVoters()
-    {
-
-        var users = await _userManager.Users.ToListAsync();
-        foreach (var u in users)
+        public DatabaseSeeder(
+            UserManager<User> userManager,
+            RoleManager<Role> roleManager,
+            SystemDbContext db,
+            ILogger<DatabaseSeeder> logger)
         {
-            if (!await _userManager.IsInRoleAsync(u, RoleConstants.BasicRole))
-            {
-                await _userManager.AddToRoleAsync(u, RoleConstants.BasicRole);
-            }
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _db = db;
+            _logger = logger;
+
         }
 
-    }
-    private async void AddConstituency()
-    {
-        var exists = await _db.Set<Constituency>().AnyAsync();
-        if (exists)
+        public async void Seed()
         {
-            //do nothing
-            return;
+            AddConstituency();
+            AddAdministrator();
+            await MakeAllUsersVoters();
+            _db.SaveChanges();
         }
-        else
+        
+        async Task MakeAllUsersVoters()
         {
-            var constituency = new Constituency() { Name = "Kitwe Central" };
-            constituency.PolingStations.Add(new PollingStation { Name = "Riverside" });
-            constituency.PolingStations.Add(new PollingStation { Name = "Chimwemwe" });
-            constituency.PolingStations.Add(new PollingStation { Name = "Nkana West" });
-            _db.Add(constituency);
-            await _db.SaveChangesAsync();
-            _logger.LogInformation("Seeded default constituency");
-        }
-    }
-    private void AddAdministrator()
-    {
-        Task.Run(async () =>
-        {
-            //Check if Role Exists
-            var adminRole = new Role
-            {
-                Name = RoleConstants.AdministratorRole,
-                Description = "Administrator role with full permissions"
 
-            };
-            var voterr = new Role
+            var users = await _userManager.Users.ToListAsync();
+            foreach (var u in users)
             {
-                Name = RoleConstants.BasicRole,
-                Description = "Voter role"
-
-            };
-            var adminRoleInDb = await _roleManager.FindByNameAsync(RoleConstants.AdministratorRole);
-            var adminRoleInDb2 = await _roleManager.FindByNameAsync(RoleConstants.BasicRole);
-            if (adminRoleInDb == null)
-            {
-                await _roleManager.CreateAsync(adminRole);
-                adminRoleInDb = await _roleManager.FindByNameAsync(RoleConstants.AdministratorRole);
-                _logger.LogInformation("Seeded Administrator Role.");
-            }
-            if (adminRoleInDb2 == null)
-            {
-                await _roleManager.CreateAsync(voterr);
-                _logger.LogInformation("Seeded Basic Role.");
-            }
-            //Check if User Exists
-            var superUser = new User
-            {
-
-                Email = "admin@example.com",
-                UserName = "testAdmin",
-                FirstName = "Wisdom",
-                LastName = "Jere",
-                NRC = "150279/34/1",
-                EmailConfirmed = true,
-                PhoneNumberConfirmed = true,
-                IsActive = true,
-                PictureUrl = "biometrics/4ib2b0o5_bna.jpeg"
-            };
-            var superUserInDb = await _userManager.FindByEmailAsync(superUser.Email);
-            if (superUserInDb == null)
-            {
-                await _userManager.CreateAsync(superUser, "test1234");
-                var userGuid = await _userManager.GetUserIdAsync(superUser);
-                var syadmin = new SystemAdmin
+                if (!await _userManager.IsInRoleAsync(u, RoleConstants.BasicRole))
                 {
-                    PersonalDetails = new()
-                    {
-                        FirstName = "Wisdom",
-                        LastName = "Jere",
-                        NRC = "150279/34/1",
-                        Email = superUser.Email,
-                        PhoneNumber = "+260974855669",
-                        Gender = Shared.Enums.Gender.Male,
-                        PictureUrl = "biometrics/4ib2b0o5_bna.jpeg",
-                        UserId = Guid.Parse(userGuid),
-                        DateOfBirth = DateTime.Now,
-                        Address = "Riverside, Kitwe"
-                    },
-                    ConstituencyId = await _db.Set<Constituency>().Select(c => c.Id).FirstOrDefaultAsync(),
-                    CreatedBy = "SYSTEM",
-                    TimeStamp = DateTime.Now,
-                    RemoteIp = "127.0.0.1"
-                };
-                var voter = new Voter
-                {
-                    PersonalDetails = new()
-                    {
-                        FirstName = "Wisdom",
-                        LastName = "Jere",
-                        NRC = "150279/34/1",
-                        Email = superUser.Email,
-                        PhoneNumber = "+260974855669",
-                        Gender = Shared.Enums.Gender.Male,
-                        PictureUrl = "biometrics/4ib2b0o5_bna.jpeg",
-                        UserId = Guid.Parse(userGuid),
-                        DateOfBirth = DateTime.Now,
-                        Address = "Riverside, Kitwe"
-                    },
-                    PolingStationId = await _db.Set<PollingStation>().Select(c => c.Id).FirstOrDefaultAsync(),
-                    CreatedBy = "SYSTEM",
-                    TimeStamp = DateTime.Now,
-                    RemoteIp = "127.0.0.1"
-                };
-                //Generate Key
-                var aes = Aes.Create();
-                var Secrete = voter.Id.ToString().Replace('-', '_') + voter.PersonalDetails.NRC;
-                var key = aes.Key;
-                var IV = aes.IV;
-                var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
-                voter.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
-                Console.WriteLine("Key: " + Convert.ToBase64String(key));
-                _db.Set<Voter>().Add(voter);
-                _db.Set<SystemAdmin>().Add(syadmin);
-                await _db.SaveChangesAsync();
-                var result = await _userManager.AddToRoleAsync(superUser, RoleConstants.AdministratorRole);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("Seeded Default SuperAdmin User.");
-
+                    await _userManager.AddToRoleAsync(u, RoleConstants.BasicRole);
                 }
-                else
+            }
+
+        }
+        private async void AddConstituency()
+        {
+            var exists = await _db.Set<Constituency>().AnyAsync();
+            if (exists)
+            {
+                //do nothing
+                return;
+            }
+            else
+            {
+                var constituency = new Constituency() { Name = "Kitwe Central" };
+                constituency.PolingStations.Add(new PollingStation { Name = "Riverside" });
+                constituency.PolingStations.Add(new PollingStation { Name = "Chimwemwe" });
+                constituency.PolingStations.Add(new PollingStation { Name = "Nkana West" });
+                _db.Add(constituency);
+                await _db.SaveChangesAsync();
+                _logger.LogInformation("Seeded default constituency");
+            }
+        }
+        private void AddAdministrator()
+        {
+            Task.Run(async () =>
+            {
+                //Check if Role Exists
+                var adminRole = new Role
                 {
-                    foreach (var error in result.Errors)
+                    Name = RoleConstants.AdministratorRole,
+                    Description = "Administrator role with full permissions"
+
+                };
+                var voterr = new Role
+                {
+                    Name = RoleConstants.BasicRole,
+                    Description = "Voter role"
+
+                };
+                var adminRoleInDb = await _roleManager.FindByNameAsync(RoleConstants.AdministratorRole);
+                var adminRoleInDb2 = await _roleManager.FindByNameAsync(RoleConstants.BasicRole);
+                if (adminRoleInDb == null)
+                {
+                    await _roleManager.CreateAsync(adminRole);
+                    adminRoleInDb = await _roleManager.FindByNameAsync(RoleConstants.AdministratorRole);
+                    _logger.LogInformation("Seeded Administrator Role.");
+                }
+                if (adminRoleInDb2 == null)
+                {
+                    await _roleManager.CreateAsync(voterr);
+                    _logger.LogInformation("Seeded Basic Role.");
+                }
+                //Check if User Exists
+                var superUser = new User
+                {
+
+                    Email = "admin@example.com",
+                    UserName = "testAdmin",
+                    FirstName = "Wisdom",
+                    LastName = "Jere",
+                    NRC = "150279/34/1",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    IsActive = true,
+                    PictureUrl = "biometrics/4ib2b0o5_bna.jpeg"
+                };
+                var superUserInDb = await _userManager.FindByEmailAsync(superUser.Email);
+                if (superUserInDb == null)
+                {
+                    await _userManager.CreateAsync(superUser, "test1234");
+                    var userGuid = await _userManager.GetUserIdAsync(superUser);
+                    var syadmin = new SystemAdmin
                     {
-                        _logger.LogError(message: error.Description);
+                        PersonalDetails = new()
+                        {
+                            FirstName = "Wisdom",
+                            LastName = "Jere",
+                            NRC = "150279/34/1",
+                            Email = superUser.Email,
+                            PhoneNumber = "+260974855669",
+                            Gender = Shared.Enums.Gender.Male,
+                            PictureUrl = "biometrics/4ib2b0o5_bna.jpeg",
+                            UserId = Guid.Parse(userGuid),
+                            DateOfBirth = DateTime.Now,
+                            Address = "Riverside, Kitwe"
+                        },
+                        ConstituencyId = await _db.Set<Constituency>().Select(c => c.Id).FirstOrDefaultAsync(),
+                        CreatedBy = "SYSTEM",
+                        TimeStamp = DateTime.Now,
+                        RemoteIp = "127.0.0.1"
+                    };
+                    var voter = new Voter
+                    {
+                        PersonalDetails = new()
+                        {
+                            FirstName = "Wisdom",
+                            LastName = "Jere",
+                            NRC = "150279/34/1",
+                            Email = superUser.Email,
+                            PhoneNumber = "+260974855669",
+                            Gender = Shared.Enums.Gender.Male,
+                            PictureUrl = "biometrics/4ib2b0o5_bna.jpeg",
+                            UserId = Guid.Parse(userGuid),
+                            DateOfBirth = DateTime.Now,
+                            Address = "Riverside, Kitwe"
+                        },
+                        PolingStationId = await _db.Set<PollingStation>().Select(c => c.Id).FirstOrDefaultAsync(),
+                        CreatedBy = "SYSTEM",
+                        TimeStamp = DateTime.Now,
+                        RemoteIp = "127.0.0.1"
+                    };
+                    //Generate Key
+                    var aes = Aes.Create();
+                    var Secrete = voter.Id.ToString().Replace('-', '_') + voter.PersonalDetails.NRC;
+                    var key = aes.Key;
+                    var IV = aes.IV;
+                    var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
+                    voter.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
+                    Console.WriteLine("Key: " + Convert.ToBase64String(key));
+                    _db.Set<Voter>().Add(voter);
+                    _db.Set<SystemAdmin>().Add(syadmin);
+                    await _db.SaveChangesAsync();
+                    var result = await _userManager.AddToRoleAsync(superUser, RoleConstants.AdministratorRole);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("Seeded Default SuperAdmin User.");
+
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            _logger.LogError(message: error.Description);
+                        }
                     }
                 }
-            }
 
-        }).GetAwaiter().GetResult();
+            }).GetAwaiter().GetResult();
+        }
     }
 }

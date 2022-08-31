@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICTAZEVoting.Shared.Constants;
-
-public static class HubConstants
+namespace ICTAZEVoting.Shared.Constants
 {
-    public const string BlockchainNetworkHubUrl = "/network";
+    public static class HubConstants
+    {
+        public const string BlockchainNetworkHubUrl = "/network";
+    }
 }

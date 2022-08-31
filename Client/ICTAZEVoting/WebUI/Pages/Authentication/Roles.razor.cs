@@ -11,84 +11,85 @@ using Microsoft.AspNetCore.Authorization;
 using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Shared.Requests;
 
-namespace ICTAZEVoting.WebUI.Pages.Authentication;
+namespace ICTAZEVoting.WebUI.Pages.Authentication
+{
+    public partial class Roles
+    {  [Inject] IRoleManager roleManager { get; set; }
+        private List<RoleResponse> _roleList = new();
+        private RoleResponse _role = new();
+        private string _searchString = "";
+        private bool _dense = false;
+        private bool _striped = true;
+        private bool _bordered = false;
+        private bool _loaded = false;
 
-public partial class Roles
-{  [Inject] IRoleManager roleManager { get; set; }
-    private List<RoleResponse> _roleList = new();
-    private RoleResponse _role = new();
-    private string _searchString = "";
-    private bool _dense = false;
-    private bool _striped = true;
-    private bool _bordered = false;
-    private bool _loaded = false;
+        private ClaimsPrincipal _currentUser;        
 
-    private ClaimsPrincipal _currentUser;        
-
-    protected override async Task OnInitializedAsync()
-    {
-      
-        await GetRolesAsync();
-        
-    }
-
-    private async Task GetRolesAsync()
-    {
-        var res = await roleManager.GetRolesAsync();
-        if(res.Succeeded)
+        protected override async Task OnInitializedAsync()
         {
-            _roleList = res.Data;
-            _loaded = true;
+          
+            await GetRolesAsync();
+            
         }
-    }
 
-    private async Task Delete(string id)
-    {
-        
-    }
-
-    private async Task InvokeModal(string id = null)
-    {
-        var parameters = new DialogParameters();
-        if (id != null)
+        private async Task GetRolesAsync()
         {
-            _role = _roleList.FirstOrDefault(c => c.Id == Guid.Parse(id));
-            if (_role != null)
+            var res = await roleManager.GetRolesAsync();
+            if(res.Succeeded)
             {
-                parameters.Add(nameof(RoleModal.RoleModel), new RoleRequest
-                {
-                    Id = _role.Id.ToString(),
-                    Name = _role.Name,
-                    Description = _role.Description
-                });
+                _roleList = res.Data;
+                _loaded = true;
             }
         }
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = dialogService.Show<RoleModal>(id == null ? "Create" : "Edit", parameters, options);
-        var result = await dialog.Result;
-        if (!result.Cancelled)
-        {
-            await Reset();
-        }
-    }
 
-    private async Task Reset()
-    {
-        _role = new RoleResponse();
-        await GetRolesAsync();
-    }
+        private async Task Delete(string id)
+        {
+            
+        }
 
-    private bool Search(RoleResponse role)
-    {
-        if (string.IsNullOrWhiteSpace(_searchString)) return true;
-        if (role.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
+        private async Task InvokeModal(string id = null)
         {
-            return true;
+            var parameters = new DialogParameters();
+            if (id != null)
+            {
+                _role = _roleList.FirstOrDefault(c => c.Id == Guid.Parse(id));
+                if (_role != null)
+                {
+                    parameters.Add(nameof(RoleModal.RoleModel), new RoleRequest
+                    {
+                        Id = _role.Id.ToString(),
+                        Name = _role.Name,
+                        Description = _role.Description
+                    });
+                }
+            }
+            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+            var dialog = dialogService.Show<RoleModal>(id == null ? "Create" : "Edit", parameters, options);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                await Reset();
+            }
         }
-        if (role.Description?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
+
+        private async Task Reset()
         {
-            return true;
+            _role = new RoleResponse();
+            await GetRolesAsync();
         }
-        return false;
-    }        
+
+        private bool Search(RoleResponse role)
+        {
+            if (string.IsNullOrWhiteSpace(_searchString)) return true;
+            if (role.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return true;
+            }
+            if (role.Description?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return true;
+            }
+            return false;
+        }        
+    }
 }

@@ -1,9 +1,10 @@
 ﻿
 using System.Collections.Generic;
 
-namespace ICTAZEVoting.Shared.Responses.Identity;
-
-public class GetAllRolesResponse
+namespace ICTAZEVoting.Shared.Responses.Identity
 {
-    public IEnumerable<RoleResponse> Roles { get; set; }
+    public class GetAllRolesResponse
+    {
+        public IEnumerable<RoleResponse> Roles { get; set; }
+    }
 }

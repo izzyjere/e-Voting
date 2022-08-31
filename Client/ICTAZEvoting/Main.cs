@@ -23,7 +23,7 @@ namespace ICTAZEVoting
             InitializeComponent();            
             ApplicationService.OnCloseClicked += OnClose;
             Task.Run(async()=> await SessionStorage.RemoveItemAsync("UserToken"));
-
+            InitNode();
             var services = new ServiceCollection();
             services.AddMudServices(configuration =>
             {
@@ -68,8 +68,8 @@ namespace ICTAZEVoting
         }
         async void InitNode()
         {
-            using var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null);
-            NodeConnection = await NodeConnectionInstance.BuildConnectionAsync(isoStore);
+            var appPath = Environment.CurrentDirectory;
+            NodeConnection = await NodeConnectionInstance.BuildConnectionAsync(Path.Combine(appPath,"data"));
         }
 
         private void blazorWebView1_Click(object sender, EventArgs e)

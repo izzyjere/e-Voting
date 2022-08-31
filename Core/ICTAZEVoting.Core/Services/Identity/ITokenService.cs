@@ -2,11 +2,12 @@
 using ICTAZEVoting.Shared.Responses.Identity;
 using ICTAZEVoting.Shared.Wrapper;
 
-namespace ICTAZEVoting.Core.Services.Identity;
-
-public interface ITokenService 
+namespace ICTAZEVoting.Core.Services.Identity
 {
-    Task<IResult<TokenResponse>> LoginAsync(TokenRequest model);
+    public interface ITokenService 
+    {
+        Task<IResult<TokenResponse>> LoginAsync(TokenRequest model);
 
-    Task<Result<TokenResponse>> GetRefreshTokenAsync(RefreshTokenRequest model);
+        Task<Result<TokenResponse>> GetRefreshTokenAsync(RefreshTokenRequest model);
+    }
 }

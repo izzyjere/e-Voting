@@ -13,59 +13,60 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 
-namespace ICTAZEVoting.Services.Identity;
-
-public class AuthenticationService : IAuthenticationService
+namespace ICTAZEVoting.Services.Identity
 {
-    AuthenticationStateProvider authenticationStateProvider;
-    HttpClient Client;
-
-    public AuthenticationService(AuthenticationStateProvider authenticationStateProvider, HttpClient httpClient)
+    public class AuthenticationService : IAuthenticationService
     {
-        this.authenticationStateProvider = authenticationStateProvider;
-        Client = httpClient;
-    }
+        AuthenticationStateProvider authenticationStateProvider;
+        HttpClient Client;
 
-    public async Task<ClaimsPrincipal> CurrentUser()
-    {
-        return (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
-    }
-
-    public async Task<AuthenticationState> GetAuthenticationState()
-    {
-        return await authenticationStateProvider.GetAuthenticationStateAsync();
-    }
-
-    public async Task<IResult> SignIn(TokenRequest request)
-    {
-        var response = await Client.PostAsJsonAsync(ApiEndpoints.Login, request);
-        if (response.IsSuccessStatusCode)
+        public AuthenticationService(AuthenticationStateProvider authenticationStateProvider, HttpClient httpClient)
         {
-            var result = await response.ToResult<TokenResponse>();
-            if (result.Succeeded)
+            this.authenticationStateProvider = authenticationStateProvider;
+            Client = httpClient;
+        }
+
+        public async Task<ClaimsPrincipal> CurrentUser()
+        {
+            return (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+        }
+
+        public async Task<AuthenticationState> GetAuthenticationState()
+        {
+            return await authenticationStateProvider.GetAuthenticationStateAsync();
+        }
+
+        public async Task<IResult> SignIn(TokenRequest request)
+        {
+            var response = await Client.PostAsJsonAsync(ApiEndpoints.Login, request);
+            if (response.IsSuccessStatusCode)
             {
-                await SessionStorage.SaveItemEncryptedAsync("UserToken", result.Data);
+                var result = await response.ToResult<TokenResponse>();
+                if (result.Succeeded)
+                {
+                    await SessionStorage.SaveItemEncryptedAsync("UserToken", result.Data);
 
-                await ((CustomAuthenticationStateProvider)authenticationStateProvider).StateChangedAsync();
-                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", result.Data.Token);
-                await Client.GetAsync($"login/?key={result.Data.TokenKey}");
-                return await Result.SuccessAsync($"Welcome!");
+                    await ((CustomAuthenticationStateProvider)authenticationStateProvider).StateChangedAsync();
+                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", result.Data.Token);
+                    await Client.GetAsync($"login/?key={result.Data.TokenKey}");
+                    return await Result.SuccessAsync($"Welcome!");
+                }
+                return await Result.FailAsync("Invalid Username or Password");
             }
-            return await Result.FailAsync("Invalid Username or Password");
+            else
+            {
+                return await Result.FailAsync("An error occured. Try again");
+            }
+
         }
-        else
+
+        public async Task<IResult> SignOut()
         {
-            return await Result.FailAsync("An error occured. Try again");
+            await Client.GetAsync("/logout");
+            await SessionStorage.RemoveItemAsync("UserToken");
+            ((CustomAuthenticationStateProvider)authenticationStateProvider).MarkUserAsLoggedOut();
+            Client.DefaultRequestHeaders.Authorization = null;
+            return await Result.SuccessAsync();
         }
-
-    }
-
-    public async Task<IResult> SignOut()
-    {
-        await Client.GetAsync("/logout");
-        await SessionStorage.RemoveItemAsync("UserToken");
-        ((CustomAuthenticationStateProvider)authenticationStateProvider).MarkUserAsLoggedOut();
-        Client.DefaultRequestHeaders.Authorization = null;
-        return await Result.SuccessAsync();
     }
 }

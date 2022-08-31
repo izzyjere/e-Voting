@@ -2,15 +2,16 @@
 
 using System;
 
-namespace ICTAZEVoting.Shared.Models;
-
-public class Constituency  : Entity<Guid>
+namespace ICTAZEVoting.Shared.Models
 {
-    public string Name { get; set; }
-    public List<PollingStation> PolingStations { get; set; }
-    public Constituency()
+    public class Constituency  : Entity<Guid>
     {
-        Id = new();
-        PolingStations = new();
+        public string Name { get; set; }
+        public List<PollingStation> PolingStations { get; set; }
+        public Constituency()
+        {
+            Id = new();
+            PolingStations = new();
+        }
     }
 }

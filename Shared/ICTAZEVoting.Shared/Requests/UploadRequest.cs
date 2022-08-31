@@ -2,12 +2,13 @@
 global using System.IO;
 
 
-namespace ICTAZEVoting.Shared.Requests;
-
-public class UploadRequest
+namespace ICTAZEVoting.Shared.Requests
 {
-    public string FileName { get; set; }    
-    public UploadType Type { get; set; }
-    public byte[] Data { get; set; }
+    public class UploadRequest
+    {
+        public string FileName { get; set; }    
+        public UploadType Type { get; set; }
+        public byte[] Data { get; set; }
+    }
+    
 }
-

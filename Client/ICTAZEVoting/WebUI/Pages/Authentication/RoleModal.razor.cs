@@ -6,30 +6,31 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 
-namespace ICTAZEVoting.WebUI.Pages.Authentication;
-
-public partial class RoleModal
+namespace ICTAZEVoting.WebUI.Pages.Authentication
 {
-    [Inject] private IRoleManager RoleManager { get; set; }
-
-    [Parameter] public RoleRequest RoleModel { get; set; } = new();
-    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }       
-
-    public void Cancel()
+    public partial class RoleModal
     {
-        MudDialog.Cancel();
-    }
-    private async Task SaveAsync()
-    {
-        var result = await RoleManager.SaveRole(RoleModel);
-        if(result.Succeeded)
+        [Inject] private IRoleManager RoleManager { get; set; }
+
+        [Parameter] public RoleRequest RoleModel { get; set; } = new();
+        [CascadingParameter] private MudDialogInstance MudDialog { get; set; }       
+
+        public void Cancel()
         {
-            snackBar.Add(result.Messages.First(), Severity.Success);
-            MudDialog.Close();
+            MudDialog.Cancel();
         }
-        else
+        private async Task SaveAsync()
         {
-            snackBar.Add(result.Messages.First(), Severity.Error);
+            var result = await RoleManager.SaveRole(RoleModel);
+            if(result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                MudDialog.Close();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
         }
     }
 }

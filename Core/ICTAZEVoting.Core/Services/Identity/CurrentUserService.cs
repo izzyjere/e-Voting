@@ -3,35 +3,36 @@ using ICTAZEVoting.Shared.Interfaces;
 
 using Microsoft.AspNetCore.Http;
 
-namespace ICTAZEVoting.Core.Services.Identity;
-
-public class CurrentUserService : ICurrentUserService
+namespace ICTAZEVoting.Core.Services.Identity
 {
-    readonly IHttpContextAccessor httpContextAccessor;
-    public CurrentUserService(IHttpContextAccessor contextAccessor)
+    public class CurrentUserService : ICurrentUserService
     {
-        httpContextAccessor = contextAccessor;
-    }
-
-    public Task<string> GetRemoteIP()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Guid> GetUserId()
-    {
-        var context = httpContextAccessor.HttpContext;
-        var id = Guid.Empty;
-        if (context != null && context.User!=null && !string.IsNullOrEmpty(context.User.Identity.Name))
+        readonly IHttpContextAccessor httpContextAccessor;
+        public CurrentUserService(IHttpContextAccessor contextAccessor)
         {
-            id = context.User.GetId();
+            httpContextAccessor = contextAccessor;
         }
-        return Task.FromResult(id);
-    }
 
-    public Task<string> GetUserName()
-    {
-        var context = httpContextAccessor.HttpContext;
-        return Task.FromResult(context?.User?.Identity?.Name ?? "SYSTEM");
+        public Task<string> GetRemoteIP()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Guid> GetUserId()
+        {
+            var context = httpContextAccessor.HttpContext;
+            var id = Guid.Empty;
+            if (context != null && context.User!=null && !string.IsNullOrEmpty(context.User.Identity.Name))
+            {
+                id = context.User.GetId();
+            }
+            return Task.FromResult(id);
+        }
+
+        public Task<string> GetUserName()
+        {
+            var context = httpContextAccessor.HttpContext;
+            return Task.FromResult(context?.User?.Identity?.Name ?? "SYSTEM");
+        }
     }
 }

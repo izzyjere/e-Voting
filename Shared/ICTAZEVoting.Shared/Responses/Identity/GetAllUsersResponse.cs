@@ -1,6 +1,7 @@
-﻿namespace ICTAZEVoting.Shared.Responses.Identity;
-
-public class GetAllUsersResponse
+﻿namespace ICTAZEVoting.Shared.Responses.Identity
 {
-    public IEnumerable<UserResponse> Users { get; set; }
+    public class GetAllUsersResponse
+    {
+        public IEnumerable<UserResponse> Users { get; set; }
+    }
 }

@@ -1,7 +1,8 @@
-﻿namespace ICTAZEVoting.Shared.Requests;
-
-public class VoterVerificationRequest
+﻿namespace ICTAZEVoting.Shared.Requests
 {
-    public string Key { get; set; }
-    public string UserId { get; set; }
+    public class VoterVerificationRequest
+    {
+        public string Key { get; set; }
+        public string UserId { get; set; }
+    }
 }

@@ -2,24 +2,25 @@
 
 #nullable disable
 
-namespace ICTAZEVoting.Core.Migrations;
-
-public partial class Init13 : Migration
+namespace ICTAZEVoting.Core.Migrations
 {
-    protected override void Up(MigrationBuilder migrationBuilder)
+    public partial class Init13 : Migration
     {
-        migrationBuilder.DropColumn(
-            name: "IsCurrent",
-            table: "Elections");
-    }
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "IsCurrent",
+                table: "Elections");
+        }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
-        migrationBuilder.AddColumn<bool>(
-            name: "IsCurrent",
-            table: "Elections",
-            type: "bit",
-            nullable: false,
-            defaultValue: false);
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<bool>(
+                name: "IsCurrent",
+                table: "Elections",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
+        }
     }
 }

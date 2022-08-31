@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ICTAZEVoting.Shared.Responses.Identity;
-
-public class RoleResponse
+namespace ICTAZEVoting.Shared.Responses.Identity
 {
-    public Guid Id { get; set; }
+    public class RoleResponse
+    {
+        public Guid Id { get; set; }
 
-    [Required]
-    public string Name { get; set; }
-    public string Description { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
 }

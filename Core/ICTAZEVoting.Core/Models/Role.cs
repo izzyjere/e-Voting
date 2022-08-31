@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ICTAZEVoting.Core.Models;
-
-public class Role : IdentityRole<Guid>
+namespace ICTAZEVoting.Core.Models
 {
-    public string Description { get; set; }
-    public Role() : base() { }
-    public Role(string roleName, string description) : base(roleName)
+    public class Role : IdentityRole<Guid>
     {
-        Description = description;
+        public string Description { get; set; }
+        public Role() : base() { }
+        public Role(string roleName, string description) : base(roleName)
+        {
+            Description = description;
+        }
     }
 }

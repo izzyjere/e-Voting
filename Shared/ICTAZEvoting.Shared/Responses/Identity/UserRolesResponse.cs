@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 
-namespace ICTAZEVoting.Shared.Responses.Identity;
-
-public class UserRolesResponse
+namespace ICTAZEVoting.Shared.Responses.Identity
 {
-    public List<UserRoleModel> UserRoles { get; set; } = new();
-}
+    public class UserRolesResponse
+    {
+        public List<UserRoleModel> UserRoles { get; set; } = new();
+    }
 
-public class UserRoleModel
-{
-    public string RoleName { get; set; }
-    public string RoleDescription { get; set; }
-    public bool Selected { get; set; }
+    public class UserRoleModel
+    {
+        public string RoleName { get; set; }
+        public string RoleDescription { get; set; }
+        public bool Selected { get; set; }
+    }
 }

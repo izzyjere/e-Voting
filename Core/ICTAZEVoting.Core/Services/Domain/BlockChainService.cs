@@ -1,6 +1,7 @@
-﻿namespace ICTAZEVoting.Core.Services.Domain;
-
-public class BlockChainService
+﻿namespace ICTAZEVoting.Core.Services.Domain
 {
-    
+    public class BlockChainService
+    {
+        
+    }
 }

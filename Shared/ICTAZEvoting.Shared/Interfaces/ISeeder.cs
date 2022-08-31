@@ -1,6 +1,7 @@
-﻿namespace ICTAZEVoting.Shared.Interfaces;
-
-public interface ISeeder
+﻿namespace ICTAZEVoting.Shared.Interfaces
 {
-    void Seed();
+    public interface ISeeder
+    {
+        void Seed();
+    }
 }

@@ -82,145 +82,208 @@ else if (currentElection.Status == ElectionStatus.Closed)
 <br />
 <br />
 @* Begenning of MudTabs *@
-<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
-    <MudTabPanel Text="Presidential">
-        <MudGrid>
-            <MudItem xs="12" sm="12" md="6">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudCard Elevation="25">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h6">Presidential > Consolidated</MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudPaper Class="pa-4">
-                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@President" Width="300px" Height="300px" />
-                        </MudPaper>
-                    </MudCard>
-                </Animate>
-            </MudItem>
+<MudExpansionPanels>
+    <MudExpansionPanel Icon="@Icons.Material.Filled.Summarize" Text="Detailed Results">
 
-            <MudItem xs="12" sm="12" md="6">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudCard Elevation="25">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h6">Presidential > Province</MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudPaper Class="pa-4">
-                            <div>
-                                <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@PresidentProvince" @bind-SelectedIndex="Index3" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
-                            </div>
-                        </MudPaper>
-                    </MudCard>
-                </Animate>
-            </MudItem>
+        @if (currentElection != null && currentElection.CandidateCount > 0)
+        {
+            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                @foreach (var position in currentElection.Positions)
+                {
+                    <MudTabPanel Text="@position.Position">
+                        <MudGrid>
+                            @if (position.CandidateCount > 0)
+                            {
+                                foreach (var candidate in candidates.Where(c => c.ElectionPositionId == position.Id))
+                                {
+                                    <MudItem xs="12" sm="6" md="4">
+                                        <Animate Animation="Animations.FadeDownRight" Duration="TimeSpan.FromSeconds(1)">
+                                            <div class='@(candidate.IsSelected?"selected":"")'>
+                                                <MudCard Elevation="25" Outlined="true">
+                                                    <MudCardHeader>
+                                                        <CardHeaderAvatar>
+                                                            <MudAvatar Color="Color.Secondary">@candidate.PersonalDetails.FirstName.First() @candidate.PersonalDetails.LastName.First() </MudAvatar>
+                                                        </CardHeaderAvatar>
+                                                        <CardHeaderContent>
+                                                            <MudText Typo="Typo.h6">@candidate.PersonalDetails.FullName</MudText>
+                                                            <MudText Typo="Typo.body2">@candidate.PoliticalParty.Name</MudText>
+                                                        </CardHeaderContent>
+                                                    </MudCardHeader>
+                                                    <MudCardMedia Image="@(fileService.GetFileUrl(candidate.PersonalDetails.PictureUrl))" Height="300" />
+                                                    <MudCardContent>
+                                                        <MudSimpleTable Bordered="true" Striped="true" Hover="true">
+                                                            <tr>
+                                                                <td><strong>Number of Votes :</strong></td>
+                                                                <td>@nodeConnectionInstance.CountVotes(currentElection.Id,candidate.Id)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Percentage of Votes :</strong></td>
+                                                                <td>@((nodeConnectionInstance.CountVotes(currentElection.Id, candidate.Id) / nodeConnectionInstance.CountVotesPerPosition(currentElection.Id, position.Id)).ToString("P2"))</td>
+                                                            </tr>
+                                                        </MudSimpleTable>
+                                                    </MudCardContent>
+                                                </MudCard>
+                                            </div>
+                                        </Animate>
+                                    </MudItem>
+                                }
+                            }
+                            else
+                            {
+                                <MudAlert Severity="Severity.Warning">No candidates data to show.</MudAlert>
+                            }
+                        </MudGrid>
+                    </MudTabPanel>
+                }
+            </MudTabs>
+        }
+        else
+        {
+            <MudAlert Severity="Severity.Warning">No candidate data to show.</MudAlert>
+        }
 
-            <MudItem xs="12" sm="12" md="6">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudCard Elevation="25">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h6">Candidates Disagreggeted by Gender</MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudPaper Class="pa-4">
-                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data4" @bind-SelectedIndex="Index4" InputLabels="@Gender2" Width="300px" Height="300px" />
-                        </MudPaper>
-                    </MudCard>
-                </Animate>
-            </MudItem>
+    </MudExpansionPanel>
+    <MudExpansionPanel Icon="@Icons.Material.Filled.Report" Text="Summary">
+        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+            <MudTabPanel Text="Presidential">
+                <MudGrid>
+                    <MudItem xs="12" sm="12" md="6">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudCard Elevation="25">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">Presidential > Consolidated</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudPaper Class="pa-4">
+                                    <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@President" Width="300px" Height="300px" />
+                                </MudPaper>
+                            </MudCard>
+                        </Animate>
+                    </MudItem>
 
-            <MudItem xs="12" sm="8" md="6">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudCard Elevation="25">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h6">Voters Disagreggeted by Gender</MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudPaper Class="pa-4">
-                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data3" @bind-SelectedIndex="Index3" InputLabels="@Gender" Width="300px" Height="300px" />
-                        </MudPaper>
-                    </MudCard>
-                </Animate>
-            </MudItem>
-        </MudGrid>
-    </MudTabPanel>
-    <MudTabPanel Text="Parliamentary">
-        <MudGrid>
-            <MudItem xs="12" sm="12" md="6">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudCard Elevation="25">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h6">Presidential > Consolidated</MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudPaper Class="pa-4">
-                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@President" Width="300px" Height="300px" />
-                        </MudPaper>
-                    </MudCard>
-                </Animate>
-            </MudItem>
+                    <MudItem xs="12" sm="12" md="6">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudCard Elevation="25">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">Presidential > Province</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudPaper Class="pa-4">
+                                    <div>
+                                        <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@PresidentProvince" @bind-SelectedIndex="Index3" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+                                    </div>
+                                </MudPaper>
+                            </MudCard>
+                        </Animate>
+                    </MudItem>
 
-            <MudItem xs="12" sm="12" md="6">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudCard Elevation="25">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h6">Presidential > Province</MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudPaper Class="pa-4">
-                            <div>
-                                <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@PresidentProvince" @bind-SelectedIndex="Index3" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
-                            </div>
-                        </MudPaper>
-                    </MudCard>
-                </Animate>
-            </MudItem>
+                    <MudItem xs="12" sm="12" md="6">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudCard Elevation="25">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">Candidates Disagreggeted by Gender</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudPaper Class="pa-4">
+                                    <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data4" @bind-SelectedIndex="Index4" InputLabels="@Gender2" Width="300px" Height="300px" />
+                                </MudPaper>
+                            </MudCard>
+                        </Animate>
+                    </MudItem>
 
-            <MudItem xs="12" sm="12" md="6">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudCard Elevation="25">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h6">Candidates Disagreggeted by Gender</MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudPaper Class="pa-4">
-                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data4" @bind-SelectedIndex="Index4" InputLabels="@Gender2" Width="300px" Height="300px" />
-                        </MudPaper>
-                    </MudCard>
-                </Animate>
-            </MudItem>
+                    <MudItem xs="12" sm="8" md="6">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudCard Elevation="25">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">Voters Disagreggeted by Gender</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudPaper Class="pa-4">
+                                    <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data3" @bind-SelectedIndex="Index3" InputLabels="@Gender" Width="300px" Height="300px" />
+                                </MudPaper>
+                            </MudCard>
+                        </Animate>
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="Parliamentary">
+                <MudGrid>
+                    <MudItem xs="12" sm="12" md="6">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudCard Elevation="25">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">Presidential > Consolidated</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudPaper Class="pa-4">
+                                    <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@President" Width="300px" Height="300px" />
+                                </MudPaper>
+                            </MudCard>
+                        </Animate>
+                    </MudItem>
 
-            <MudItem xs="12" sm="8" md="6">
-                <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
-                    <MudCard Elevation="25">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h6">Voters Disagreggeted by Gender</MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudPaper Class="pa-4">
-                            <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data3" @bind-SelectedIndex="Index3" InputLabels="@Gender" Width="300px" Height="300px" />
-                        </MudPaper>
-                    </MudCard>
-                </Animate>
-            </MudItem>
-        </MudGrid>
-    </MudTabPanel>
-    <MudTabPanel Text="Tab Three">
-        <MudText>Content Three</MudText>
-    </MudTabPanel>
-    <MudTabPanel Text="Tab Disabled" Disabled="true">
-        <MudText>Content Disabled</MudText>
-    </MudTabPanel>
-</MudTabs>
+                    <MudItem xs="12" sm="12" md="6">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudCard Elevation="25">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">Presidential > Province</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudPaper Class="pa-4">
+                                    <div>
+                                        <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@PresidentProvince" @bind-SelectedIndex="Index3" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+                                    </div>
+                                </MudPaper>
+                            </MudCard>
+                        </Animate>
+                    </MudItem>
 
+                    <MudItem xs="12" sm="12" md="6">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudCard Elevation="25">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">Candidates Disagreggeted by Gender</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudPaper Class="pa-4">
+                                    <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data4" @bind-SelectedIndex="Index4" InputLabels="@Gender2" Width="300px" Height="300px" />
+                                </MudPaper>
+                            </MudCard>
+                        </Animate>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="8" md="6">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(0.5)">
+                            <MudCard Elevation="25">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">Voters Disagreggeted by Gender</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudPaper Class="pa-4">
+                                    <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data3" @bind-SelectedIndex="Index3" InputLabels="@Gender" Width="300px" Height="300px" />
+                                </MudPaper>
+                            </MudCard>
+                        </Animate>
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="Tab Three">
+                <MudText>Content Three</MudText>
+            </MudTabPanel>
+            <MudTabPanel Text="Tab Disabled" Disabled="true">
+                <MudText>Content Disabled</MudText>
+            </MudTabPanel>
+        </MudTabs>
+    </MudExpansionPanel>
+</MudExpansionPanels>
 <MudScrollToTop>
     <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
 </MudScrollToTop>
@@ -230,7 +293,8 @@ else if (currentElection.Status == ElectionStatus.Closed)
     ElectionResponse currentElection = null;
     [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; }
     ClaimsPrincipal claimsPrincipal = new();
-   
+    private List<CandidateResponse> candidates = new List<CandidateResponse>();
+
     private int NumberOfCandidates = 0;
     private int NumberOfVoters = 0;
     private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
@@ -239,12 +303,13 @@ else if (currentElection.Status == ElectionStatus.Closed)
     string[] President = { "Clarence Simukanzye", "Wisdom Jere", "Ndanji Bupe Soko", "Bulaya Mwanaute" };
 
     protected override async Task OnInitializedAsync()
-    {    
+    {
         currentElection = await electionService.GetCurrentElection();
-        if(currentElection!=null)
+        if (currentElection != null)
         {
             NumberOfVoters = currentElection.VoterCount;
-            NumberOfCandidates = currentElection.CandidateCount;            
+            NumberOfCandidates = currentElection.CandidateCount;
+            candidates = await electionService.GetCandidates(currentElection.Id.ToString());
         }
     }
 

@@ -13,7 +13,7 @@ namespace ICTAZEVoting.Services.Domain
         Dictionary<string, Node> ConnectedNodes { get; set; } = new();
         readonly StorageContext storageContext;
         bool chainSynced;
-        public int NodeCount { get => ConnectedNodes.Count+1; }
+        public int NodeCount { get => ConnectedNodes.Count + 1; }
         Task RegisterNode(Node node)
         {
             ConnectedNodes.Add(node.NodeId, node);
@@ -29,18 +29,54 @@ namespace ICTAZEVoting.Services.Domain
         }
         public int CountBallots(Guid? electionId)
         {
-            if(electionId==null)
+            if (electionId == null)
             {
                 return 0;
             }
             var list = GetBallots((Guid)electionId);
 
-            return list.Any()?list.Count:0;
+            return list.Any() ? list.Count : 0;
+        }
+        public double CountVotes(Guid? electionId, Guid? candidateId)
+        {
+            if (electionId == null || candidateId == null)
+            {
+                return 0;
+            }
+            var allBallots = GetBallots((Guid)electionId);
+            if (allBallots.Any())
+            {
+                var myVotes = allBallots.SelectMany(b => b.Votes.Where(v => v.CandidateId == candidateId));
+                if (!myVotes.Any())
+                {
+                    return 0;
+                }
+                return myVotes.Count();
+            }
+            return 0;
+        }
+        public double CountVotesPerPosition(Guid? electionId, Guid? positionId)
+        {
+            if (electionId == null || positionId == null)
+            {
+                return 0;
+            }
+            var allBallots = GetBallots((Guid)electionId);
+            if (allBallots.Any())
+            {
+                var allVotes = allBallots.SelectMany(b => b.Votes.Where(v => v.PositionId==positionId));
+                if (!allVotes.Any())
+                {
+                    return 0;
+                }
+                return allVotes.Count();
+            }
+            return 0;
         }
         public NodeConnectionInstance()
         {
             var appPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-            storageContext = new StorageContext(Path.Combine(appPath,"Evoting","data"));
+            storageContext = new StorageContext(Path.Combine(appPath, "Evoting", "data"));
             hubConnection = new HubConnectionBuilder().WithUrl("https://localhost:7119/blockchain").WithAutomaticReconnect().Build();
             hubRegistrations.Add(hubConnection.OnMessageReceived(OnMessageRecievedAsync));
             hubRegistrations.Add(hubConnection.OnNodeConnected(node =>
@@ -50,12 +86,12 @@ namespace ICTAZEVoting.Services.Domain
             storageContext.InitializeBlockChain();
             BuildConnectionAsync();
         }
-         async void BuildConnectionAsync() 
+        async void BuildConnectionAsync()
         {
             if (hubConnection != null)
             {
                 await hubConnection.StartAsync();
-            }     
+            }
         }
         async Task OnMessageRecievedAsync(NetworkMessage message)
         {
@@ -81,11 +117,11 @@ namespace ICTAZEVoting.Services.Domain
         {
             var chain = storageContext.GetBlockChain();
             var ballots = new List<Ballot>();
-            if(chain==null)
+            if (chain == null)
             {
                 return new();
             }
-            foreach (var item in chain.Chain.Where(b=>b.Data.ElectionId==electionId))
+            foreach (var item in chain.Chain.Where(b => b.Data.ElectionId == electionId))
             {
                 ballots.Add(item.Data);
             }

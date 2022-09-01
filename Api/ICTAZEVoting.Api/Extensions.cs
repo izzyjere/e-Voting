@@ -551,7 +551,7 @@ namespace ICTAZEVoting.Api
                         }
                           
                         var s= await unitOfWork.Commit(new CancellationToken());
-                        return s != 0 ? Result.Success() : Result.Fail();
+                        return s > 0 ? Result.Success() : Result.Fail();
                     }     
                            
                      

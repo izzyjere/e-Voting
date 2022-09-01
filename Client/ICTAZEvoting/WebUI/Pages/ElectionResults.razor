@@ -307,9 +307,9 @@ else if (currentElection.Status == ElectionStatus.Closed)
         currentElection = await electionService.GetCurrentElection();
         if (currentElection != null)
         {
-            NumberOfVoters = currentElection.VoterCount;
-            NumberOfCandidates = currentElection.CandidateCount;
+            NumberOfVoters = currentElection.VoterCount;            
             candidates = await electionService.GetCandidates(currentElection.Id.ToString());
+            NumberOfCandidates = candidates.Count();
         }
     }
 

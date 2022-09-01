@@ -298,6 +298,15 @@ namespace ICTAZEVoting.Services.Domain
                 return await delete.ToResult();
             }
             return Result.Fail("An error occured. Check your internet connection.");
+        }   
+        public async Task<IResult> Activate(string id)
+        {
+            var done = await httpClient.GetAsync($"elections/activate/{id}");
+            if (done.IsSuccessStatusCode)
+            {
+                return await done.ToResult();
+            }
+            return Result.Fail("An error occured. Check your internet connection.");
         }
 
         public async Task<List<PollingStationResponse>> GetPollingStationList()

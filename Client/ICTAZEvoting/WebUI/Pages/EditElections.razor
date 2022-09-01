@@ -115,7 +115,7 @@
                 </MudItem>
                 <MudItem xs="12">
                     <center><MudText GutterBottom="true" Typo="Typo.h6">Voters</MudText></center>
-                   <MudSimpleTable Dense="true" Bordered="true" Hover="true" FixedHeader="true">
+                    <MudSimpleTable Dense="true" Bordered="true" Hover="true" FixedHeader="true">
                         <thead>
                             <tr>
                                 <th>NRC</th>
@@ -139,7 +139,7 @@
 
                             }
                         </tbody>
-                   </MudSimpleTable>
+                    </MudSimpleTable>
                 </MudItem>
             </MudGrid>
             <MudButton ButtonType="MudBlazor.ButtonType.Submit" Class="mt-6" Variant="Variant.Filled" Color="Color.Success">Save Election</MudButton>
@@ -158,6 +158,7 @@
             <MudTh>Description</MudTh>
             <MudTh>Starting Time</MudTh>
             <MudTh>Closing Time</MudTh>
+            <MudTh>Active</MudTh>
             <MudTh>Status</MudTh>
             <MudTh>Actions</MudTh>
         </HeaderContent>
@@ -172,6 +173,20 @@
                 <MudChip Label="true" Color="Color.Secondary" Icon="@Icons.Material.Filled.Watch">
                     @context.ClosingTime.ToString("dd MMM yyyy H:mm")
                 </MudChip>
+            </MudTd>
+            <MudTd>
+                @if (context.IsActive)
+                {
+                    <MudChip Color="Color.Success">
+                        Yes
+                    </MudChip>
+                }
+                else
+                {
+                    <MudChip OnClick="()=>Activate(context.Id.ToString())" Color="Color.Info">
+                        No
+                    </MudChip>
+                }
             </MudTd>
             <MudTd>
                 <MudChip Color="GetColor(context.Status)">
@@ -217,6 +232,19 @@
     {
         await Refresh();
     }
+    async void Activate(string id)
+    {
+          var result = await electionService.Activate(id.ToString());
+            if (result.Succeeded)
+            {
+                snackBar.Add(result.Messages.First(), Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                snackBar.Add(result.Messages.First(), Severity.Error);
+            }
+    }
     Color GetColor(ElectionStatus status)
     {
         return status switch
@@ -227,11 +255,7 @@
             _ => Color.Default,
         };
 
-    }
-    async Task Activate(string id)
-    {
-
-    }
+    }    
     async Task Refresh()
     {
         election = new();

@@ -13,7 +13,7 @@ namespace ICTAZEVoting.Services.Domain
         Dictionary<string, Node> ConnectedNodes { get; set; } = new();
         readonly StorageContext storageContext;
         bool chainSynced;
-        public int NodeCount { get => ConnectedNodes.Count; }
+        public int NodeCount { get => ConnectedNodes.Count+1; }
         Task RegisterNode(Node node)
         {
             ConnectedNodes.Add(node.NodeId, node);

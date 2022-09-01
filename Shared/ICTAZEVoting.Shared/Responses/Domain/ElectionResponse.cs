@@ -19,6 +19,7 @@ namespace ICTAZEVoting.Shared.Responses.Domain
         public DateTime ClosingTime { get; set; }
         public List<ElectionPositionResponse> Positions { get; set; }
         public int VoterCount { get; set; }
+        public bool IsActive { get; set; }
         public int CandidateCount => Positions.Sum(prop =>prop.CandidateCount);
     }
     public class ElectionPositionResponse

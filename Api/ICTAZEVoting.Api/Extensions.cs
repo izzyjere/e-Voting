@@ -440,7 +440,7 @@ namespace ICTAZEVoting.Api
              });
             app.MapGet("/elections/current", [Authorize] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper) =>
             {
-                var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).FirstOrDefaultAsync(e => e.ElectionDate.Value.AddHours(e.Duration) >= DateTime.Now && e.ElectionDate <= DateTime.Now);
+                var election = await unitOfWork.Repository<Election>().Entities().Include(e => e.Positions).FirstOrDefaultAsync(e=>e.IsActive);
                 var result = mapper.Map<ElectionResponse>(election);                
                 return Result<ElectionResponse>.Success(result);
             });
@@ -510,6 +510,38 @@ namespace ICTAZEVoting.Api
                         }
                         return Result.Fail("Not found.");
                     }
+
+                }
+                return Result.Fail("Not found.");
+            });
+            app.MapGet("/elections/activate/{electionId}",[Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IMapper mapper, [FromRoute] string electionId) =>
+            {
+                var myGuid = Guid.Empty;
+         
+                if (Guid.TryParse(electionId, out myGuid))
+                {
+                    var elections = await unitOfWork.Repository<Election>().Entities().ToListAsync();
+                    if (!elections.Any(e=>e.Id==myGuid))
+                    {
+                        return Result.Fail("Not found.");
+                    }
+                    else
+                    {
+                        foreach (var item in elections)
+                        {
+                            if(item.Id==myGuid)
+                            {
+                                item.IsActive = true;
+                            }
+                            item.IsActive = false; 
+                            await unitOfWork.Repository<Election>().Update(item);
+                        }
+                          
+                        var s= await unitOfWork.Commit(new CancellationToken());
+                        return s != 0 ? Result.Success() : Result.Fail();
+                    }     
+                           
+                     
 
                 }
                 return Result.Fail("Not found.");

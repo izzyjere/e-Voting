@@ -278,10 +278,11 @@
     }
     async Task Save()
     {
-
+        candidate.ElectionId = election.Id;
         if (!isEditing)
         {
             //adding
+
             var result = await electionService.AddCandidate(candidate);
             if (result.Succeeded)
             {

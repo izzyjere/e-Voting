@@ -48,7 +48,7 @@ namespace ICTAZEVoting.Services.Domain
 
         public async Task<VoterResponse> GetByUserId(string id)
         {
-            var get = await httpClient.GetAsync(ApiEndpoints.GetVoterByUserId +"/"+id);
+            var get = await httpClient.GetAsync(ApiEndpoints.GetVoterByUserId +$"/{id}");
             if (get.IsSuccessStatusCode)
             {
                 var res = await get.ToResult<VoterResponse>();

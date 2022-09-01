@@ -15,11 +15,11 @@ namespace ICTAZEVoting.BlockChain.Models
         {
            PendingBallots.Add(Ballot);
         }
-        public void ProcessPendingBallots()
+        public bool ProcessPendingBallots()
         {   
             if(!PendingBallots.Any())
             {
-                return;
+                return true;
             }
             foreach(var ballot in PendingBallots)
             {
@@ -30,10 +30,12 @@ namespace ICTAZEVoting.BlockChain.Models
             }
             
             PendingBallots = new();
+            return true;
         }
         public void InitializeChain()
         {
             Chain = new List<Block>();
+            AddGenesisBlock();
         }
         /// <summary>
         /// This method creates the genesis
@@ -42,7 +44,8 @@ namespace ICTAZEVoting.BlockChain.Models
         public static Block CreateGenesisBlock()
         {
             var block = new Block(DateTime.Now, "", null);
-            block.Mine(Difficulty);
+           // block.Mine(Difficulty);
+            block.Hash = block.CalculateHash();
             return block;             
         }
         public void AddGenesisBlock()
@@ -76,8 +79,8 @@ namespace ICTAZEVoting.BlockChain.Models
             Block latestBlock = GetLatestBlock();
             block.Index = latestBlock.Index + 1;
             block.PreviousHash = latestBlock.Hash;
-            // block.Hash = block.CalculateHash();
-            block.Mine(Difficulty);
+            block.Hash = block.CalculateHash();
+            //block.Mine(Difficulty);
             Chain.Add(block);
         }
         /// <summary>

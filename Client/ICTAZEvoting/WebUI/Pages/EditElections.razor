@@ -234,17 +234,17 @@
     }
     async void Activate(string id)
     {
-          var result = await electionService.Activate(id.ToString());
-            if (result.Succeeded)
-            {
-                snackBar.Add("Election was activated.", Severity.Success);
-                await Refresh();
-                return;
-            }
-            else
-            {
-                snackBar.Add("An Error Occured. Try again", Severity.Error);
-            }
+        var result = await electionService.Activate(id.ToString());
+        if (result.Succeeded)
+        {
+            snackBar.Add("Election was activated.", Severity.Success);
+            await Refresh();
+            return;
+        }
+        else
+        {
+            snackBar.Add("An Error Occured. Try again", Severity.Error);
+        }
     }
     Color GetColor(ElectionStatus status)
     {
@@ -296,6 +296,7 @@
     {
 
         election.ElectionDate = dateTime.Value.Add(time.Value);
+        election.IsActive = true;
         foreach (var item in selectedVoters)
         {
             election.Voters.Add(new ElectionVoter { VoterId = item.Id });

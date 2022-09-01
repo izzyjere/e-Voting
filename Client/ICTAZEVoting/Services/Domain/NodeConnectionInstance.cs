@@ -1,6 +1,8 @@
 ﻿using ICTAZEVoting.BlockChain.IO;
 using ICTAZEVoting.BlockChain.Network;
+
 using Microsoft.AspNetCore.SignalR.Client;
+
 using Newtonsoft.Json;
 namespace ICTAZEVoting.Services.Domain
 {
@@ -8,14 +10,14 @@ namespace ICTAZEVoting.Services.Domain
     {
         HubConnection? hubConnection;
         readonly HashSet<IDisposable> hubRegistrations = new();
-        Dictionary<string, Node> ConnectedNodes { get; set; } = new();        
+        Dictionary<string, Node> ConnectedNodes { get; set; } = new();
         bool chainSynced;
         public int NodeCount { get => ConnectedNodes.Count + 1; }
-        
-        
-        public NodeConnectionInstance( HttpClient httpClient)
-        {               
-           
+
+
+        public NodeConnectionInstance(HttpClient httpClient)
+        {
+
             hubConnection = new HubConnectionBuilder().WithUrl($"{httpClient.BaseAddress}/blockchain").WithAutomaticReconnect().Build();
             hubRegistrations.Add(hubConnection.OnMessageReceived(OnMessageRecievedAsync));
             hubRegistrations.Add(hubConnection.OnNodeConnected(node =>
@@ -85,7 +87,7 @@ namespace ICTAZEVoting.Services.Domain
             }
             return 0;
         }
-        
+
         async void BuildConnectionAsync()
         {
             try
@@ -97,7 +99,7 @@ namespace ICTAZEVoting.Services.Domain
             }
             catch (Exception)
             {
-               
+
             }
 
         }
@@ -123,6 +125,7 @@ namespace ICTAZEVoting.Services.Domain
         }
         public List<Ballot> GetBallots(Guid electionId)
         {
+
             var chain = StorageContext.GetBlockChain();
             var ballots = new List<Ballot>();
             if (chain == null)
@@ -135,15 +138,24 @@ namespace ICTAZEVoting.Services.Domain
             }
             return ballots;
         }
-        public async Task AddBallotAsync(Ballot ballot)
+        public async Task<bool> AddBallotAsync(Ballot ballot)
         {
-            StorageContext.AddBallot(ballot);
+            var done =  await StorageContext.AddBallot(ballot);
             await SendMessageAsync();
+            return done;
         }
         async Task SendMessageAsync()
         {
             if (hubConnection is not null)
+            {
+
+                if (hubConnection.State != HubConnectionState.Disconnected)
+                {
+                    await hubConnection.StartAsync();
+                }
+
                 await hubConnection.InvokeAsync("SendMessage", StorageContext.GetBlockChain());
+            }
         }
         public async ValueTask DisposeAsync()
         {

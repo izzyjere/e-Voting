@@ -248,7 +248,7 @@ namespace ICTAZEVoting.Api
                     entity.PersonalDetails.UserId = register.Data;
                     //Generate Key
                     var aes = Aes.Create();
-                    var Secrete = entity.Id.ToString().Replace('-', '_') + entity.PersonalDetails.NRC;
+                    var Secrete = entity.PersonalDetails.NRC;
                     var key = aes.Key;
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
@@ -330,6 +330,27 @@ namespace ICTAZEVoting.Api
                 return Result<List<CandidateResponse>>.Success(new List<CandidateResponse>());
 
             });
+            app.MapDelete("/voters/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
+            {
+                var myGuid = Guid.Empty;
+                if (Guid.TryParse(id, out myGuid))
+                {
+                    var entity = await unitOfWork.Repository<Voter>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
+                    if (entity == null)
+                    {
+                        return await Result.FailAsync("Not found.");
+                    }
+                    else
+                    {
+                        var result = await unitOfWork.Repository<Voter>().Delete(entity);
+                        result = await unitOfWork.Commit(new CancellationToken()) != 0;
+                        return result ? Result.Success($"{entity.PersonalDetails.FullName} was deleted.") : Result.Fail("An error occured, try again.");
+                    }
+
+                }
+                return Result.Fail("Not found.");
+
+            });
             app.MapPost("/candidates/add", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IUnitOfWork<Guid> unitOfWork, IUserService userService, [FromBody] Candidate entity) =>
             {
                 var userRegister = new RegisterRequest
@@ -345,29 +366,7 @@ namespace ICTAZEVoting.Api
                     Role = RoleConstants.BasicRole,
                     PhoneNumber = entity.PersonalDetails.PhoneNumber,
                     NRC = entity.PersonalDetails.NRC
-                };
-
-                app.MapDelete("/voters/delete/{id}", async (IUnitOfWork<Guid> unitOfWork, [FromRoute] string id) =>
-                {
-                    var myGuid = Guid.Empty;
-                    if (Guid.TryParse(id, out myGuid))
-                    {
-                        var entity = await unitOfWork.Repository<Voter>().Entities().FirstOrDefaultAsync(v => v.Id == myGuid);
-                        if (entity == null)
-                        {
-                            return await Result.FailAsync("Not found.");
-                        }
-                        else
-                        {
-                            var result = await unitOfWork.Repository<Voter>().Delete(entity);
-                            result = await unitOfWork.Commit(new CancellationToken()) != 0;
-                            return result ? Result.Success($"{entity.PersonalDetails.FullName} was deleted.") : Result.Fail("An error occured, try again.");
-                        }
-
-                    }
-                    return Result.Fail("Not found.");
-
-                });
+                };                 
 
                 var register = await userService.RegisterAsync(userRegister);
                 if (register.Succeeded)
@@ -394,13 +393,21 @@ namespace ICTAZEVoting.Api
                     };
                     //Generate Key
                     var aes = Aes.Create();
-                    var Secrete = entity.Id.ToString().Replace('-', '_') + entity.PersonalDetails.NRC;
+                    var Secrete = entity.PersonalDetails.NRC;
                     var key = aes.Key;
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
                     voter.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
                     await unitOfWork.Repository<Voter>().Add(voter);
-                    string[] res = new string[2] { Convert.ToBase64String(key), userRegister.Password };
+                    string[] res = new string[2] { Convert.ToBase64String(key), userRegister.Password };                    
+                    var election = await unitOfWork.Repository<Election>().Get(entity.ElectionId);
+                    if(election.Voters==null)
+                    {
+                        election.Voters = new();
+                    }
+                    else { }
+                    election.Voters.Add(new ElectionVoter { VoterId = voter.Id });
+                    await unitOfWork.Repository<Election>().Update(election);
                     await unitOfWork.Repository<Candidate>().Add(entity);
                     var result = await unitOfWork.Commit(new CancellationToken()) != 0;
                     return result ? Result<string[]>.Success(data: res, "Candidate was registered.") : Result<string[]>.Fail("An error has occured. Try again.");

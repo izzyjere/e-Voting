@@ -115,11 +115,11 @@
         election = await electionService.GetElection(ElectionId);
         candidates = await electionService.GetCandidates(ElectionId);
         voter = await voterService.GetByUserId(claimsPrincipal.GetUserId());
-        if(voter==null)
+        if (voter == null)
         {
             ApplicationService.NotifyOncloseClicked(this, new EventArgs());
             return;
-        }        
+        }
         if (election.Positions.Count == 1)
         {
             buttonText = "Submit";
@@ -185,16 +185,20 @@
                     if (response.Verified)
                     {
                         //Save to block chain.
-                        await nodeConnectionInstance.AddBallotAsync(ballot);
-                        snackBar.Add("Your vote was registered.", Severity.Success);
-                        var done = await dialogService.ShowMessageBox("Confirmation", "Your vote was saved");
-                        await electionService.MarkVoted(voter.Id, election.Id);
-                        await authenticationService.SignOut();
-                        ApplicationService.NotifyOncloseClicked(this, new EventArgs());
+                        if (await nodeConnectionInstance.AddBallotAsync(ballot))
+                        {
+                            snackBar.Add("Your vote was registered.", Severity.Success);
+                            var done = await dialogService.ShowMessageBox("Confirmation", "Your vote was saved");
+                            await electionService.MarkVoted(voter.Id, election.Id);
+                            await authenticationService.SignOut();
+                            ApplicationService.NotifyOncloseClicked(this, new EventArgs());
+                        }
+                        else
+                        {
+                            snackBar.Add("Something went wrong.", Severity.Error);
+                        }
                     }
-
                 }
-
                 _processing = false;
                 StateHasChanged();
                 return;
@@ -207,12 +211,12 @@
                 if (!result.Cancelled)
                 {
                     var response = (VoterVerificationResponse)result.Data;
-                    if (response.Verified)
+                    if (!response.Verified)
                     {
                         //Save to block chain and send.
                         await nodeConnectionInstance.AddBallotAsync(ballot);
                         snackBar.Add("Your vote was registered.", Severity.Success);
-                        var done = await dialogService.ShowMessageBox("Confirmation","Your vote was saved");
+                        var done = await dialogService.ShowMessageBox("Confirmation", "Your vote was saved");
                         await authenticationService.SignOut();
                         ApplicationService.NotifyOncloseClicked(this, new EventArgs());
                     }

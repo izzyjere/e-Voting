@@ -37,16 +37,24 @@ namespace ICTAZEVoting.BlockChain.IO
         {
             database.UpdateBlock(chain, keyStore["key"], keyStore["iv"]);
         }
-        public static void AddBallot(Ballot ballot)
+        public static Task<bool> AddBallot(Ballot ballot)
         {
             var chain = GetBlockChain();
             if(chain == null)
             {
-                return;
+                return Task.FromResult(false);
             }
             chain.AddBallot(ballot);
-            chain.ProcessPendingBallots();
-            UpdateBlockChain(chain);
+            if(chain.ProcessPendingBallots())
+            {   
+                UpdateBlockChain(chain);
+                return Task.FromResult(true);
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
+            
         }
         public static void InitializeBlockChain()
         {

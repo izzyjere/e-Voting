@@ -17,6 +17,8 @@ namespace ICTAZEVoting.Shared.Models
         [ValidateComplexType]
         public PersonalDetails PersonalDetails { get; set; }
         public PoliticalParty PoliticalParty { get; set; }
+        [NotMapped]
+        public Guid ElectionId { get; set; }
     }
    
 }

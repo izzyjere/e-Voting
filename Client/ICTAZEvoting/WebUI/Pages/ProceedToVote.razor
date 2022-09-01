@@ -68,9 +68,10 @@
     bool isAllowedToVote;
     protected override async Task OnInitializedAsync()
     {
+        claimsPrincipal = (await AuthenticationStateTask).User;
         currentElection = await electionService.GetCurrentElection();
         voter = await voterService.GetByUserId(claimsPrincipal.GetUserId());
-        if (voter == null)
+        if (voter == null || currentElection==null)
         {
             currentElection = null;
             StateHasChanged();

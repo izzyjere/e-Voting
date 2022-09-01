@@ -237,12 +237,13 @@
           var result = await electionService.Activate(id.ToString());
             if (result.Succeeded)
             {
-                snackBar.Add(result.Messages.First(), Severity.Success);
+                snackBar.Add("Election was activated.", Severity.Success);
                 await Refresh();
+                return;
             }
             else
             {
-                snackBar.Add(result.Messages.First(), Severity.Error);
+                snackBar.Add("An Error Occured. Try again", Severity.Error);
             }
     }
     Color GetColor(ElectionStatus status)

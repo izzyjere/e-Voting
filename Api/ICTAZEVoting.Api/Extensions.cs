@@ -32,6 +32,8 @@ using System.Net.Http.Headers;
 using ICTAZEVoting.Shared.Responses;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ICTAZEVoting.Core.Services.Utility;
+using ICTAZEVoting.Shared.Responses.Audit;
 
 namespace ICTAZEVoting.Api
 {
@@ -70,6 +72,17 @@ namespace ICTAZEVoting.Api
         }
         public static IEndpointRouteBuilder MapEndpointRoutes(this IEndpointRouteBuilder app)
         {
+            #region Audit
+            app.MapGet("/audits", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IAuditService auditService) =>
+            {
+               return await auditService.GetTrailsAsync();
+              
+            });   
+            app.MapGet("/audits/{userId}", [Authorize(Roles = RoleConstants.AdministratorRole)] async (IAuditService auditService, [FromRoute]string userId) =>
+            {
+                return await auditService.GetCurrentUserTrailsAsync(Guid.Parse(userId));              
+            });
+            #endregion
             #region Identity             
             app.MapPost("/token", async (ITokenService tokenService, [FromBody] TokenRequest request) =>
             {

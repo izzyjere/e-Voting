@@ -10,19 +10,17 @@ namespace ICTAZEVoting.Extensions
 {
     public static class SessionStorage
     {
-        static readonly StorageContext SecureStorage = new(Path.Combine(Environment.CurrentDirectory, "data"));
-
         public static async Task SaveItemEncryptedAsync<T>(string key, T item)
         {
             var itemJson = JsonSerializer.Serialize(item);
             var itemJsonBytes = Encoding.UTF8.GetBytes(itemJson);
             var base64Json = Convert.ToBase64String(itemJsonBytes);
-            await SecureStorage.SetAsync(key, base64Json);
+            await StorageContext.SetAsync(key, base64Json);
         }
 
         public static async Task<T> ReadEncryptedItemAsync<T>(string key)
         {
-            var base64Json = await SecureStorage.GetAsync(key);
+            var base64Json = await StorageContext.GetAsync(key);
             if (string.IsNullOrEmpty(base64Json))
             {
                 return default;
@@ -35,7 +33,7 @@ namespace ICTAZEVoting.Extensions
 
         internal static Task RemoveItemAsync(string key)
         {
-            SecureStorage.Remove(key);
+            StorageContext.Remove(key);
             return Task.CompletedTask;
         }
     }

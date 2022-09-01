@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ICTAZEVoting.Shared.Responses.Audit;
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,5 +14,6 @@ namespace ICTAZEVoting.Shared.Interfaces
         Task<List<IResult>> DeleteAdmin(string id);
         Task<List<IResult>> UpdateAdmin(SystemAdmin entity);
         Task<List<PollingStation>> GetPollingStations(string userId);
+        Task<List<AuditResponse>> GetAuditsAsync();
     }
 }

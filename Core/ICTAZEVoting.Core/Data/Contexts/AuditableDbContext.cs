@@ -16,15 +16,15 @@ namespace ICTAZEVoting.Core.Data.Contexts
 
         public DbSet<Audit> AuditTrails { get; set; }
 
-        public virtual async Task<int> SaveChangesAsync(Guid userId = default, CancellationToken cancellationToken = new())
+        public virtual async Task<int> SaveChangesAsync(Guid userId = default, CancellationToken cancellationToken = new(), string userName=null,string ip=null)
         {
-            var auditEntries = OnBeforeSaveChanges(userId);
+            var auditEntries = OnBeforeSaveChanges(userId,userName,ip);
             var result = await base.SaveChangesAsync(cancellationToken);
             await OnAfterSaveChanges(auditEntries, cancellationToken);
             return result;
         }
 
-        private List<AuditEntry> OnBeforeSaveChanges(Guid userId)
+        private List<AuditEntry> OnBeforeSaveChanges(Guid userId, string userName,string ip)
         {
             ChangeTracker.DetectChanges();
             var auditEntries = new List<AuditEntry>();
@@ -36,7 +36,10 @@ namespace ICTAZEVoting.Core.Data.Contexts
                 var auditEntry = new AuditEntry(entry)
                 {
                     TableName = entry.Entity.GetType().Name,
-                    UserId = userId
+                    UserId = userId,
+                    UserName = userName,
+                    RemoteIpAddress = ip
+                    
                 };
                 auditEntries.Add(auditEntry);
                 foreach (var property in entry.Properties)

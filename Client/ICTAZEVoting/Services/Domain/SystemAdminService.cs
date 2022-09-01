@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ICTAZEVoting.Shared.Responses.Audit;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +19,12 @@ namespace ICTAZEVoting.Services.Domain
         {
             throw new NotImplementedException();
         }
-
+        public async Task<List<AuditResponse>> GetAuditsAsync()
+        {
+            var response = await httpClient.GetAsync(ApiEndpoints.GetAudits);
+            var result = await response.ToResult<List<AuditResponse>>();
+            return result.Data ?? new();
+        }
         public async Task<List<PollingStation>> GetPollingStations(string userId)
         {
             var response = await httpClient.GetAsync(ApiEndpoints.GetPollingStationsByUserId + $"/{userId}");

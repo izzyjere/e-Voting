@@ -59,5 +59,6 @@ namespace ICTAZEVoting.Shared.Constants
         public const string CheckEligibility = "elections/voters/check";
         public const string MarkVoted = "elections/voters/mark";
         public const string GetVoterByUserId="voters/byuserid";
+        public const string GetAudits = "audits";
     }
 }

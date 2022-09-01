@@ -7,25 +7,12 @@ using Newtonsoft.Json;
 
 namespace ICTAZEVoting.BlockChain.IO
 {
-    public class StorageContext : IDisposable
-    {
-        readonly DB database;
+    public static class StorageContext 
+    { 
+        readonly static DB database = new(new Options { CreateIfMissing=true},Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Evoting","database"));
         static Dictionary<string,string> keyStore { get; set; } = new Dictionary<string,string>();
-        public StorageContext(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentNullException(nameof(filePath));
-            }
-            var options = new Options { CreateIfMissing = true };
-            database = new(options, filePath);
-            var keys = database.Get("keys");
-            if(!string.IsNullOrEmpty(keys))
-            {
-                keyStore = JsonConvert.DeserializeObject<Dictionary<string,string>>(keys);
-            }
-        }
-        public Models.BlockChain GetBlockChain()
+      
+        public static Models.BlockChain GetBlockChain()
         {  
             if (keyStore.Any())
             {
@@ -34,23 +21,23 @@ namespace ICTAZEVoting.BlockChain.IO
             return null;
         }
 
-        public Task SetAsync(string key, string value)
+        public static Task SetAsync(string key, string value)
         {
             database.Put(key, value);
             return Task.CompletedTask;
         }
 
-        public Task<string> GetAsync(string key)
+        public static Task<string> GetAsync(string key)
         {
             var token = database.Get(key);
             return Task.FromResult(token);
         }
 
-        public void UpdateBlockChain(Models.BlockChain chain)
+        public static void UpdateBlockChain(Models.BlockChain chain)
         {
             database.UpdateBlock(chain, keyStore["key"], keyStore["iv"]);
         }
-        public void AddBallot(Ballot ballot)
+        public static void AddBallot(Ballot ballot)
         {
             var chain = GetBlockChain();
             if(chain == null)
@@ -61,7 +48,7 @@ namespace ICTAZEVoting.BlockChain.IO
             chain.ProcessPendingBallots();
             UpdateBlockChain(chain);
         }
-        public void InitializeBlockChain()
+        public static void InitializeBlockChain()
         {
             var chain = new Models.BlockChain();
             chain.InitializeChain();
@@ -75,17 +62,14 @@ namespace ICTAZEVoting.BlockChain.IO
             }
         }
       
-        public bool ChainExists()
-        {
-            throw new NotImplementedException();
-        }
+        
 
-        public void Remove(string key)
+        public static void Remove(string key)
         {
             database.Delete(key);
         }
 
-        public void Dispose()
+        public static void Dispose()
         {
             database.Dispose();
         }

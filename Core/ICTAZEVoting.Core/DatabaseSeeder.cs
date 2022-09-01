@@ -169,7 +169,13 @@ namespace ICTAZEVoting.Core
                     var IV = aes.IV;
                     var encrypted = EncryptionService.EncryptStringToBytes_Aes(Secrete, key, IV);
                     voter.SecreteKey = new Shared.Models.SecreteKey { EncryptedKey = Convert.ToBase64String(encrypted), IV = Convert.ToBase64String(IV) };
-                    Console.WriteLine("Key: " + Convert.ToBase64String(key));
+                    var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "adminSecreteKey.txt");
+                    var fileStream = new FileStream(path,FileMode.OpenOrCreate);
+                    var writer = new StreamWriter(fileStream);                     
+                    writer.WriteLine("Key:  "+ Convert.ToBase64String(key));
+                    writer.Close();
+                    fileStream.Close();
+                    Console.WriteLine("Key file was stored in: " + path);
                     _db.Set<Voter>().Add(voter);
                     _db.Set<SystemAdmin>().Add(syadmin);
                     await _db.SaveChangesAsync();

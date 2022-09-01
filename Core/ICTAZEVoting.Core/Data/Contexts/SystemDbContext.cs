@@ -47,7 +47,7 @@ namespace ICTAZEVoting.Core.Data.Contexts
             }
             else
             {
-                return await base.SaveChangesAsync(await currentUserService.GetUserId(), cancellationToken);
+                return await base.SaveChangesAsync(await currentUserService.GetUserId(), cancellationToken,await currentUserService.GetUserName(),await currentUserService.GetRemoteIP());
             }
 
         }

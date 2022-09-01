@@ -9,6 +9,7 @@ using System.Reflection;
 using SkiaSharp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using ICTAZEVoting.Core.Services.Utility;
 
 namespace ICTAZEVoting.Core.Extensions;
 
@@ -88,7 +89,7 @@ public static class ServiceCollectionExtensions
                     options.EnableRetryOnFailure();
                     options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 });
-            }, ServiceLifetime.Transient);
+            }, ServiceLifetime.Transient).AddTransient<IAuditService,AuditService>();
 
         return services;
     }

@@ -2,6 +2,7 @@
 using ICTAZEVoting.Shared.Interfaces;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace ICTAZEVoting.Core.Services.Identity
 {
@@ -15,7 +16,17 @@ namespace ICTAZEVoting.Core.Services.Identity
 
         public Task<string> GetRemoteIP()
         {
-            throw new NotImplementedException();
+            var context = httpContextAccessor.HttpContext;
+            string? ip;
+            if (!string.IsNullOrEmpty(context.Request.Headers["X-Forwarded-For"]))
+            {
+                ip = context.Request.Headers["X-Forwarded-For"];
+            }
+            else
+            {
+                ip = context.Request.HttpContext.Features.Get<IHttpConnectionFeature>().RemoteIpAddress.ToString();
+            }
+            return Task.FromResult(ip);
         }
 
         public Task<Guid> GetUserId()

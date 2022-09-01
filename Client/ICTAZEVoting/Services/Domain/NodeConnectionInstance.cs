@@ -33,7 +33,9 @@ namespace ICTAZEVoting.Services.Domain
             {
                 return 0;
             }
-            return GetBallots((Guid)electionId).Count;
+            var list = GetBallots((Guid)electionId);
+
+            return list.Any()?list.Count:0;
         }
         public NodeConnectionInstance()
         {

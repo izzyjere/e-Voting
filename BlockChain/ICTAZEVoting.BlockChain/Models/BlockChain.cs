@@ -43,7 +43,7 @@ namespace ICTAZEVoting.BlockChain.Models
         /// <returns></returns>
         public static Block CreateGenesisBlock()
         {
-            var block = new Block(DateTime.Now, "", null);
+            var block = new Block(DateTime.Now, "", new Ballot() { TimeStamp = DateTime.Now, ElectionId=Guid.Empty});
            // block.Mine(Difficulty);
             block.Hash = block.CalculateHash();
             return block;             

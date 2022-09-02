@@ -17,7 +17,7 @@ namespace ICTAZEVoting.Core.Services.Identity
         public Task<string> GetRemoteIP()
         {
             var context = httpContextAccessor.HttpContext;
-            string? ip;
+            var ip = "";
             if (!string.IsNullOrEmpty(context.Request.Headers["X-Forwarded-For"]))
             {
                 ip = context.Request.Headers["X-Forwarded-For"];
@@ -25,25 +25,29 @@ namespace ICTAZEVoting.Core.Services.Identity
             else
             {
                 ip = context.Request.HttpContext.Features.Get<IHttpConnectionFeature>().RemoteIpAddress.ToString();
+
+            }
+            if(string.IsNullOrEmpty(ip))
+            {
+                ip = "127.0.0.1";
             }
             return Task.FromResult(ip);
         }
-
-        public Task<Guid> GetUserId()
-        {
-            var context = httpContextAccessor.HttpContext;
-            var id = Guid.Empty;
-            if (context != null && context.User!=null && !string.IsNullOrEmpty(context.User.Identity.Name))
+            public Task<Guid> GetUserId()
             {
-                id = context.User.GetId();
+                var context = httpContextAccessor.HttpContext;
+                var id = Guid.Empty;
+                if (context != null && context.User != null && !string.IsNullOrEmpty(context.User.Identity.Name))
+                {
+                    id = context.User.GetId();
+                }
+                return Task.FromResult(id);
             }
-            return Task.FromResult(id);
-        }
 
-        public Task<string> GetUserName()
-        {
-            var context = httpContextAccessor.HttpContext;
-            return Task.FromResult(context?.User?.Identity?.Name ?? "SYSTEM");
+            public Task<string> GetUserName()
+            {
+                var context = httpContextAccessor.HttpContext;
+                return Task.FromResult(context?.User?.Identity?.Name ?? "SYSTEM");
+            }
         }
     }
-}

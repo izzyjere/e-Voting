@@ -280,7 +280,7 @@ namespace ICTAZEVoting.Api
                  var iv = Convert.FromBase64String(voter.SecreteKey.IV);
                  var encrypted = Convert.FromBase64String(voter.SecreteKey.EncryptedKey);
                  var str = EncryptionService.DecryptStringFromBytes_Aes(encrypted, key, iv);
-                 if (voter.Id.ToString().Replace('-', '_') + voter.PersonalDetails.NRC.Reverse() == str)
+                 if (voter.PersonalDetails.NRC == str || voter.PersonalDetails.NRC.Reverse() == str)
                  {
                      return Result<VoterVerificationResponse>.Success(new VoterVerificationResponse { });
                  }

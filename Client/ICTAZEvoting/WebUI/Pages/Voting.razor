@@ -181,23 +181,21 @@
                 var result = await dialog.Result;
                 if (!result.Cancelled)
                 {
-                    var response = (VoterVerificationResponse)result.Data;
-                    if (response.Verified)
+
+                    //Save to block chain.
+                    if (await nodeConnectionInstance.AddBallotAsync(ballot))
                     {
-                        //Save to block chain.
-                        if (await nodeConnectionInstance.AddBallotAsync(ballot))
-                        {
-                            snackBar.Add("Your vote was registered.", Severity.Success);
-                            var done = await dialogService.ShowMessageBox("Confirmation", "Your vote was saved");
-                            await electionService.MarkVoted(voter.Id, election.Id);
-                            await authenticationService.SignOut();
-                            ApplicationService.NotifyOncloseClicked(this, new EventArgs());
-                        }
-                        else
-                        {
-                            snackBar.Add("Something went wrong.", Severity.Error);
-                        }
+                        snackBar.Add("Your vote was registered.", Severity.Success);
+                        var done = await dialogService.ShowMessageBox("Confirmation", "Your vote was saved");
+                        await electionService.MarkVoted(voter.Id, election.Id);
+                        await authenticationService.SignOut();
+                        ApplicationService.NotifyOncloseClicked(this, new EventArgs());
                     }
+                    else
+                    {
+                        snackBar.Add("Something went wrong.", Severity.Error);
+                    }
+
                 }
                 _processing = false;
                 StateHasChanged();

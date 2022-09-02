@@ -52,12 +52,12 @@ namespace ICTAZEVoting
             services.AddScoped<IRoleManager, RoleManager>();
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IFileService, FileUploadService>();
+            services.AddSingleton<NodeConnectionInstance>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();               
             services.AddAuthorizationCore()
             .AddScoped<IAuthenticationService, AuthenticationService>();       
             services.AddWindowsFormsBlazorWebView();
-            services.AddBlazorWebViewDeveloperTools();
-            services.AddScoped<NodeConnectionInstance>();
+            services.AddBlazorWebViewDeveloperTools();           
             blazorWebView1.HostPage = "wwwroot\\index.html";
             blazorWebView1.Services = services.BuildServiceProvider();
             blazorWebView1.RootComponents.Add<App>("#app");

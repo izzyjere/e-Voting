@@ -15,10 +15,10 @@ namespace ICTAZEVoting.Services.Domain
         public int NodeCount { get => ConnectedNodes.Count + 1; }
 
 
-        public NodeConnectionInstance(HttpClient httpClient)
+        public NodeConnectionInstance()
         {
 
-            hubConnection = new HubConnectionBuilder().WithUrl($"{httpClient.BaseAddress}/blockchain").WithAutomaticReconnect().Build();
+            hubConnection = new HubConnectionBuilder().WithUrl("https://localhost:7119/blockchain").WithAutomaticReconnect().Build();
             hubRegistrations.Add(hubConnection.OnMessageReceived(OnMessageRecievedAsync));
             hubRegistrations.Add(hubConnection.OnNodeConnected(node =>
                 RegisterNode(node)));
@@ -123,7 +123,7 @@ namespace ICTAZEVoting.Services.Domain
             }
 
         }
-        public List<Ballot> GetBallots(Guid electionId)
+        public static List<Ballot> GetBallots(Guid electionId)
         {
 
             var chain = StorageContext.GetBlockChain();
@@ -153,8 +153,15 @@ namespace ICTAZEVoting.Services.Domain
                 {
                     await hubConnection.StartAsync();
                 }
+                try
+                {
+                    await hubConnection.InvokeAsync("SendMessage", StorageContext.GetBlockChain());
+                }
+                catch (Exception)
+                {
 
-                await hubConnection.InvokeAsync("SendMessage", StorageContext.GetBlockChain());
+                }
+               
             }
         }
         public async ValueTask DisposeAsync()
